@@ -34,7 +34,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               verticalSpacer(20),
-              textField(controller,46,356,"Langostino","",100,Colors.white,true,false,true,false,(){}),
+              textField(controller,46,356,"Langostino","",100,Colors.white,true,false,true,false,(){}, context),
               verticalSpacer(15),
               Text(
                 "FRESCOS",

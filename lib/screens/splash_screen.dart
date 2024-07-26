@@ -1,7 +1,4 @@
 import 'dart:async';
-
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:kasanipedido/exports/exports.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -113,7 +113,8 @@ Widget customListWidget(BuildContext context){
           ),
           horizontalSpacer(40),
           customButton(context,false,"Crear Pedido",11,(){
-            Get.to(const HostScreen());
+            Navigator.of(context).pushNamed('host');
+            // Get.to(const HostScreen());
           },90,28,Colors.transparent,AppColors.lightCyan,100,showShadow: true),
         ],
       ),

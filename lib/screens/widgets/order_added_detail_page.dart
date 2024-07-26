@@ -44,7 +44,7 @@ Widget orderDetailedPageView(BuildContext context,TextEditingController controll
                 verticalSpacer(10),
                 customText("Mensaje", FontWeight.w600, 12, GoogleFonts.beVietnamPro().fontFamily.toString(),Color(0XFF1B1B1B)),
                 verticalSpacer(5),
-                textField(controller,78,356,"","",8,Colors.white,true,false,false,false,(){}),
+                textField(controller,78,356,"","",8,Colors.white,true,false,false,false,(){}, context),
                 verticalSpacer(15),
                 Row(
                   children: [

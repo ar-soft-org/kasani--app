@@ -1,10 +1,6 @@
 
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/exports/exports.dart';
-import 'package:kasanipedido/screens/vendor_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -69,21 +65,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 30.w,vertical: 40.h),
                     child: Column(
                       children: [
-                        textField(email,46,296,"Email","email",10,AppColors.tfBg,false,false,false,false,(){}),
+                        textField(email,46,296,"Email","email",10,AppColors.tfBg,false,false,false,false,(){}, context),
                         verticalSpacer(10),
                         textField(pw,46,296,"Password","password",10,AppColors.tfBg,false,false,false,isObscure,(){
                         setState(() {
                           isObscure=!isObscure;
                         });
 
-                        }),
+                        }, context),
                         const Spacer(),
                         customButton(context,false,"INGRESAR",16,() {
                           if (email.text == "Vendedor") {
-                            Get.to(const VendorScreen());
+                            Navigator.of(context).pushNamed('vendor');
+                            // Get.to(const VendorScreen());
                           }
                         else{
-                          Get.to(const HostScreen());
+                          Navigator.of(context).pushNamed('host');
+                          // Get.to(const HostScreen());
                         }
                         },308,58,Colors.transparent,AppColors.lightCyan,100,showShadow: true),
                         verticalSpacer(20),

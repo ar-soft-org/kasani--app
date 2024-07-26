@@ -33,7 +33,8 @@ class ProfileScreen extends StatelessWidget {
 
             }),
             profileCategoryTile("Historial de pedidos", (){
-              Get.to(const HistoryScreen());
+              Navigator.of(context).pushNamed('history_screen');
+              // Get.to(const HistoryScreen());
 
                 }),
           ],

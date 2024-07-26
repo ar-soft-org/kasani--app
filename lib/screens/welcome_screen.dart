@@ -1,7 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:kasanipedido/exports/exports.dart';
+import 'package:kasanipedido/screens/animation.dart';
+import 'package:kasanipedido/screens/splash_screen.dart';
+import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/utils/images.dart';
+import 'package:kasanipedido/widgets/custom_btn.dart';
+import 'package:kasanipedido/widgets/vertical_spacer.dart';
 
 
 class WelcomeScreen extends StatelessWidget {

@@ -54,9 +54,10 @@ class _CartScreenState extends State<CartScreen> {
         Align(
           alignment: Alignment.center,
           child: customButton(context,true,"Continuar comprando",12,() {
-            Get.to(
-              const OrderBookingScreen()
-            );
+            Navigator.of(context).pushNamed('order_booking');
+            // Get.to(
+              // const OrderBookingScreen()
+            // );
 
           },175,31,Colors.transparent,AppColors.blue,8,showShadow: true),
         ),

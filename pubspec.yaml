@@ -16,10 +16,14 @@ dependencies:
   google_fonts: ^5.1.0
   flutter_screenutil:
   flutter_svg:
-  get: ^4.6.6
   flutter_calendar_carousel: ^2.4.3
   timeline_tile: ^2.0.0
   table_calendar:
+  provider: ^6.1.2
+  flutter_bloc: ^8.1.6
+  bloc: ^8.1.4
+  meta: ^1.11.0
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

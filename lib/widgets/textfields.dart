@@ -11,7 +11,8 @@ Widget textField(
     bool onTap,
     bool isSearchIcon,
     bool isShow,
-    void Function() onShow
+    void Function() onShow,
+    BuildContext context
     ) {
   return Card(
     shape: RoundedRectangleBorder(
@@ -23,7 +24,9 @@ Widget textField(
         height: height.h,
         child: TextField(
           onTap:onTap?(){
-            Get.to(const ContinueHomeScreen());
+            // TODO: Navigate to the next screen (method)
+            Navigator.of(context).pushNamed('continue_home');
+            // Get.to(const ContinueHomeScreen());
           }:null ,
           onChanged: (value) {
 

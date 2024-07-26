@@ -1,7 +1,4 @@
 import 'package:kasanipedido/exports/exports.dart';
-import 'package:kasanipedido/screens/history_detail_screen.dart';
-
-import '../widgets/drop_down.dart';
 
 class HistoryScreen extends StatelessWidget {
 
@@ -88,7 +85,8 @@ Widget customListWidget(BuildContext context){
 
           horizontalSpacer(40),
           customButton(context,false,"Ver detalles",12,(){
-            Get.to(const HistoryDetailScreen());
+            Navigator.of(context).pushNamed('history_detail');
+            // Get.to(const HistoryDetailScreen());
           },100,28,Colors.transparent,AppColors.lightCyan,8,showShadow: true),
         ],
       ),

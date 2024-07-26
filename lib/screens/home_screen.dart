@@ -1,6 +1,3 @@
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/utils/app_constant.dart';
 
@@ -38,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               verticalSpacer(15),
-             textField(controller,46,356,"Buscar","",100,Colors.white,true,true,true,false,(){}),
+             textField(controller,46,356,"Buscar","",100,Colors.white,true,true,true,false,(){}, context),
 
               verticalSpacer(15),
                Row(
