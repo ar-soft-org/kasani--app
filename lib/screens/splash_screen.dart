@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/splash/splash_cubit.dart';
 import 'package:kasanipedido/exports/exports.dart';
 
@@ -23,19 +24,29 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Timer(const Duration(seconds: 3), () {
-    //   Navigator.of(context)
-    //       .push(SlideBottomToTopPageRoute(page: const LoginScreen()));
-    // });
-    return BlocListener<SplashCubit, SplashState>(
-      listenWhen: (previous, current) => current is SplashSuccess,
-      listener: (context, state) {
-        if (state is SplashSuccess && state.logedIn) {
-          Navigator.of(context).pushReplacementNamed('host');
-        } else if (state is SplashSuccess && !state.logedIn) {
-          Navigator.of(context).pushReplacementNamed('login');
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SplashCubit, SplashState>(
+          listenWhen: (previous, current) => current is SplashSuccess,
+          listener: (context, state) {
+            if (state is SplashSuccess && state.logedIn) {
+              BlocProvider.of<AuthCubit>(context).loadUserLogged();
+            } else if (state is SplashSuccess && !state.logedIn) {
+              Navigator.of(context).pushReplacementNamed('login');
+            }
+          },
+        ),
+        BlocListener<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSuccess) {
+              Navigator.of(context).pushReplacementNamed('host');
+            } else if (state is AuthLogout || state is AuthError) {
+              // FIXME: Considerar delete de host
+              Navigator.of(context).pushReplacementNamed('login');
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: Colors.transparent, // Dark background color
         appBar: null,

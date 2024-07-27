@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:kasanipedido/helpers/storage/user_storage.dart';
 import 'package:kasanipedido/models/host/host_model.dart';
@@ -13,12 +14,27 @@ class LoginCubit extends Cubit<LoginState> {
 
   final AuthenticationRepository repository;
 
+  loginVendor(String email, String password) async {
+    emit(LoginLoading());
+
+    try {
+      final vendor = await repository.loginHost(email, password);
+      await UserStorage.setVendor(json.encode(vendor.toJson()));
+      final newState = LoginSuccess(vendor);
+      emit(newState);
+    } on UnauthorizedException catch (e) {
+      emit(LoginFailure(e.message));
+    } catch (e) {
+      emit(LoginFailure(e.toString()));
+    }
+  }
+
   loginHost(String email, String password) async {
     emit(LoginLoading());
 
     try {
       final host = await repository.loginHost(email, password);
-      await UserStorage.setHost(host.toJson().toString());
+      await UserStorage.setHost(json.encode(host.toJson()));
       final newState = LoginSuccess(host);
       emit(newState);
     } on UnauthorizedException catch (e) {

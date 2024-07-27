@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/bloc/login/login_cubit.dart';
 import 'package:kasanipedido/bloc/splash/splash_cubit.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
+import 'package:kasanipedido/repositories/category_repository.dart';
+import 'package:kasanipedido/repositories/product_repository.dart';
 
 class BlocProviders extends StatelessWidget {
   const BlocProviders({
@@ -22,8 +25,15 @@ class BlocProviders extends StatelessWidget {
               repository:
                   RepositoryProvider.of<AuthenticationRepository>(context)),
         ),
+        BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => SplashCubit()),
-        BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(
+          create: (context) => HomeCubit(
+              categoryRepository:
+                  RepositoryProvider.of<CategoryRepository>(context),
+              productRepository:
+                  RepositoryProvider.of<ProductRepository>(context)),
+        ),
       ],
       child: child,
     );

@@ -6,6 +6,7 @@ class UserStorage {
   /// keys
   static const _keyUserName = 'username';
   static const _keyHost = 'host';
+  static const _keyVendor = 'vendor';
 
   /// setters
   static Future<void> setUserName(String value) async {
@@ -13,6 +14,9 @@ class UserStorage {
   }
   static Future<void> setHost(String value) async {
     await _storage.write(key: _keyHost, value: value);
+  }
+  static Future<void> setVendor(String value) async {
+    await _storage.write(key: _keyVendor, value: value);
   }
 
   /// getters
@@ -22,6 +26,9 @@ class UserStorage {
   static Future<String?> getHost() async {
     return await _storage.read(key: _keyHost);
   }
+  static Future<String?> getVendor() async {
+    return await _storage.read(key: _keyVendor);
+  }
 
   /// deleters
   static Future<void> deleteUserName() async {
@@ -29,5 +36,8 @@ class UserStorage {
   }
   static Future<void> deleteHost() async {
     await _storage.delete(key: _keyHost);
+  }
+  static Future<void> deleteVendor() async {
+    await _storage.delete(key: _keyVendor);
   }
 }

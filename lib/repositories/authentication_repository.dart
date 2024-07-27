@@ -7,6 +7,7 @@ class UnauthorizedException implements Exception {
 
   UnauthorizedException(this.message);
 }
+
 class AuthenticationRepository {
   Future<void> clientSignIn() {
     throw UnimplementedError();
@@ -16,15 +17,17 @@ class AuthenticationRepository {
     const path = KasaniEndpoints.loginHost;
     final headers = Api.generalHeaders();
 
-    final response = await Api.post(path,
-        data: {
-          'usuario': email,
-          'contraseña': password,
-          'id_aplicacion': 3,
-          'id_establecimiento': 64
-        },
-        headers: headers);
-    
+    final response = await Api.post(
+      path,
+      headers: headers,
+      data: {
+        'usuario': email,
+        'contraseña': password,
+        'id_aplicacion': 3,
+        'id_establecimiento': 64
+      },
+    );
+
     if (response['codigo'] == "99" && response['mensaje'] is String) {
       throw UnauthorizedException(response['mensaje'] ?? 'Unauthorized');
     }

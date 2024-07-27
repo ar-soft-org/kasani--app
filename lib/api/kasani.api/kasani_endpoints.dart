@@ -6,4 +6,12 @@ class KasaniEndpoints {
   //-----------------Auth-----------------
   static const String loginHost = '$apiServer/auth/acceso_aplicacion';
   //--------------------------------------
+  
+  //--------------Categories--------------
+  static const String categoriesSubcategories = '$apiServer/producto/categoria/consultar';
+  //--------------------------------------
+  
+  //---------------Products---------------
+  static const String products = '$apiServer/producto/consultar';
+  //--------------------------------------
 }
