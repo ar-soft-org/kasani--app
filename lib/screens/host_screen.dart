@@ -17,7 +17,7 @@ class _HostScreenState extends State<HostScreen> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const HistoryScreen(),
-    const CartScreen(),
+    const ShoppingCartPage(),
     const FavouriteScreen(),
     const ProfileScreen(),
   ];

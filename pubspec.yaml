@@ -25,6 +25,13 @@ dependencies:
   meta: ^1.11.0
   http: ^1.2.2
   flutter_secure_storage: ^9.2.2
+  products_api_impl:
+    path: packages/products_api_impl
+  products_api:
+    path: packages/products_api
+  shopping_cart_repository:
+    path: packages/shopping_cart_repository
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  equatable:
+    dependency: "direct main"
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -384,6 +392,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  products_api:
+    dependency: "direct main"
+    description:
+      path: "packages/products_api"
+      relative: true
+    source: path
+    version: "0.1.0+1"
+  products_api_impl:
+    dependency: "direct main"
+    description:
+      path: "packages/products_api_impl"
+      relative: true
+    source: path
+    version: "0.1.0+1"
   provider:
     dependency: "direct main"
     description:
@@ -392,6 +414,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.2"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.28.0"
+  shopping_cart_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/shopping_cart_repository"
+      relative: true
+    source: path
+    version: "0.1.0+1"
   simple_gesture_detector:
     dependency: transitive
     description:
@@ -551,4 +588,4 @@ packages:
     version: "6.5.0"
 sdks:
   dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.16.0"
+  flutter: ">=3.19.0"

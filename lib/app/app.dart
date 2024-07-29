@@ -8,19 +8,28 @@ import 'package:kasanipedido/config/providers/service_providers.dart';
 import 'package:kasanipedido/config/router/app_router.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/navigation_keys.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({
+    super.key,
+    required this.shoppingCartRepository,
+  });
+
+  final ShoppingCartRepository shoppingCartRepository;
 
   @override
   Widget build(BuildContext context) {
-    return const ScreenUtilInit(
-      designSize: Size(390, 844),
+    return ScreenUtilInit(
+      designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
       child: ServiceProviders(
         child: RepositoryProviders(
-          child: BlocProviders(
+          values: [
+            shoppingCartRepository,
+          ],
+          child: const BlocProviders(
             child: AppView(),
           ),
         ),

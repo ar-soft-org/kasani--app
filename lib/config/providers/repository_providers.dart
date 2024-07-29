@@ -5,12 +5,11 @@ import 'package:kasanipedido/repositories/category_repository.dart';
 import 'package:kasanipedido/repositories/product_repository.dart';
 
 class RepositoryProviders extends StatelessWidget {
-  const RepositoryProviders({
-    super.key,
-    required this.child,
-  });
+  const RepositoryProviders(
+      {super.key, required this.child, required this.values});
 
   final Widget child;
+  final List<dynamic> values;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +18,7 @@ class RepositoryProviders extends StatelessWidget {
         RepositoryProvider(create: (context) => AuthenticationRepository()),
         RepositoryProvider(create: (context) => CategoryRepository()),
         RepositoryProvider(create: (context) => ProductRepository()),
+        ...values.map((r) => RepositoryProvider.value(value: r))
       ],
       child: child,
     );
