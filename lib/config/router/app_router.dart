@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:kasanipedido/host_home/host_home.dart';
 import 'package:kasanipedido/screens/history_detail_screen.dart';
 import 'package:kasanipedido/screens/history_screen.dart';
 import 'package:kasanipedido/screens/home_screen_continution.dart';
-import 'package:kasanipedido/screens/host_screen.dart';
 import 'package:kasanipedido/screens/login_screen.dart';
 import 'package:kasanipedido/screens/order_check_out_screen.dart';
 import 'package:kasanipedido/screens/vendor_screen.dart';
@@ -18,7 +18,7 @@ class AppRoutes {
     'order_booking': (context) => const OrderBookingScreen(),
     'history_screen': (context) => const HistoryScreen(),
     'continue_home': (context) => const ContinueHomeScreen(),
-    'host': (context) => const HostScreen(),
+    'host': (context) => const HostHomePage(),
     'vender': (context) => const VendorScreen(),
     'history_detail': (context) => const HistoryDetailScreen()
   };
