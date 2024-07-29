@@ -1,6 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kasanipedido/exports/exports.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
+import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/widgets/app_bar.dart';
+import 'package:kasanipedido/widgets/custom_btn.dart';
+import 'package:kasanipedido/widgets/vertical_spacer.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class ShoppingCartPage extends StatelessWidget {
@@ -31,6 +38,8 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final products =
+        context.select((ShoppingCartBloc bloc) => bloc.state.products);
     return Scaffold(
       backgroundColor: AppColors.ice,
       appBar: customAppBar(context, "Carrito", true),
@@ -51,44 +60,63 @@ class CartScreen extends StatelessWidget {
               ),
             ),
             verticalSpacer(10),
-            ListView.builder(
-              itemCount: 1,
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return addItemCard(
-                    "Langostinos. eget lectus lobortis viverra.",
-                    // count[index].toString(), "Kg", true, true, () {
-                    '0',
-                    "Kg",
-                    true,
-                    true, () {
-                  // FIXME
-                  // setState(() {
-                  // if (count[index] > 0) {
-                  //   --count[index];
-                  // }
-                  // });
-                }, () {
-                  // FIXME
-                  // setState(() {
-                  //   ++count[index];
-                  // });
-                });
-              },
+            Expanded(
+              child: ListView.builder(
+                itemCount: products.length,
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  final item = products[index];
+                  return addItemCard(
+                      headTitle: item.nombreProducto,
+                      title: item.descripcionProducto,
+                      count: '0',
+                      mScale: item.unidadMedida,
+                      isHeadingVisible: true,
+                      isMessage: true,
+                      increment: () {
+                        // FIXME
+                        // setState(() {
+                        // if (count[index] > 0) {
+                        //   --count[index];
+                        // }
+                        // });
+                      },
+                      decrement: () {
+                        // FIXME
+                        // setState(() {
+                        //   ++count[index];
+                        // });
+                      });
+                },
+              ),
+            ),
+            Divider(
+              thickness: 5.sp,
             ),
             verticalSpacer(30),
             Align(
               alignment: Alignment.center,
-              child: customButton(context, true, "Continuar comprando", 12, () {
-                Navigator.of(context).pushNamed('order_booking');
-                // Get.to(
-                // const OrderBookingScreen()
-                // );
-              }, 175, 31, Colors.transparent, AppColors.blue, 8,
-                  showShadow: true),
+              child: customButton(
+                context,
+                true,
+                'Continuar comprando',
+                12.sp,
+                () {
+                  Navigator.of(context).pushNamed('order_booking');
+                  // Get.to(
+                  // const OrderBookingScreen()
+                  // );
+                },
+                190.sp,
+                31.sp,
+                Colors.transparent,
+                AppColors.blue,
+                8.sp,
+                showShadow: true,
+              ),
             ),
-            const Spacer(),
             Container(
               height: 150,
               padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),

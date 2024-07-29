@@ -11,7 +11,7 @@ class ShoppingCartRepository {
 
   Stream<List<Product>> getProducts() => _productsApi.getProducts();
 
-  Future<void> updateProduct(Product product) =>
+  void updateProduct(Product product) =>
       _productsApi.updateProduct(product);
 
   Future<void> deleteProduct(String id) => _productsApi.deleteProduct(id);

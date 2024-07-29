@@ -10,7 +10,7 @@ abstract class ProductsApi {
   /// Saves a [product]
   /// 
   /// If a [product] with the same id already exists, it will be replaced.
-  Future<void> updateProduct(Product product);
+  void updateProduct(Product product);
 
   /// Deletes the `product` with the given id.
   /// 

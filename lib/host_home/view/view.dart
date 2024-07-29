@@ -1,6 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kasanipedido/exports/exports.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
+import 'package:kasanipedido/screens/cart_screen.dart';
+import 'package:kasanipedido/screens/favourite_screen.dart';
+import 'package:kasanipedido/screens/history_screen.dart';
+import 'package:kasanipedido/screens/home_screen.dart';
+import 'package:kasanipedido/screens/profile_screen.dart';
+import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/utils/images.dart';
 
 class HostHomePage extends StatelessWidget {
   const HostHomePage({super.key});
@@ -34,7 +43,7 @@ class HostScreen extends StatelessWidget {
       body: IndexedStack(
         index: selectedTab.index,
         children: const [
-          HomeScreen(),
+          EditProductPage(),
           HistoryScreen(),
           ShoppingCartPage(),
           FavouriteScreen(),

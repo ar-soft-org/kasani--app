@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
+import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
 import 'package:kasanipedido/models/product/product_model.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
@@ -12,6 +13,30 @@ import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 import 'package:kasanipedido/widgets/textfields.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
+
+class EditProductPage extends StatelessWidget {
+  const EditProductPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => EditProductBloc(
+        shoppingCartRepository: context.read<ShoppingCartRepository>(),
+      ),
+      child: const EditProductView(),
+    );
+  }
+}
+
+class EditProductView extends StatelessWidget {
+  const EditProductView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const HomeScreen();
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -112,14 +137,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(
                                 height: 80, child: CategoriesSection()),
                           verticalSpacer(15),
-                    
+
                           // subcategories
                           if (state.hasCurrentCategory)
                             const SizedBox(
                               height: 200,
                               child: SubCategorySection(),
                             ),
-                    
+
                           verticalSpacer(20),
                           // Products
                           const ProductsSection()
@@ -163,23 +188,36 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return addItemCard(
-        item.nombreProducto,
+        title: item.nombreProducto,
         // TODO: add count
 
-        '0',
-        item.unidadMedida,
-        false,
-        false, () {
-      // setState(() {
-      //   if (count[index] > 0) {
-      //     --count[index];
-      //   }
-      // });
-    }, () {
-      // setState(() {
-      //   ++count[index];
-      // });
-    });
+        count: '0',
+        mScale: item.unidadMedida,
+        isHeadingVisible: false,
+        isMessage: false,
+        increment: () {
+          // setState(() {
+          //   if (count[index] > 0) {
+          //     --count[index];
+          //   }
+          // });
+        },
+        decrement: () {
+          // setState(() {
+          //   ++count[index];
+          // });
+          context.read<EditProductBloc>().add(EditProductSubmitted(
+                product: Product(
+                    categoria: item.categoria,
+                    descripcionProducto: item.descripcionProducto,
+                    idProducto: item.idProducto,
+                    nombreProducto: item.nombreProducto,
+                    precio: item.precio,
+                    stock: item.stock,
+                    subCategoria: item.subCategoria,
+                    unidadMedida: item.unidadMedida),
+              ));
+        });
   }
 }
 

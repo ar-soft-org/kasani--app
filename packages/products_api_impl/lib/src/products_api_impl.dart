@@ -27,7 +27,7 @@ class ProductsApiImpl extends ProductsApi {
   }
 
   @override
-  Future<void> updateProduct(Product product) async {
+  void updateProduct(Product product) {
     final products = [..._productsStreamController.value];
     final productIndex =
         products.indexWhere((p) => p.idProducto == product.idProducto);

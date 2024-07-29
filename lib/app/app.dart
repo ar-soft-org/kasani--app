@@ -26,9 +26,7 @@ class App extends StatelessWidget {
       splitScreenMode: true,
       child: ServiceProviders(
         child: RepositoryProviders(
-          values: [
-            shoppingCartRepository,
-          ],
+          shoppingCartRepository: shoppingCartRepository,
           child: const BlocProviders(
             child: AppView(),
           ),

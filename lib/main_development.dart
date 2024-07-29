@@ -12,7 +12,7 @@ Future<void> main() async {
   final shoppingCartRepository =
       ShoppingCartRepository(productsApi: productsApi);
 
-  await bootstrap(() {
+  bootstrap(() {
     return App(
       shoppingCartRepository: shoppingCartRepository,
     );

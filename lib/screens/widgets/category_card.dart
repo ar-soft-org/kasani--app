@@ -84,15 +84,16 @@ Widget circleCard(
   );
 }
 
-Widget addItemCard(
-  String title,
-  String count,
-  String mScale,
-  bool isHeadingVisible,
-  bool isMessage,
-  void Function() increment,
-  void Function() decrement,
-) {
+Widget addItemCard({
+  String? headTitle,
+  required String title,
+  required String count,
+  required String mScale,
+  required bool isHeadingVisible,
+  required bool isMessage,
+  required void Function() increment,
+  required void Function() decrement,
+}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.end,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +110,7 @@ Widget addItemCard(
               children: [
                 isHeadingVisible
                     ? Text(
-                        "Langostino Jumbo",
+                        headTitle ?? '--',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontFamily: GoogleFonts.inter().fontFamily,
@@ -117,7 +118,7 @@ Widget addItemCard(
                           color: AppColors.lightCyan,
                         ),
                       )
-                    : const SizedBox(),
+                    : const SizedBox.shrink(),
                 Text(
                   title,
                   maxLines: null,
