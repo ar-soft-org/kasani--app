@@ -32,9 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     log("LoginScreen initState");
-    if (kDebugMode) {
+    // if (kDebugMode) {
       loadDevData();
-    }
+    // }
   }
 
   @override
