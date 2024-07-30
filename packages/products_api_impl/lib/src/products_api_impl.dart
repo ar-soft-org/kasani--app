@@ -7,6 +7,9 @@ class ProductsApiImpl extends ProductsApi {
   late final _productsStreamController =
       BehaviorSubject<List<Product>>.seeded(const []);
 
+  late final _productsDataStreamController =
+      BehaviorSubject<Map<String, ProductData>>.seeded(const {});
+
   // TODO: use sharedPreferences to save local products selected
 
   @override
@@ -15,15 +18,22 @@ class ProductsApiImpl extends ProductsApi {
   }
 
   @override
-  Future<void> deleteProduct(String id) async {
+  Stream<Map<String, ProductData>> getProductsData() {
+    return _productsDataStreamController.asBroadcastStream();
+  }
+
+  @override
+  void addProduct(Product product) {
     final products = [..._productsStreamController.value];
-    final productIndex = products.indexWhere((p) => p.idProducto == id);
-    if (productIndex == -1) {
-      throw ProductNotFoundException();
-    } else {
-      products.removeAt(productIndex);
-      _productsStreamController.add(products);
-    }
+    products.add(product);
+    _productsStreamController.add(products);
+  }
+
+  @override
+  void addProductData(ProductData productData) {
+    final map = {..._productsDataStreamController.value};
+    map[productData.productId] = productData;
+    _productsDataStreamController.add(map);
   }
 
   @override
@@ -39,13 +49,53 @@ class ProductsApiImpl extends ProductsApi {
     }
   }
 
+  @override
+  void updateProductData(ProductData productData) {
+    final map = {..._productsDataStreamController.value};
+    final element = map.containsKey(productData.productId);
+    if (!element) {
+      throw ProductDataNotFoundException();
+    }
+    map[productData.productId] = productData;
+    _productsDataStreamController.add(map);
+  }
+
   // @override
   // Future<void> createOrder() async {
   //   _dioInstance.post('');
   // }
 
   @override
-  Future<void> close() {
-    return _productsStreamController.close();
+  void deleteProduct(String id) {
+    final products = [..._productsStreamController.value];
+    final productIndex = products.indexWhere((p) => p.idProducto == id);
+    if (productIndex == -1) {
+      throw ProductNotFoundException();
+    } else {
+      products.removeAt(productIndex);
+      _productsStreamController.add(products);
+    }
+  }
+
+  @override
+  void deleteProductData(String id) async {
+    final map = {..._productsDataStreamController.value};
+    final element = map.containsKey(id);
+    if (!element) {
+      throw ProductDataNotFoundException();
+    }
+    map.remove(id);
+    _productsDataStreamController.add(map);
+  }
+
+  @override
+  void clearProductsData() {
+    _productsDataStreamController.add(const {});
+  }
+
+  @override
+  Future<void> close() async {
+    await _productsStreamController.close();
+    await _productsDataStreamController.close();
   }
 }

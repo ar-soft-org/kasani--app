@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
+import 'package:kasanipedido/profile/profile.dart';
 import 'package:kasanipedido/screens/cart_screen.dart';
 import 'package:kasanipedido/screens/favourite_screen.dart';
 import 'package:kasanipedido/screens/history_screen.dart';
 import 'package:kasanipedido/screens/home_screen.dart';
-import 'package:kasanipedido/screens/profile_screen.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 
@@ -47,7 +47,7 @@ class HostScreen extends StatelessWidget {
           HistoryScreen(),
           ShoppingCartPage(),
           FavouriteScreen(),
-          ProfileScreen(),
+          ProfilePage(),
         ],
       ),
       bottomNavigationBar: PreferredSize(

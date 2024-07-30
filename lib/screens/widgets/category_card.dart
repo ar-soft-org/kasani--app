@@ -144,7 +144,7 @@ Widget addItemCard({
               Row(
                 children: [
                   GestureDetector(
-                    onTap: increment,
+                    onTap: decrement,
                     child: Container(
                       width: 20.w,
                       height: 20.h,
@@ -175,7 +175,7 @@ Widget addItemCard({
                   ),
                   horizontalSpacer(6),
                   GestureDetector(
-                    onTap: decrement,
+                    onTap: increment,
                     child: Container(
                       width: 20.w,
                       height: 20.h,

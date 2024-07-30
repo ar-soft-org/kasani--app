@@ -10,8 +10,8 @@ class HomeState {
   final CategoryModel? currentCategory;
   final SubCategoria? currentSubCategory;
 
-  final List<ProductModel> products;
-  final List<ProductModel> currentProducts;
+  final List<Product> products;
+  final List<Product> currentProducts;
 
   HomeState({
     this.status = HomeStatus.initial,
@@ -29,8 +29,8 @@ class HomeState {
     CategoryModel? Function()? currentCategory,
     SubCategoria? Function()? currentSubCategory,
     String? Function()? errorMessage,
-    List<ProductModel>? products,
-    List<ProductModel>? currentProducts,
+    List<Product>? products,
+    List<Product>? currentProducts,
   }) {
     return HomeState(
       status: status ?? this.status,

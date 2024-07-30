@@ -11,6 +11,10 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
   })  : _shoppingCartRepository = shoppingCartRepository,
         super(const ShoppingCartState()) {
     on<ShoppingCartSubscriptionRequested>(_onSubscriptionRequested);
+    on<ShoppingCartProductsDataRequested>(_onProductsDataRequested);
+    on<ShoppingCartProductDataAdd>(_onProductsDataAdd);
+    on<ShoppingCartProductDataUpdated>(_onProductsDataUpdated);
+    on<ShoppingCartProductDataDeleted>(_onProductsDataDeleted);
   }
 
   final ShoppingCartRepository _shoppingCartRepository;
@@ -31,5 +35,48 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
         status: () => ShoppingCartStatus.failure,
       ),
     );
+  }
+
+  Future<void> _onProductsDataRequested(
+    ShoppingCartProductsDataRequested event,
+    Emitter<ShoppingCartState> emit,
+  ) async {
+    emit(state.copyWith(status: () => ShoppingCartStatus.loading));
+
+    await emit.forEach<Map<String, ProductData>>(
+      _shoppingCartRepository.getProductsData(),
+      onData: (productsData) => state.copyWith(
+        status: () => ShoppingCartStatus.success,
+        productsData: () => productsData,
+      ),
+      onError: (_, __) => state.copyWith(
+        status: () => ShoppingCartStatus.failure,
+      ),
+    );
+  }
+
+  void _onProductsDataAdd(
+    ShoppingCartProductDataAdd event,
+    Emitter<ShoppingCartState> emit,
+  ) {
+    final data = event.data;
+    _shoppingCartRepository.updateProductData(data);
+  }
+
+  void _onProductsDataUpdated(
+    ShoppingCartProductDataUpdated event,
+    Emitter<ShoppingCartState> emit,
+  ) {
+    final data = event.data;
+    _shoppingCartRepository.updateProductData(data);
+  }
+
+  void _onProductsDataDeleted(
+    ShoppingCartProductDataDeleted event,
+    Emitter<ShoppingCartState> emit,
+  ) {
+    final id = event.id;
+    _shoppingCartRepository.deleteProductData(id);
+    _shoppingCartRepository.deleteProduct(id);
   }
 }

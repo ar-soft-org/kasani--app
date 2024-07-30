@@ -7,6 +7,7 @@ import 'package:kasanipedido/bloc/splash/splash_cubit.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
 import 'package:kasanipedido/repositories/category_repository.dart';
 import 'package:kasanipedido/repositories/product_repository.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class BlocProviders extends StatelessWidget {
   const BlocProviders({
@@ -29,10 +30,13 @@ class BlocProviders extends StatelessWidget {
         BlocProvider(create: (context) => SplashCubit()),
         BlocProvider(
           create: (context) => HomeCubit(
-              categoryRepository:
-                  RepositoryProvider.of<CategoryRepository>(context),
-              productRepository:
-                  RepositoryProvider.of<ProductRepository>(context)),
+            categoryRepository:
+                RepositoryProvider.of<CategoryRepository>(context),
+            productRepository:
+                RepositoryProvider.of<ProductRepository>(context),
+            shoppingCartRepository:
+                RepositoryProvider.of<ShoppingCartRepository>(context),
+          ),
         ),
       ],
       child: child,

@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:kasanipedido/models/category/category_model.dart';
 import 'package:kasanipedido/models/host/host_model.dart';
-import 'package:kasanipedido/models/product/product_model.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
 import 'package:kasanipedido/repositories/category_repository.dart';
 import 'package:kasanipedido/repositories/product_repository.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 part 'home_state.dart';
 
@@ -13,10 +13,13 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit({
     required this.categoryRepository,
     required this.productRepository,
-  }) : super(HomeState());
+    required ShoppingCartRepository shoppingCartRepository,
+  })  : _shoppingCartRepository = shoppingCartRepository,
+        super(HomeState());
 
   final CategoryRepository categoryRepository;
   final ProductRepository productRepository;
+  final ShoppingCartRepository _shoppingCartRepository;
 
   fetchCategoriesSubCategories(HostModel host) async {
     emit(state.copyWith(status: HomeStatus.loading));
@@ -31,12 +34,11 @@ class HomeCubit extends Cubit<HomeState> {
         idUsuario: host.idUsuario,
       );
       emit(state.copyWith(
-        status: HomeStatus.success,
-        categories: categories,
-        currentCategory: () => null,
-        currentSubCategory: () => null,
-        currentProducts: []
-      ));
+          status: HomeStatus.success,
+          categories: categories,
+          currentCategory: () => null,
+          currentSubCategory: () => null,
+          currentProducts: []));
     } on UnauthorizedException catch (e) {
       emit(state.copyWith(
         status: HomeStatus.error,
@@ -103,6 +105,22 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(state.copyWith(
         currentSubCategory: () => subCategory, currentProducts: products));
+  }
+
+  addProductData(Product product) {
+    _shoppingCartRepository.addProductData(
+        ProductData.initialValue(product.idProducto, product.precio).copyWith(
+      quantity: 1,
+    ));
+  }
+
+  updateProductData(ProductData data) {
+    _shoppingCartRepository.updateProductData(data);
+  }
+
+  deleteProductData(String id) {
+    _shoppingCartRepository.deleteProductData(id);
+    _shoppingCartRepository.deleteProduct(id);
   }
 
   _getProductsBySubCategory(String category, String subCategory) {

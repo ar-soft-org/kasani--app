@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
-import 'package:kasanipedido/models/product/product_model.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/utils/app_constant.dart';
@@ -23,7 +22,9 @@ class EditProductPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => EditProductBloc(
         shoppingCartRepository: context.read<ShoppingCartRepository>(),
-      ),
+      )..add(
+          const EditProductProductsDataRequested(),
+        ),
       child: const EditProductView(),
     );
   }
@@ -161,6 +162,8 @@ class ProductsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productsData =
+        context.select((EditProductBloc bloc) => bloc.state.productsData);
     return BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
       final products = state.currentProducts;
 
@@ -170,7 +173,12 @@ class ProductsSection extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           final item = products[index];
-          return ProductCard(item: item);
+          final data = productsData[item.idProducto] ??
+              ProductData.initialValue(item.idProducto, item.precio);
+          return ProductCard(
+            item: item,
+            data: data,
+          );
         },
       );
     });
@@ -181,43 +189,44 @@ class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
     required this.item,
+    required this.data,
   });
 
-  final ProductModel item;
+  final Product item;
+  final ProductData data;
 
   @override
   Widget build(BuildContext context) {
     return addItemCard(
-        title: item.nombreProducto,
-        // TODO: add count
+      title: item.nombreProducto,
+      count: data.quantity.toString(),
+      mScale: item.unidadMedida,
+      isHeadingVisible: false,
+      isMessage: false,
+      increment: () {
+        if (data.hasNotQuantity) {
+          context.read<HomeCubit>().addProductData(item);
+          context
+              .read<EditProductBloc>()
+              .add(EditProductAddProduct(product: item));
+        } else {
+          final updated = data.copyWith(quantity: data.quantity + 1);
+          context.read<HomeCubit>().updateProductData(updated);
+        }
+      },
+      decrement: () {
+        if (data.hasNotQuantity) {
+          return;
+        }
 
-        count: '0',
-        mScale: item.unidadMedida,
-        isHeadingVisible: false,
-        isMessage: false,
-        increment: () {
-          // setState(() {
-          //   if (count[index] > 0) {
-          //     --count[index];
-          //   }
-          // });
-        },
-        decrement: () {
-          // setState(() {
-          //   ++count[index];
-          // });
-          context.read<EditProductBloc>().add(EditProductSubmitted(
-                product: Product(
-                    categoria: item.categoria,
-                    descripcionProducto: item.descripcionProducto,
-                    idProducto: item.idProducto,
-                    nombreProducto: item.nombreProducto,
-                    precio: item.precio,
-                    stock: item.stock,
-                    subCategoria: item.subCategoria,
-                    unidadMedida: item.unidadMedida),
-              ));
-        });
+        final updated = data.copyWith(quantity: data.quantity - 1);
+        if (updated.hasNotQuantity) {
+          context.read<HomeCubit>().deleteProductData(updated.productId);
+        } else {
+          context.read<HomeCubit>().updateProductData(updated);
+        }
+      },
+    );
   }
 }
 

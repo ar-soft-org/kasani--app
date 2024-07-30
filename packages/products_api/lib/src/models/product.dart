@@ -1,4 +1,4 @@
-import 'package:products_api/src/models/json_map.dart';
+import 'package:products_api/products_api.dart';
 
 class Product {
   final String idProducto;
@@ -30,6 +30,7 @@ class Product {
     String? descripcionProducto,
     String? stock,
     String? precio,
+    ProductData? data,
   }) =>
       Product(
         idProducto: idProducto ?? this.idProducto,
@@ -43,24 +44,24 @@ class Product {
       );
 
   factory Product.fromJson(JsonMap json) => Product(
-        idProducto: json["id_producto"],
-        nombreProducto: json["nombre_producto"],
-        unidadMedida: json["unidad_medida"],
-        categoria: json["categoria"],
-        subCategoria: json["sub_categoria"],
-        descripcionProducto: json["descripcion_producto"],
-        stock: json["stock"],
-        precio: json["precio"],
+        idProducto: json['id_producto'],
+        nombreProducto: json['nombre_producto'],
+        unidadMedida: json['unidad_medida'],
+        categoria: json['categoria'],
+        subCategoria: json['sub_categoria'],
+        descripcionProducto: json['descripcion_producto'],
+        stock: json['stock'],
+        precio: json['precio'],
       );
 
   JsonMap toJson() => {
-        "id_producto": idProducto,
-        "nombre_producto": nombreProducto,
-        "unidad_medida": unidadMedida,
-        "categoria": categoria,
-        "sub_categoria": subCategoria,
-        "descripcion_producto": descripcionProducto,
-        "stock": stock,
-        "precio": precio,
+        'id_producto': idProducto,
+        'nombre_producto': nombreProducto,
+        'unidad_medida': unidadMedida,
+        'categoria': categoria,
+        'sub_categoria': subCategoria,
+        'descripcion_producto': descripcionProducto,
+        'stock': stock,
+        'precio': precio,
       };
 }

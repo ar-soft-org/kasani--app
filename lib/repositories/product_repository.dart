@@ -1,7 +1,7 @@
 import 'package:kasanipedido/api/api.dart';
 import 'package:kasanipedido/api/kasani.api/kasani_endpoints.dart';
-import 'package:kasanipedido/models/product/product_model.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class ProductRepository {
   Future<dynamic> fetchProducts({
@@ -34,7 +34,7 @@ class ProductRepository {
     }
 
     return (response as List<dynamic>)
-        .map((e) => ProductModel.fromJson(e))
+        .map((e) => Product.fromJson(e))
         .toList();
   }
 }

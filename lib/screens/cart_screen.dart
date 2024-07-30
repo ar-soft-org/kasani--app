@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
+import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/widgets/app_bar.dart';
 import 'package:kasanipedido/widgets/custom_btn.dart';
@@ -18,7 +19,9 @@ class ShoppingCartPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ShoppingCartBloc(
         shoppingCartRepository: context.read<ShoppingCartRepository>(),
-      )..add(const ShoppingCartSubscriptionRequested()),
+      )
+        ..add(const ShoppingCartSubscriptionRequested())
+        ..add(const ShoppingCartProductsDataRequested()),
       child: const ShoppingCartView(),
     );
   }
@@ -40,6 +43,8 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final products =
         context.select((ShoppingCartBloc bloc) => bloc.state.products);
+    final productsData =
+        context.select((ShoppingCartBloc bloc) => bloc.state.productsData);
     return Scaffold(
       backgroundColor: AppColors.ice,
       appBar: customAppBar(context, "Carrito", true),
@@ -68,26 +73,37 @@ class CartScreen extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   final item = products[index];
+                  final data = getProductData(item, productsData);
                   return addItemCard(
                       headTitle: item.nombreProducto,
                       title: item.descripcionProducto,
-                      count: '0',
+                      count: data.quantity.toString(),
                       mScale: item.unidadMedida,
                       isHeadingVisible: true,
                       isMessage: true,
                       increment: () {
-                        // FIXME
-                        // setState(() {
-                        // if (count[index] > 0) {
-                        //   --count[index];
-                        // }
-                        // });
+                        final updated =
+                            data.copyWith(quantity: data.quantity + 1);
+                        if (updated.quantity == 1) {
+                          context
+                              .read<ShoppingCartBloc>()
+                              .add(ShoppingCartProductDataAdd(data: updated));
+                        } else {
+                          context.read<ShoppingCartBloc>().add(
+                              ShoppingCartProductDataUpdated(data: updated));
+                        }
                       },
                       decrement: () {
-                        // FIXME
-                        // setState(() {
-                        //   ++count[index];
-                        // });
+                        final updated =
+                            data.copyWith(quantity: data.quantity - 1);
+                        if (updated.greaterThanZero) {
+                          context.read<ShoppingCartBloc>().add(
+                              ShoppingCartProductDataUpdated(data: updated));
+                        } else {
+                          context.read<ShoppingCartBloc>().add(
+                              ShoppingCartProductDataDeleted(
+                                  id: updated.productId));
+                        }
                       });
                 },
               ),
@@ -135,5 +151,10 @@ class CartScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  ProductData getProductData(Product item, Map<String, ProductData> data) {
+    return data[item.idProducto] ??
+        ProductData.initialValue(item.idProducto, item.precio.toString());
   }
 }
