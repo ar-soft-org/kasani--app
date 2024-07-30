@@ -37,9 +37,9 @@ class ProductData {
 
   factory ProductData.fromJson(JsonMap json) => ProductData(
         productId: json['id_producto'],
-        quantity: json['cantidad'],
-        price: json['precio'],
-        observation: json['observacion'],
+        quantity: num.parse(json['cantidad']).toInt(),
+        price: num.parse(json['precio']).toDouble(),
+        observation: json['observacion'] != null ? json['observacion'] : '',
       );
 
   JsonMap toJson() => {

@@ -94,6 +94,11 @@ class ProductsApiImpl extends ProductsApi {
   }
 
   @override
+  void clearProducts() {
+    _productsStreamController.add(const []);
+  }
+
+  @override
   Future<void> close() async {
     await _productsStreamController.close();
     await _productsDataStreamController.close();

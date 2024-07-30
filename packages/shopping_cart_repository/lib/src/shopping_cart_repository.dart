@@ -27,6 +27,8 @@ class ShoppingCartRepository {
   void deleteProductData(String id) => _productsApi.deleteProductData(id);
 
   void clearProductsData() => _productsApi.clearProductsData();
+  
+  void clearProducts() => _productsApi.clearProducts();
 
   Future<void> close() => _productsApi.close();
 }
