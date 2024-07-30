@@ -1,7 +1,6 @@
 import 'package:kasanipedido/exports/exports.dart';
 
 class HistoryScreen extends StatelessWidget {
-
   const HistoryScreen({super.key});
   @override
   Widget build(BuildContext context) {
@@ -11,29 +10,38 @@ class HistoryScreen extends StatelessWidget {
       "Últimos 30 días",
       "Desde siempre"
     ];
-    return   Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.ice,
-      appBar:customAppBar(context,"HISTORIA DE PEDIDOS",false),
-      body:  Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 30.w),
+      appBar: customAppBar(context, "HISTORIA DE PEDIDOS", false),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             verticalSpacer(40),
             Padding(
-              padding: const EdgeInsets.only(left: 200.0,),
-              child: dropDown(context,staticList,staticList[0].toString()),
+              padding: const EdgeInsets.only(
+                left: 200.0,
+              ),
+              // FIXME:
+              child: CustomDropdown(
+                list: staticList
+                    .map((e) =>
+                        CustomDropdownMenuItem(value: e, key: e, data: e))
+                    .toList(),
+                // staticList[0].toString()
+              ),
             ),
             ListView.builder(
-                itemCount: 5,
-                shrinkWrap: true,
-                padding: EdgeInsets.only(left: 200.w),
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  return   bulletPoints();
-                },),
-
+              itemCount: 5,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 200.w),
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return bulletPoints();
+              },
+            ),
             verticalSpacer(20),
             Text(
               "Fetcha",
@@ -44,28 +52,30 @@ class HistoryScreen extends StatelessWidget {
                 color: AppColors.sand,
               ),
             ),
-
             verticalSpacer(20),
-
-            Container(width: 375.w,height: 1.h,color: AppColors.strokeWhite,),
+            Container(
+              width: 375.w,
+              height: 1.h,
+              color: AppColors.strokeWhite,
+            ),
             verticalSpacer(10),
             ListView.builder(
               itemCount: 3,
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                return   customListWidget(context);
-              },),
+                return customListWidget(context);
+              },
+            ),
             verticalSpacer(20),
-
           ],
         ),
       ),
-
     );
   }
 }
-Widget customListWidget(BuildContext context){
+
+Widget customListWidget(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -82,26 +92,31 @@ Widget customListWidget(BuildContext context){
               color: AppColors.blackShade,
             ),
           ),
-
           horizontalSpacer(40),
-          customButton(context,false,"Ver detalles",12,(){
+          customButton(context, false, "Ver detalles", 12, () {
             Navigator.of(context).pushNamed('history_detail');
             // Get.to(const HistoryDetailScreen());
-          },100,28,Colors.transparent,AppColors.lightCyan,8,showShadow: true),
+          }, 100, 28, Colors.transparent, AppColors.lightCyan, 8,
+              showShadow: true),
         ],
       ),
       verticalSpacer(10),
-      Container(width: 375.w,height: 1.h,color: AppColors.strokeWhite,),
+      Container(
+        width: 375.w,
+        height: 1.h,
+        color: AppColors.strokeWhite,
+      ),
       verticalSpacer(10),
     ],
   );
 }
-Widget bulletPoints(){
+
+Widget bulletPoints() {
   return Row(
     children: [
       Container(
         height: 6.h,
-        width:6.w,
+        width: 6.w,
         decoration: const BoxDecoration(
           color: Colors.black,
           shape: BoxShape.circle,
@@ -117,7 +132,6 @@ Widget bulletPoints(){
           color: AppColors.blackShade,
         ),
       ),
-
     ],
   );
 }

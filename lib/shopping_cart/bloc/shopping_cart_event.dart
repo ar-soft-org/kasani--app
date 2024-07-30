@@ -38,3 +38,7 @@ final class ShoppingCartProductDataDeleted extends ShoppingCartEvent {
   @override
   List<Object> get props => [id];
 }
+
+final class ShoppingCartAllDataCleared extends ShoppingCartEvent {
+  const ShoppingCartAllDataCleared();
+}

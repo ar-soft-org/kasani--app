@@ -15,6 +15,7 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
     on<ShoppingCartProductDataAdd>(_onProductsDataAdd);
     on<ShoppingCartProductDataUpdated>(_onProductsDataUpdated);
     on<ShoppingCartProductDataDeleted>(_onProductsDataDeleted);
+    on<ShoppingCartAllDataCleared>(_onProductsDataCleared);
   }
 
   final ShoppingCartRepository _shoppingCartRepository;
@@ -78,5 +79,13 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
     final id = event.id;
     _shoppingCartRepository.deleteProductData(id);
     _shoppingCartRepository.deleteProduct(id);
+  }
+
+  void _onProductsDataCleared(
+    ShoppingCartAllDataCleared event,
+    Emitter<ShoppingCartState> emit,
+  ) {
+    _shoppingCartRepository.clearProductsData();
+    _shoppingCartRepository.clearProducts();
   }
 }

@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:dio/dio.dart';
 import 'package:kasanipedido/config/providers/bloc_providers.dart';
 import 'package:kasanipedido/config/providers/repository_providers.dart';
 import 'package:kasanipedido/config/providers/service_providers.dart';
 import 'package:kasanipedido/config/router/app_router.dart';
-import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/data/services/order_booking/order_booking_service.dart';
+import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
+import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/utils/navigation_keys.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
@@ -14,9 +13,15 @@ class App extends StatelessWidget {
   const App({
     super.key,
     required this.shoppingCartRepository,
+    required this.dio,
+    required this.orderBookingService,
+    required this.orderBookingRepository,
   });
 
   final ShoppingCartRepository shoppingCartRepository;
+  final OrderBookingService orderBookingService;
+  final OrderBookingRepository orderBookingRepository;
+  final Dio dio;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +30,11 @@ class App extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: ServiceProviders(
+        dio: dio,
+        orderBookingService: orderBookingService,
         child: RepositoryProviders(
           shoppingCartRepository: shoppingCartRepository,
+          orderBookingRepository: orderBookingRepository,
           child: const BlocProviders(
             child: AppView(),
           ),
@@ -54,6 +62,7 @@ class AppView extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
+      // FIXME: locales
     );
   }
 }

@@ -32,6 +32,8 @@ dependencies:
   shopping_cart_repository:
     path: packages/shopping_cart_repository
   equatable: ^2.0.5
+  intl: ^0.18.1
+  dio: ^5.5.0+1
 
 dev_dependencies:
   flutter_test:

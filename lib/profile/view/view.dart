@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kasanipedido/api/dio_interceptor.dart';
 import 'package:kasanipedido/bloc/login/login_cubit.dart';
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/profile/cubit/profile_cubit.dart';
@@ -37,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
         return current is LoginLogout;
       },
       listener: (context, state) {
-        context.read<ProfileCubit>().clearProductsData(); 
+        context.read<ProfileCubit>().clearProductsData();
         Navigator.of(context).pushReplacementNamed('login');
       },
       builder: (context, state) {
@@ -72,6 +73,7 @@ class ProfileScreen extends StatelessWidget {
                 profileCategoryTile(
                   state is LoginLoading ? 'Cerrando Sesión' : 'Cerrar sesión',
                   () {
+                    context.read<DioInterceptor>().removeInterceptors();
                     context.read<LoginCubit>().logoutHost();
                   },
                 ),

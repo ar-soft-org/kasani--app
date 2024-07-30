@@ -7,6 +7,7 @@ import 'package:kasanipedido/screens/login_screen.dart';
 import 'package:kasanipedido/screens/order_check_out_screen.dart';
 import 'package:kasanipedido/screens/vendor_screen.dart';
 import 'package:kasanipedido/screens/welcome_screen.dart';
+import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 
 class AppRoutes {
   static const initialRoute = 'welcome';
@@ -15,7 +16,11 @@ class AppRoutes {
   static Map<String, Widget Function(BuildContext)> routes = {
     'login': (context) => const LoginScreen(),
     'welcome': (context) => const WelcomeScreen(),
-    'order_booking': (context) => const OrderBookingScreen(),
+    'order_booking': (context) {
+      final map =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+      return OrderBookingPage.init(context, map['bloc'] as ShoppingCartBloc);
+    },
     'history_screen': (context) => const HistoryScreen(),
     'continue_home': (context) => const ContinueHomeScreen(),
     'host': (context) => const HostHomePage(),

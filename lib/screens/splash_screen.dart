@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kasanipedido/api/dio_interceptor.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/splash/splash_cubit.dart';
 import 'package:kasanipedido/exports/exports.dart';
@@ -18,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Future.delayed(const Duration(seconds: 3), navigateToLogin);
     BlocProvider.of<SplashCubit>(context).validateLocalSession();
   }
 
@@ -39,6 +41,10 @@ class _SplashScreenState extends State<SplashScreen> {
         BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
+              context.read<DioInterceptor>().removeInterceptors();
+              context.read<DioInterceptor>().addInterceptor({
+                HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
+              });
               Navigator.of(context).pushReplacementNamed('host');
             } else if (state is AuthLogout || state is AuthError) {
               // FIXME: Considerar delete de host

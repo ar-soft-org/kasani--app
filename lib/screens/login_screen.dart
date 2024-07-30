@@ -1,8 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kasanipedido/api/dio_interceptor.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/login/login_cubit.dart';
 import 'package:kasanipedido/exports/exports.dart';
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     log("LoginScreen initState");
     // if (kDebugMode) {
-      loadDevData();
+    loadDevData();
     // }
   }
 
@@ -79,6 +80,10 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             if (state is AuthSuccess) {
               log('AuthSuccess');
+              context.read<DioInterceptor>().removeInterceptors();
+              context.read<DioInterceptor>().addInterceptor({
+                HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
+              });
               Navigator.of(context).pushReplacementNamed('host');
             }
           },

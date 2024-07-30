@@ -35,6 +35,8 @@ abstract class ProductsApi {
   Future<void> close();
 
   void clearProductsData();
+
+  void clearProducts();
 }
 
 class ProductNotFoundException implements Exception {}

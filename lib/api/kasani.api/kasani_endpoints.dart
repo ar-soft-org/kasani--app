@@ -14,4 +14,9 @@ class KasaniEndpoints {
   //---------------Products---------------
   static const String products = '$apiServer/producto/consultar';
   //--------------------------------------
+  
+  
+  //----------------Orders----------------
+  static const String prepedidoRegister = '$apiServer/prepedido/registrar';
+  //--------------------------------------
 }

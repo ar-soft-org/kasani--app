@@ -150,7 +150,17 @@ class CartScreen extends StatelessWidget {
                       topRight: Radius.circular(60.r))),
               child: Center(
                 child: customButton(context, false, 'Continuar', 16, () {
-                  Navigator.of(context).pushNamed('order_booking');
+                  if (products.isEmpty) {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(const SnackBar(
+                          content: Text(
+                              'No hay productos en el carrito de compras')));
+                    return;
+                  }
+                  final bloc = context.read<ShoppingCartBloc>();
+                  Navigator.of(context)
+                      .pushNamed('order_booking', arguments: {'bloc': bloc});
                 }, 308, 58, Colors.transparent, AppColors.lightCyan, 100,
                     showShadow: true),
               ),
