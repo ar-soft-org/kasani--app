@@ -226,6 +226,7 @@ class ProductCard extends StatelessWidget {
           context.read<HomeCubit>().updateProductData(updated);
         }
       },
+      context: context,
     );
   }
 }

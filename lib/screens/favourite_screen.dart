@@ -27,24 +27,25 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 return addItemCard(
-                    title: "Langostinos. eget lectus lobortis viverra.",
-                    count: count[index].toString(),
-                    mScale: "Kg",
-                    isHeadingVisible: true,
-                    isMessage: false,
-                    increment: () {
-                      setState(() {
-                        if (count[index] > 0) {
-                          --count[index];
-                        }
-                      });
-                    },
-                    decrement: () {
-                      setState(() {
-                        ++count[index];
-                      });
+                  title: "Langostinos. eget lectus lobortis viverra.",
+                  count: count[index].toString(),
+                  mScale: "Kg",
+                  isHeadingVisible: true,
+                  isMessage: false,
+                  increment: () {
+                    setState(() {
+                      if (count[index] > 0) {
+                        --count[index];
+                      }
                     });
-                ;
+                  },
+                  decrement: () {
+                    setState(() {
+                      ++count[index];
+                    });
+                  },
+                  context: context,
+                );
               },
             ),
             verticalSpacer(20),

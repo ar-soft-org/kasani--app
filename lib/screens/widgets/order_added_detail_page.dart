@@ -38,21 +38,23 @@ Widget orderDetailedPageView(
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 return addItemCard(
-                    title: "Langostinos. eget lectus lobortis viverra.",
-                    count: counts[index].toString(),
-                    mScale: "Kg",
-                    isHeadingVisible: true,
-                    isMessage: true,
-                    increment: () {
-                      if (counts[index] > 0) {
-                        --counts[index];
-                      }
-                      onChange();
-                    },
-                    decrement: () {
-                      ++counts[index];
-                      onChangeIncrement();
-                    });
+                  title: "Langostinos. eget lectus lobortis viverra.",
+                  count: counts[index].toString(),
+                  mScale: "Kg",
+                  isHeadingVisible: true,
+                  isMessage: true,
+                  increment: () {
+                    if (counts[index] > 0) {
+                      --counts[index];
+                    }
+                    onChange();
+                  },
+                  decrement: () {
+                    ++counts[index];
+                    onChangeIncrement();
+                  },
+                  context: context,
+                );
               },
             ),
           ),

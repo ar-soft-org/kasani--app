@@ -58,23 +58,25 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   return addItemCard(
-                      title: 'Langostinos. eget lectus lobortis viverra.',
-                      count: count[index].toString(),
-                      mScale: 'Kg',
-                      isHeadingVisible: true,
-                      isMessage: false,
-                      increment: () {
-                        setState(() {
-                          if (count[index] > 0) {
-                            --count[index];
-                          }
-                        });
-                      },
-                      decrement: () {
-                        setState(() {
-                          ++count[index];
-                        });
+                    title: 'Langostinos. eget lectus lobortis viverra.',
+                    count: count[index].toString(),
+                    mScale: 'Kg',
+                    isHeadingVisible: true,
+                    isMessage: false,
+                    increment: () {
+                      setState(() {
+                        if (count[index] > 0) {
+                          --count[index];
+                        }
                       });
+                    },
+                    decrement: () {
+                      setState(() {
+                        ++count[index];
+                      });
+                    },
+                    context: context,
+                  );
                 },
               ),
               verticalSpacer(20),
@@ -94,24 +96,26 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   return addItemCard(
-                      title: 'Langostinos. eget lectus lobortis viverra.',
-                      count: counts[index].toString(),
-                      mScale: 'Kg',
-                      isHeadingVisible: true,
-                      isMessage: false,
-                      increment: () {
-                        setState(() {
-                          if (counts[index] > 0) {
-                            --counts[index];
-                          }
-                        });
-                      },
-                      decrement: () {
-                        setState(() {
-                          print(count);
-                          ++counts[index];
-                        });
+                    title: 'Langostinos. eget lectus lobortis viverra.',
+                    count: counts[index].toString(),
+                    mScale: 'Kg',
+                    isHeadingVisible: true,
+                    isMessage: false,
+                    increment: () {
+                      setState(() {
+                        if (counts[index] > 0) {
+                          --counts[index];
+                        }
                       });
+                    },
+                    decrement: () {
+                      setState(() {
+                        print(count);
+                        ++counts[index];
+                      });
+                    },
+                    context: context,
+                  );
                 },
               )
             ],

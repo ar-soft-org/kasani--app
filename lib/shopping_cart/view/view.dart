@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
@@ -47,7 +48,7 @@ class CartScreen extends StatelessWidget {
         context.select((ShoppingCartBloc bloc) => bloc.state.productsData);
     return Scaffold(
       backgroundColor: AppColors.ice,
-      appBar: customAppBar(context, "Carrito", true),
+      appBar: customAppBar(context, 'Carrito', true),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 18.w),
         child: Column(
@@ -56,7 +57,7 @@ class CartScreen extends StatelessWidget {
           children: [
             verticalSpacer(40),
             Text(
-              "Lista de productos seleccionados",
+              'Lista de productos seleccionados',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontFamily: GoogleFonts.inter().fontFamily,
@@ -65,18 +66,25 @@ class CartScreen extends StatelessWidget {
               ),
             ),
             verticalSpacer(10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: products.length,
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  final item = products[index];
-                  final data = getProductData(item, productsData);
-                  return addItemCard(
+            if (products.isEmpty)
+              Expanded(
+                  child: Text('Aún no se han agregado productos',
+                      style: TextStyle(fontSize: 13.sp)))
+            else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: products.length,
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    final item = products[index];
+                    final data = getProductData(item, productsData);
+                    return addItemCard(
                       headTitle: item.nombreProducto,
                       title: item.descripcionProducto,
+                      comment: data.observation,
+                      data: data,
                       count: data.quantity.toString(),
                       mScale: item.unidadMedida,
                       isHeadingVisible: true,
@@ -104,10 +112,12 @@ class CartScreen extends StatelessWidget {
                               ShoppingCartProductDataDeleted(
                                   id: updated.productId));
                         }
-                      });
-                },
+                      },
+                      context: context,
+                    );
+                  },
+                ),
               ),
-            ),
             Divider(
               thickness: 5.sp,
             ),
@@ -120,10 +130,7 @@ class CartScreen extends StatelessWidget {
                 'Continuar comprando',
                 12.sp,
                 () {
-                  Navigator.of(context).pushNamed('order_booking');
-                  // Get.to(
-                  // const OrderBookingScreen()
-                  // );
+                  context.read<HostHomeCubit>().setTab(HostHomeTab.home);
                 },
                 190.sp,
                 31.sp,
@@ -142,8 +149,9 @@ class CartScreen extends StatelessWidget {
                       topLeft: Radius.circular(60.r),
                       topRight: Radius.circular(60.r))),
               child: Center(
-                child: customButton(context, false, "Continuar", 16, () {}, 308,
-                    58, Colors.transparent, AppColors.lightCyan, 100,
+                child: customButton(context, false, 'Continuar', 16, () {
+                  Navigator.of(context).pushNamed('order_booking');
+                }, 308, 58, Colors.transparent, AppColors.lightCyan, 100,
                     showShadow: true),
               ),
             ),

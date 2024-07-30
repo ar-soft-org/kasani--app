@@ -1,4 +1,14 @@
-import 'package:kasanipedido/exports/exports.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
+import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/utils/images.dart';
+import 'package:kasanipedido/widgets/custom_text.dart';
+import 'package:kasanipedido/widgets/horizontal_spacer.dart';
+import 'package:kasanipedido/widgets/vertical_spacer.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 Widget categoryCard(String image, String title, void Function() onTap,
     Color color, Color clrText) {
@@ -93,6 +103,9 @@ Widget addItemCard({
   required bool isMessage,
   required void Function() increment,
   required void Function() decrement,
+  String? comment,
+  ProductData? data,
+  required BuildContext context,
 }) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.end,
@@ -136,9 +149,53 @@ Widget addItemCard({
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               isMessage
-                  ? Image.asset(
-                      AppImages.message,
-                      height: 20.h,
+                  ? InkWell(
+                      onTap: () async {
+                        final shoppingCartBloc =
+                            context.read<ShoppingCartBloc>();
+                        final result = await showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) {
+                            return BlocProvider.value(
+                              value: shoppingCartBloc,
+                              child: Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(17.r)),
+                                child: ProductComments(
+                                  initialComment: comment ?? '',
+                                  onDelete: () {
+                                    if (data != null) {
+                                      context.read<ShoppingCartBloc>().add(
+                                            ShoppingCartProductDataUpdated(
+                                                data: data.copyWith(
+                                                    observation: '')),
+                                          );
+                                    }
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        );
+
+                        final commentResult = result?['comment'];
+                        if (context.mounted &&
+                            data != null &&
+                            result is Map &&
+                            commentResult != null) {
+                          context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataUpdated(
+                                  data:
+                                      data.copyWith(observation: commentResult),
+                                ),
+                              );
+                        }
+                      },
+                      child: Image.asset(
+                        AppImages.message,
+                        height: 20.h,
+                      ),
                     )
                   : const SizedBox.shrink(),
               Row(
