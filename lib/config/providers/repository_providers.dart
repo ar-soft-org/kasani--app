@@ -16,7 +16,7 @@ class RepositoryProviders extends StatelessWidget {
 
   final Widget child;
   final ShoppingCartRepository shoppingCartRepository;
-  final OrderBookingRepository orderBookingRepository;
+  final OrderRepository orderBookingRepository;
 
   @override
   Widget build(BuildContext context) {

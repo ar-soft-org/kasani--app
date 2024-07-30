@@ -16,7 +16,7 @@ part 'order_booking_state.dart';
 
 class OrderBookingBloc extends Bloc<OrderBookingEvent, OrderBookingState> {
   OrderBookingBloc({
-    required OrderBookingRepository orderBookingRepository,
+    required OrderRepository orderBookingRepository,
   })  : _orderBookingRepository = orderBookingRepository,
         super(const OrderBookingState()) {
     on<OrderBookingSubsidiariesRequested>(_onSubsidiariesRequested);
@@ -26,7 +26,7 @@ class OrderBookingBloc extends Bloc<OrderBookingEvent, OrderBookingState> {
     on<OrderBookingOrderCreated>(_onOrderCreated);
   }
 
-  final OrderBookingRepository _orderBookingRepository;
+  final OrderRepository _orderBookingRepository;
 
   _onSubsidiariesRequested(
     OrderBookingSubsidiariesRequested event,

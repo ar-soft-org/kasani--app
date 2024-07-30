@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:kasanipedido/api/dio_interceptor.dart';
-import 'package:kasanipedido/data/services/order_booking/order_booking_service.dart';
+import 'package:kasanipedido/data/services/order_booking/order_service.dart';
 import 'package:kasanipedido/services/authentication_service.dart';
 import 'package:provider/provider.dart';
 
@@ -10,12 +10,12 @@ class ServiceProviders extends StatelessWidget {
     super.key,
     required this.child,
     required this.dio,
-    required this.orderBookingService,
+    required this.orderService,
   });
 
   final Widget child;
   final Dio dio;
-  final OrderBookingService orderBookingService;
+  final OrderService orderService;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ServiceProviders extends StatelessWidget {
       providers: [
         Provider(create: (context) => AuthenticationService()),
         Provider.value(value: dio),
-        Provider.value(value: orderBookingService),
+        Provider.value(value: orderService),
         Provider(create: (_) => DioInterceptor(dio: dio))
       ],
       child: child,

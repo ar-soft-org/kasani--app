@@ -20,6 +20,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const Text('*Vista Maqueta'),
             verticalSpacer(60),
             ListView.builder(
               itemCount: 3,

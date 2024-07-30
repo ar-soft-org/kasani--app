@@ -31,6 +31,7 @@ class ProfileView extends StatelessWidget {
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
@@ -65,13 +66,41 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 verticalSpacer(20),
                 profileCategoryTile('Mi perfil', () {}),
-                profileCategoryTile('Historial de pedidos', () {
-                  Navigator.of(context).pushNamed('history_screen');
-                  // Get.to(const HistoryScreen());
-                }),
+                if (state is LoginSuccess) ...[
+                  Padding(
+                      padding: EdgeInsets.only(
+                        left: 10.w,
+                        right: 10.w,
+                        top: 30.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('${state.host.nombres} ${state.host.apellidos}'),
+                          Text(state.host.correo),
+                          SizedBox(height: 20.h),
+                          Divider(height: 2.h, thickness: 2.h),
+                          SizedBox(height: 20.h),
+                          ...state.host.locales.map((e) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(e.nombreLocal),
+                                Text(e.direccionLocal),
+                                SizedBox(height: 10.h),
+                              ],
+                            );
+                          }).toList()
+                        ],
+                      ))
+                ],
+                // profileCategoryTile('Historial de pedidos', () {
+                //   Navigator.of(context).pushNamed('history_screen');
+                // }),
                 verticalSpacer(20),
                 profileCategoryTile(
                   state is LoginLoading ? 'Cerrando Sesión' : 'Cerrar sesión',
+                  showNavIcon: true,
                   () {
                     context.read<DioInterceptor>().removeInterceptors();
                     context.read<LoginCubit>().logoutHost();
@@ -86,7 +115,8 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-Widget profileCategoryTile(String title, void Function() onTap) {
+Widget profileCategoryTile(String title, void Function() onTap,
+    {bool showNavIcon = false}) {
   return Padding(
     padding: EdgeInsets.only(left: 10.w, right: 75.w, top: 30.h),
     child: Row(
@@ -94,13 +124,14 @@ Widget profileCategoryTile(String title, void Function() onTap) {
       children: [
         customText(title, FontWeight.w400, 14,
             GoogleFonts.beVietnamPro().fontFamily.toString(), AppColors.black),
-        GestureDetector(
-            onTap: onTap,
-            child: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              color: AppColors.black,
-              size: 18,
-            )),
+        if (showNavIcon)
+          GestureDetector(
+              onTap: onTap,
+              child: const Icon(
+                Icons.arrow_forward_ios_outlined,
+                color: AppColors.black,
+                size: 18,
+              )),
       ],
     ),
   );

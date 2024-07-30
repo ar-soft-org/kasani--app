@@ -16,7 +16,7 @@ class OrderBookingPage extends StatelessWidget {
       BlocProvider(
         create: (_) => OrderBookingBloc(
           orderBookingRepository:
-              RepositoryProvider.of<OrderBookingRepository>(context),
+              RepositoryProvider.of<OrderRepository>(context),
         )..add(const OrderBookingSubsidiariesRequested()),
       ),
     ], child: const OrderBookingPage());
@@ -27,7 +27,7 @@ class OrderBookingPage extends StatelessWidget {
     return BlocProvider(
         create: (_) => OrderBookingBloc(
               orderBookingRepository:
-                  RepositoryProvider.of<OrderBookingRepository>(context),
+                  RepositoryProvider.of<OrderRepository>(context),
             )..add(
                 const OrderBookingSubsidiariesRequested(),
               ),

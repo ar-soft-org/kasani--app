@@ -25,6 +25,6 @@ class AppRoutes {
     'continue_home': (context) => const ContinueHomeScreen(),
     'host': (context) => const HostHomePage(),
     'vender': (context) => const VendorScreen(),
-    'history_detail': (context) => const HistoryDetailScreen()
+    'history_detail': (context) => const HistoryDetailPage()
   };
 }

@@ -3,7 +3,7 @@ import 'package:kasanipedido/config/providers/bloc_providers.dart';
 import 'package:kasanipedido/config/providers/repository_providers.dart';
 import 'package:kasanipedido/config/providers/service_providers.dart';
 import 'package:kasanipedido/config/router/app_router.dart';
-import 'package:kasanipedido/data/services/order_booking/order_booking_service.dart';
+import 'package:kasanipedido/data/services/order_booking/order_service.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/utils/navigation_keys.dart';
@@ -14,13 +14,13 @@ class App extends StatelessWidget {
     super.key,
     required this.shoppingCartRepository,
     required this.dio,
-    required this.orderBookingService,
+    required this.orderService,
     required this.orderBookingRepository,
   });
 
   final ShoppingCartRepository shoppingCartRepository;
-  final OrderBookingService orderBookingService;
-  final OrderBookingRepository orderBookingRepository;
+  final OrderService orderService;
+  final OrderRepository orderBookingRepository;
   final Dio dio;
 
   @override
@@ -31,7 +31,7 @@ class App extends StatelessWidget {
       splitScreenMode: true,
       child: ServiceProviders(
         dio: dio,
-        orderBookingService: orderBookingService,
+        orderService: orderService,
         child: RepositoryProviders(
           shoppingCartRepository: shoppingCartRepository,
           orderBookingRepository: orderBookingRepository,

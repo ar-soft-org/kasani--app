@@ -44,7 +44,7 @@ class HostScreen extends StatelessWidget {
         index: selectedTab.index,
         children: const [
           EditProductPage(),
-          HistoryScreen(),
+          HistoryPage(),
           ShoppingCartPage(),
           FavouriteScreen(),
           ProfilePage(),

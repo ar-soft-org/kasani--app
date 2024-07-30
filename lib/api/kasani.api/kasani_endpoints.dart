@@ -17,6 +17,8 @@ class KasaniEndpoints {
   
   
   //----------------Orders----------------
-  static const String prepedidoRegister = '$apiServer/prepedido/registrar';
+  static const String orderRegister = '$apiServer/prepedido/registrar';
+  static const String orderHistory = '$apiServer/prepedido/consultar';
+  static const String orderHistoryDetail = '$apiServer/prepedido/consultar_detalle';
   //--------------------------------------
 }
