@@ -11,12 +11,13 @@ import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final productsApi = ProductsApiImpl();
+    final dioInstance = Dio();
+
+  final productService = ProductService(dio: dioInstance);
+  final productsApi = ProductsApiImpl(productService: productService);
 
   final shoppingCartRepository =
       ShoppingCartRepository(productsApi: productsApi);
-
-  final dioInstance = Dio();
 
   final orderService = OrderService(dio: dioInstance);
   final orderBookingApi =

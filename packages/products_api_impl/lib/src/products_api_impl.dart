@@ -1,8 +1,13 @@
 import 'package:products_api/products_api.dart';
+import 'package:products_api_impl/src/product_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProductsApiImpl extends ProductsApi {
-  ProductsApiImpl();
+  ProductsApiImpl({
+    required ProductService productService,
+  }):_productService = productService;
+
+  final ProductService _productService;
 
   late final _productsStreamController =
       BehaviorSubject<List<Product>>.seeded(const []);
@@ -102,5 +107,10 @@ class ProductsApiImpl extends ProductsApi {
   Future<void> close() async {
     await _productsStreamController.close();
     await _productsDataStreamController.close();
+  }
+
+  @override
+  Future<List<FavoriteProduct>> getFavoriteProducts(FavoriteProductsRequest data) async {
+    return _productService.fetchFavoriteProducts(data);
   }
 }

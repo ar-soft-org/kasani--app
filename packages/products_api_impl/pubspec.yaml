@@ -14,3 +14,4 @@ dependencies:
   rxdart: ^0.28.0
   products_api:
     path: ../products_api
+  dio: ^5.5.0+1

@@ -31,4 +31,7 @@ class ShoppingCartRepository {
   void clearProducts() => _productsApi.clearProducts();
 
   Future<void> close() => _productsApi.close();
+
+  Future<List<FavoriteProduct>> getFavoriteProducts(FavoriteProductsRequest data) => _productsApi.getFavoriteProducts(data);
+
 }

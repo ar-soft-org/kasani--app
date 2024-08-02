@@ -46,7 +46,7 @@ class HostScreen extends StatelessWidget {
           EditProductPage(),
           HistoryPage(),
           ShoppingCartPage(),
-          FavouriteScreen(),
+          FavoriteProductsPage(),
           ProfilePage(),
         ],
       ),

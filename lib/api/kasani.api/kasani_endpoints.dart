@@ -13,6 +13,7 @@ class KasaniEndpoints {
   
   //---------------Products---------------
   static const String products = '$apiServer/producto/consultar';
+  static const String favoriteProducts = '$apiServer/producto/favoritos';
   //--------------------------------------
   
   

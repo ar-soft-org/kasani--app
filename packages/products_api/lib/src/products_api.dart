@@ -37,8 +37,12 @@ abstract class ProductsApi {
   void clearProductsData();
 
   void clearProducts();
+
+  Future<List<FavoriteProduct>> getFavoriteProducts(FavoriteProductsRequest data);
+
 }
 
 class ProductNotFoundException implements Exception {}
 
 class ProductDataNotFoundException implements Exception {}
+
