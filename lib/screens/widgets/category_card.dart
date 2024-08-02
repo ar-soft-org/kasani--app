@@ -195,6 +195,9 @@ Widget addItemCard({
                       child: Image.asset(
                         AppImages.message,
                         height: 20.h,
+                        color: comment != null && comment.isNotEmpty
+                            ? Colors.blue
+                            : null,
                       ),
                     )
                   : const SizedBox.shrink(),

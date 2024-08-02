@@ -66,18 +66,14 @@ class CartScreen extends StatelessWidget {
               ),
             ),
             verticalSpacer(10),
-            if (products.isEmpty)
-              Expanded(
-                  child: Text('Aún no se han agregado productos',
-                      style: TextStyle(fontSize: 13.sp)))
-            else
-              Expanded(
-                child: ListView.builder(
-                  itemCount: products.length,
-                  physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
+            Expanded(
+              child: ListView.builder(
+                itemCount: products.isEmpty ? 1 : products.length + 1,
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  if (index < products.length) {
                     final item = products[index];
                     final data = getProductData(item, productsData);
                     return addItemCard(
@@ -115,39 +111,55 @@ class CartScreen extends StatelessWidget {
                       },
                       context: context,
                     );
-                  },
-                ),
-              ),
-            Divider(
-              thickness: 5.sp,
-            ),
-            verticalSpacer(30),
-            Align(
-              alignment: Alignment.center,
-              child: customButton(
-                context,
-                true,
-                'Continuar comprando',
-                12.sp,
-                () {
-                  context.read<HostHomeCubit>().setTab(HostHomeTab.home);
+                  }
+                  else {
+                    return Column(
+                      children: [
+                        if(products.isEmpty) 
+                          Text(
+                            'Aún no se han agregado productos',
+                            style: TextStyle(fontSize: 13.sp)),
+                        verticalSpacer(20),
+                        Align(
+                          alignment: Alignment.center,
+                          child: customButton(
+                            context,
+                            true,
+                            'Agregar Producto',
+                            12.sp,
+                            () {
+                              context.read<HostHomeCubit>().setTab(HostHomeTab.home);
+                            },
+                            170.sp,
+                            31.sp,
+                            Colors.transparent,
+                            AppColors.blue,
+                            8.sp,
+                            showShadow: true,
+                          ),
+                        ),
+                      ],
+                    );
+                  }  
                 },
-                190.sp,
-                31.sp,
-                Colors.transparent,
-                AppColors.blue,
-                8.sp,
-                showShadow: true,
               ),
             ),
             Container(
               height: 150,
               padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60.r),
-                      topRight: Radius.circular(60.r))),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50),
+                  topRight: Radius.circular(50),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 4.0,
+                  ),
+                ],
+              ),  
               child: Center(
                 child: customButton(context, false, 'Continuar', 16, () {
                   if (products.isEmpty) {
