@@ -10,5 +10,4 @@ export 'home_screen_continution.dart';
 export 'order_check_out_screen.dart';
 export 'widgets/order_added_detail_page.dart';
 export 'widgets/check_out_stepper.dart';
-export 'widgets/order_cmpleted_screen.dart';
 export 'widgets/booking_order_page.dart';

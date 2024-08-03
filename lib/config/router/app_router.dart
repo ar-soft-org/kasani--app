@@ -7,6 +7,7 @@ import 'package:kasanipedido/screens/login_screen.dart';
 import 'package:kasanipedido/screens/order_check_out_screen.dart';
 import 'package:kasanipedido/screens/vendor_screen.dart';
 import 'package:kasanipedido/screens/welcome_screen.dart';
+import 'package:kasanipedido/screens/widgets/order_completed_screen.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 
 class AppRoutes {
@@ -25,6 +26,8 @@ class AppRoutes {
     'continue_home': (context) => const ContinueHomeScreen(),
     'host': (context) => const HostHomePage(),
     'vender': (context) => const VendorScreen(),
-    'history_detail': (context) => const HistoryDetailPage()
+    'history_detail': (context) => const HistoryDetailPage(),
+    'order_completed': (context) => const OrderCompletedPageView(),
+
   };
 }

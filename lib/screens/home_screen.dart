@@ -79,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage ?? 'An error occurred'),
-              backgroundColor: Colors.red,
             ),
           );
         }
@@ -269,7 +268,8 @@ class SubCategorySection extends StatelessWidget {
             final item = subCategories[index];
             return SubCategoryCard(
               item: item,
-              isSelected: currentSubCategory?.idSubCategoria == item.idSubCategoria,
+              isSelected:
+                  currentSubCategory?.idSubCategoria == item.idSubCategoria,
               onTap: (String subCategoryId) {
                 BlocProvider.of<HomeCubit>(context)
                     .setCurrentSubCategory(subCategoryId);

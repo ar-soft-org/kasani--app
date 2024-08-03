@@ -70,7 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ..showSnackBar(
                   SnackBar(
                     content: Text(state.message),
-                    backgroundColor: Colors.red,
                   ),
                 );
             }

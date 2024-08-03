@@ -136,7 +136,11 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
             context
                 .read<ShoppingCartBloc>()
                 .add(const ShoppingCartAllDataCleared());
-            _nextPage();
+            if (_currentPage >= 1) {
+              Navigator.of(context).pushReplacementNamed('order_completed');
+            } else {
+              _nextPage();
+            }
           }
           if (state.errorMessage != '') {
             ScaffoldMessenger.of(context)
@@ -168,13 +172,13 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
                       },
                     ),
                     OrderDetailedPageView(
-                        formKey: formKey,
-                        onSavedComment: (String value) {
-                          context
-                              .read<OrderBookingBloc>()
-                              .add(OrderBookingCommentSaved(comment: value));
-                        }),
-                    const OrderCompletePageView()
+                      formKey: formKey,
+                      onSavedComment: (String value) {
+                        context
+                            .read<OrderBookingBloc>()
+                            .add(OrderBookingCommentSaved(comment: value));
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -206,7 +210,7 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
                     return;
                   }
 
-                  if (_currentPage == 1) {
+                  if (_currentPage >= 1) {
                     // capture comment
                     formKey.currentState?.save();
 
@@ -224,6 +228,9 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
                                 productsData.productsData.values.toList(),
                           ));
                     }
+
+                    // navigation throw listener
+
                     return;
                   }
 
