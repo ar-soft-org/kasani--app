@@ -62,7 +62,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                     count: count[index].toString(),
                     mScale: 'Kg',
                     isHeadingVisible: true,
-                    isMessage: false,
+                    showTopActions: false,
                     increment: () {
                       setState(() {
                         if (count[index] > 0) {
@@ -100,7 +100,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                     count: counts[index].toString(),
                     mScale: 'Kg',
                     isHeadingVisible: true,
-                    isMessage: false,
+                    showTopActions: false,
                     increment: () {
                       setState(() {
                         if (counts[index] > 0) {

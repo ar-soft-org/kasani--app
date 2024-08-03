@@ -84,7 +84,7 @@ class CartScreen extends StatelessWidget {
                       count: data.quantity.toString(),
                       mScale: item.unidadMedida,
                       isHeadingVisible: true,
-                      isMessage: true,
+                      showTopActions: true,
                       increment: () {
                         final updated =
                             data.copyWith(quantity: data.quantity + 1);

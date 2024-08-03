@@ -32,6 +32,25 @@ class OrderCompletePageView extends StatelessWidget {
             GoogleFonts.beVietnamPro().fontFamily.toString(),
             AppColors.black),
         verticalSpacer(100),
+        // button
+        // FIXME: make global
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed('host');
+          },
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            minimumSize: Size(175.w, 31.h),
+            backgroundColor: const Color(0XFF009EBF),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r)),
+          ),
+          child: Text('Inicio',
+              style: TextStyle(
+                  fontFamily: GoogleFonts.beVietnamPro().fontFamily,
+                  fontSize: 14.sp,
+                  color: Colors.white)),
+        ),
       ],
     );
   }

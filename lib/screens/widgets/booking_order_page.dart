@@ -21,6 +21,16 @@ class OrderBookingPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // FIXME: box shadow se repite en table calendar
+    const cardBoxShadow = BoxShadow(
+        offset: Offset(1, 1),
+        blurRadius: 2,
+        spreadRadius: 1,
+        color: Color.fromRGBO(0, 0, 0, 0.05));
+
+    // FIXME: elevation se repite en table calendar
+    const cardElevation = 1.0;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 32.w),
       child: SingleChildScrollView(
@@ -42,7 +52,7 @@ class OrderBookingPageView extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                elevation: 5,
+                elevation: cardElevation,
                 child: Container(
                   // height: 94.h,
                   height: 70.h,
@@ -53,11 +63,7 @@ class OrderBookingPageView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.r),
                       color: Colors.white,
                       boxShadow: const [
-                        BoxShadow(
-                            offset: Offset(5, 5),
-                            blurRadius: 15,
-                            spreadRadius: 1,
-                            color: Color.fromRGBO(0, 0, 0, 0.3)),
+                        cardBoxShadow,
                       ]),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -106,11 +112,12 @@ class OrderBookingPageView extends StatelessWidget {
                 ),
               ),
               verticalSpacer(5),
+              // FIXME: make card container a widget (reutilizeble)
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                elevation: 5,
+                elevation: cardElevation,
                 child: Container(
                     // height: 94.h,
                     height: 50.h,
@@ -120,13 +127,7 @@ class OrderBookingPageView extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.r),
                         color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                              offset: Offset(5, 5),
-                              blurRadius: 15,
-                              spreadRadius: 1,
-                              color: Color.fromRGBO(0, 0, 0, 0.3)),
-                        ]),
+                        boxShadow: const [cardBoxShadow]),
                     child: const AddressSelector()),
               )
             ]),

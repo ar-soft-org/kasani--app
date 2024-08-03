@@ -10,8 +10,14 @@ import 'package:kasanipedido/widgets/horizontal_spacer.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
-Widget categoryCard(String image, String title, void Function() onTap,
-    Color color, Color clrText) {
+Widget categoryCard(
+  String image,
+  String title,
+  void Function() onTap,
+  Color color,
+  Color clrText, {
+  FontWeight? fontWeight,
+}) {
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8.r),
@@ -41,7 +47,7 @@ Widget categoryCard(String image, String title, void Function() onTap,
               ),
             ),
             verticalSpacer(5),
-            customText(title, FontWeight.w700, 16,
+            customText(title, fontWeight ?? FontWeight.w700, 16,
                 GoogleFonts.roboto().fontFamily.toString(), clrText),
           ],
         ),
@@ -83,10 +89,11 @@ Widget circleCard(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: GoogleFonts.inter().fontFamily,
-                fontSize: 11.sp,
-                fontWeight: fontWeight,
-                color: clrText),
+              fontFamily: GoogleFonts.inter().fontFamily,
+              fontSize: 11.sp,
+              fontWeight: fontWeight,
+              color: clrText,
+            ),
           ),
         ],
       ),
@@ -100,7 +107,9 @@ Widget addItemCard({
   required String count,
   required String mScale,
   required bool isHeadingVisible,
-  required bool isMessage,
+
+  /// show comment and delete icon
+  required bool showTopActions,
   required void Function() increment,
   required void Function() decrement,
   String? comment,
@@ -148,66 +157,19 @@ Widget addItemCard({
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              isMessage
-                  ? InkWell(
-                      onTap: () async {
-                        final shoppingCartBloc =
-                            context.read<ShoppingCartBloc>();
-                        final result = await showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) {
-                            return BlocProvider.value(
-                              value: shoppingCartBloc,
-                              child: Dialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(17.r)),
-                                child: ProductComments(
-                                  initialComment: comment ?? '',
-                                  onDelete: () {
-                                    if (data != null) {
-                                      context.read<ShoppingCartBloc>().add(
-                                            ShoppingCartProductDataUpdated(
-                                                data: data.copyWith(
-                                                    observation: '')),
-                                          );
-                                    }
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        );
-
-                        final commentResult = result?['comment'];
-                        if (context.mounted &&
-                            data != null &&
-                            result is Map &&
-                            commentResult != null) {
-                          context.read<ShoppingCartBloc>().add(
-                                ShoppingCartProductDataUpdated(
-                                  data:
-                                      data.copyWith(observation: commentResult),
-                                ),
-                              );
-                        }
-                      },
-                      child: Image.asset(
-                        AppImages.message,
-                        height: 20.h,
-                        color: comment != null && comment.isNotEmpty
-                            ? Colors.blue
-                            : null,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+              if (showTopActions) ...[
+                TopActions(comment: comment, data: data),
+                SizedBox(
+                  height: 8.h,
+                )
+              ],
               Row(
                 children: [
                   GestureDetector(
                     onTap: decrement,
                     child: Container(
-                      width: 20.w,
-                      height: 20.h,
+                      width: 27.w,
+                      height: 27.h,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
@@ -223,22 +185,27 @@ Widget addItemCard({
                     ),
                   ),
                   horizontalSpacer(6),
-                  Text(
-                    count,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontFamily: GoogleFonts.roboto().fontFamily,
-                      fontSize: 16.sp,
-                      color: AppColors.darkBlue,
-                      decoration: TextDecoration.underline,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: 35.w),
+                    child: Center(
+                      child: Text(
+                        count,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: GoogleFonts.roboto().fontFamily,
+                          fontSize: 16.sp,
+                          color: AppColors.darkBlue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
                   ),
                   horizontalSpacer(6),
                   GestureDetector(
                     onTap: increment,
                     child: Container(
-                      width: 20.w,
-                      height: 20.h,
+                      width: 27.w,
+                      height: 27.h,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
@@ -280,4 +247,95 @@ Widget addItemCard({
       verticalSpacer(5),
     ],
   );
+}
+
+class TopActions extends StatelessWidget {
+  const TopActions({super.key, required this.comment, required this.data});
+
+  final String? comment;
+  final ProductData? data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () async {
+            final shoppingCartBloc = context.read<ShoppingCartBloc>();
+            final result = await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) {
+                return BlocProvider.value(
+                  value: shoppingCartBloc,
+                  child: Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17.r)),
+                    child: ProductComments(
+                      initialComment: comment ?? '',
+                      onDelete: () {
+                        if (data != null) {
+                          context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataUpdated(
+                                    data: data!.copyWith(observation: '')),
+                              );
+                        }
+                      },
+                    ),
+                  ),
+                );
+              },
+            );
+
+            final commentResult = result?['comment'];
+            if (context.mounted &&
+                data != null &&
+                result is Map &&
+                commentResult != null) {
+              context.read<ShoppingCartBloc>().add(
+                    ShoppingCartProductDataUpdated(
+                      data: data!.copyWith(observation: commentResult),
+                    ),
+                  );
+            }
+          },
+          child: Image.asset(
+            AppImages.message,
+            height: 20.h,
+            color: comment != null && comment!.isNotEmpty ? Colors.blue : null,
+          ),
+        ),
+        SizedBox(width: 10.w),
+        InkWell(
+          onTap: () async {
+            // FIXME: add confirm
+            final result = await showDialog(
+                context: context,
+                builder: (_) {
+                  return AlertDialog(
+                    // FIXME: show product name
+                    content: const Text('Está seguro de borrar este producto?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Cancelar')),
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: const Text('Borrar')),
+                    ],
+                  );
+                });
+
+            if (context.mounted && result == true) {
+              context
+                  .read<ShoppingCartBloc>()
+                  .add(ShoppingCartProductDataDeleted(id: data!.productId));
+            }
+          },
+          child: Image.asset(AppImages.deleteIcon,
+              height: 19.h, color: const Color(0xff009ebf)),
+        )
+      ],
+    );
+  }
 }

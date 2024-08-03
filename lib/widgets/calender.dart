@@ -75,11 +75,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const cardBoxShadow = BoxShadow(
+        offset: Offset(1, 1),
+        blurRadius: 2,
+        spreadRadius: 1,
+        color: Color.fromRGBO(0, 0, 0, 0.05));
+
+    const cardElevation = 1.0;
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.r),
       ),
-      elevation: 5,
+      elevation: cardElevation,
       child: Container(
         height: 310.h,
         width: 330.w,
@@ -88,11 +96,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.r),
             boxShadow: const [
-              BoxShadow(
-                  offset: Offset(5, 5),
-                  blurRadius: 15,
-                  spreadRadius: 1,
-                  color: Color.fromRGBO(0, 0, 0, 0.3)),
+              cardBoxShadow,
             ]),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,

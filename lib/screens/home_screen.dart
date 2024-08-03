@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.ice, // Dark background color
             appBar: AppBar(
               title: Text(
-                "Realiza tu Pedido",
+                'Realiza tu Pedido',
                 style: TextStyle(
                     color: AppColors.darkBlue,
                     fontFamily: GoogleFonts.inter().fontFamily,
@@ -110,47 +110,56 @@ class _HomeScreenState extends State<HomeScreen> {
                       .fetchCategoriesSubCategories(state.host);
                 }
               },
-              child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 18.w),
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          verticalSpacer(15),
-                          textField(
-                              controller,
-                              46,
-                              356,
-                              "Buscar",
-                              "",
-                              100,
-                              Colors.white,
-                              true,
-                              true,
-                              true,
-                              false,
-                              () {},
-                              context),
-                          verticalSpacer(15),
-                          if (state.hasCategories)
-                            const SizedBox(
-                                height: 80, child: CategoriesSection()),
-                          verticalSpacer(15),
+              child: state.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 18.w),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                verticalSpacer(15),
+                                textField(
+                                    controller,
+                                    46,
+                                    356,
+                                    'Buscar',
+                                    '',
+                                    100,
+                                    Colors.white,
+                                    true,
+                                    true,
+                                    true,
+                                    false,
+                                    () {},
+                                    context),
+                                verticalSpacer(15),
+                                if (state.hasCategories)
+                                  SizedBox(
+                                    height: 65.h,
+                                    child: const CategoriesSection(),
+                                  )
+                                else
+                                  const Text('No hay categorías'),
+                                verticalSpacer(5),
+                                // subcategories
+                                if (state.hasCurrentCategory)
+                                  SizedBox(
+                                    height: 167.h,
+                                    child: const SubCategorySection(),
+                                  ),
 
-                          // subcategories
-                          if (state.hasCurrentCategory)
-                            const SizedBox(
-                              height: 200,
-                              child: SubCategorySection(),
+                                verticalSpacer(20),
+                              ],
                             ),
-
-                          verticalSpacer(20),
-                          // Products
-                          const ProductsSection()
-                        ]),
-                  )),
+                            // Products
+                            const Expanded(
+                              child: SingleChildScrollView(
+                                  child: ProductsSection()),
+                            )
+                          ])),
             ));
       },
     );
@@ -202,7 +211,7 @@ class ProductCard extends StatelessWidget {
       count: data.quantity.toString(),
       mScale: item.unidadMedida,
       isHeadingVisible: false,
-      isMessage: false,
+      showTopActions: false,
       increment: () {
         if (data.hasNotQuantity) {
           context.read<HomeCubit>().addProductData(item);
@@ -249,6 +258,7 @@ class SubCategorySection extends StatelessWidget {
         }
 
         final subCategories = state.currentCategory!.subCategorias;
+        final currentSubCategory = state.currentSubCategory;
 
         return ListView.builder(
           physics: const BouncingScrollPhysics(),
@@ -259,6 +269,7 @@ class SubCategorySection extends StatelessWidget {
             final item = subCategories[index];
             return SubCategoryCard(
               item: item,
+              isSelected: currentSubCategory?.idSubCategoria == item.idSubCategoria,
               onTap: (String subCategoryId) {
                 BlocProvider.of<HomeCubit>(context)
                     .setCurrentSubCategory(subCategoryId);
@@ -276,10 +287,12 @@ class SubCategoryCard extends StatelessWidget {
     super.key,
     required this.item,
     required this.onTap,
+    required this.isSelected,
   });
 
   final SubCategoria item;
   final Function(String) onTap;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -293,6 +306,7 @@ class SubCategoryCard extends StatelessWidget {
       },
       Colors.white,
       AppColors.darkBlue,
+      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
     );
   }
 }
@@ -308,22 +322,28 @@ class CategoriesSection extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: state.categories.length,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            final item = state.categories[index];
-            return CategoryCard(
-                categoryId: item.idCategoria,
-                label: item.nombreCategoria,
-                isSelected: false,
-                onTap: (String categoryId) {
-                  BlocProvider.of<HomeCubit>(context)
-                      .setCurrentCategory(categoryId);
-                });
-          },
+        final currentCategory = state.currentCategory;
+
+        return Align(
+          alignment: Alignment.centerLeft,
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            itemCount: state.categories.length,
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              final item = state.categories[index];
+
+              return CategoryCard(
+                  categoryId: item.idCategoria,
+                  label: item.nombreCategoria,
+                  isSelected: currentCategory?.idCategoria == item.idCategoria,
+                  onTap: (String categoryId) {
+                    BlocProvider.of<HomeCubit>(context)
+                        .setCurrentCategory(categoryId);
+                  });
+            },
+          ),
         );
       },
     );
@@ -349,7 +369,11 @@ class CategoryCard extends StatelessWidget {
     return circleCard(
       context,
       // FIXME: Add image
-      AppImages.frescos,
+      categoryId == '1'
+          ? AppImages.frecosIcon
+          : categoryId == '2'
+              ? AppImages.congeladosIcon
+              : AppImages.jellyfish,
       label,
       Colors.cyan,
       0,
@@ -361,8 +385,8 @@ class CategoryCard extends StatelessWidget {
         //   index = 0;
         // });
       },
-      isSelected ? AppColors.purple : AppColors.purple,
-      isSelected ? FontWeight.w400 : FontWeight.w400,
+      isSelected ? AppColors.blue : AppColors.purple,
+      isSelected ? FontWeight.w500 : FontWeight.w400,
     );
   }
 }

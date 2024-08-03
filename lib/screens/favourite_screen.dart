@@ -68,7 +68,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       count: "0",
                       mScale: item.unidadMedida,
                       isHeadingVisible: true,
-                      isMessage: false,
+                      showTopActions: false,
                       increment: () {
                         setState(() {
                           if (count[index] > 0) {

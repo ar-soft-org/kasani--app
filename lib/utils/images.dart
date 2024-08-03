@@ -16,4 +16,9 @@ class AppImages {
   static String message = 'lib/assets/images/message.png';
   static String deleteIcon = 'assets/icons/delete_icon_x2.png';
   static String closeIcon = 'assets/icons/close_icon_x2.png';
+  static String frecosIcon = 'assets/icons/frescos_icon.png';
+  static String congeladosIcon = 'assets/icons/congelados_icon.png';
+  static String homeIcon = 'lib/assets/images/home_icon.svg';
+  static String profileIcon = 'lib/assets/images/profile_icon.svg';
+  static String cartIcon = 'lib/assets/images/cart_icon.svg';
 }
