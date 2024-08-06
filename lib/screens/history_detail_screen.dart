@@ -197,59 +197,75 @@ Widget historyItemCard(String title, String count, String mScale) {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Langostino Jumbo',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  fontSize: 16.sp,
-                  color: AppColors.lightCyan,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Langostino Jumbo',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    fontSize: 16.sp,
+                    color: AppColors.lightCyan,
+                  ),
                 ),
-              ),
-              Text(
-                title,
-                maxLines: null,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  fontSize: 12.sp,
-                  color: Colors.black,
+                Text(
+                  title,
+                  maxLines: null,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    fontSize: 12.sp,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const Spacer(),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                count,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontFamily: GoogleFonts.roboto().fontFamily,
-                  fontSize: 16.sp,
-                  color: AppColors.darkBlue,
-                  decoration: TextDecoration.underline,
-                ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 90.w,
+            height: 30.h,
+            child: Align(
+              alignment: Alignment.centerRight, // Alinea el contenido a la derecha
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Text(
+                      count,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: GoogleFonts.roboto().fontFamily,
+                        fontSize: 16.sp,
+                        color: AppColors.darkBlue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  horizontalSpacer(8),
+                  Flexible(
+                    flex: 2,
+                    child: customText(
+                      mScale,
+                      FontWeight.w400,
+                      11,
+                      GoogleFonts.beVietnamPro().fontFamily.toString(),
+                      AppColors.darkGrey,
+                    ),
+                  ),
+                ],
               ),
-              horizontalSpacer(8),
-              customText(
-                  mScale,
-                  FontWeight.w400,
-                  11,
-                  GoogleFonts.beVietnamPro().fontFamily.toString(),
-                  AppColors.darkGrey),
-            ],
-          ),
+            ),
+          )
         ],
       ),
       verticalSpacer(10),
       Container(
-        width: 330.w,
+        width: double.infinity, // Ajustar al ancho disponible
         height: 1.h,
         color: AppColors.lightGrey,
       ),

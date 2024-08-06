@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
+import 'package:kasanipedido/shopping_cart/widgets/product_count.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 import 'package:kasanipedido/widgets/custom_text.dart';
@@ -112,6 +113,8 @@ Widget addItemCard({
   required bool showTopActions,
   required void Function() increment,
   required void Function() decrement,
+  void Function(String)? onEdit,
+
   String? comment,
   ProductData? data,
   required BuildContext context,
@@ -188,14 +191,44 @@ Widget addItemCard({
                   ConstrainedBox(
                     constraints: BoxConstraints(minWidth: 35.w),
                     child: Center(
-                      child: Text(
-                        count,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: GoogleFonts.roboto().fontFamily,
-                          fontSize: 16.sp,
-                          color: AppColors.darkBlue,
-                          decoration: TextDecoration.underline,
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (onEdit != null) {
+                            final result = await showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(17.r),
+                                  ),
+                                  child: ProductCount(
+                                    initialComment: comment ?? '',
+                                    onDelete: () {},
+                                  ),
+                                );
+                              },
+                            );
+
+                            final commentResult = result?['comment'];
+                            if (context.mounted &&
+                                data != null &&
+                                result is Map &&
+                                commentResult != null) {
+                                onEdit(commentResult);
+                            } 
+                            onEdit('hola');
+                          }
+                        },
+                        child: Text(
+                          count,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontFamily: GoogleFonts.roboto().fontFamily,
+                            fontSize: 16.sp,
+                            color: AppColors.darkBlue,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
                     ),

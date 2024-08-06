@@ -109,6 +109,13 @@ class CartScreen extends StatelessWidget {
                                   id: updated.productId));
                         }
                       },
+                      onEdit: (String value) {
+                        final updated = data.copyWith(quantity: int.parse(value));
+                        context.read<ShoppingCartBloc>().add(
+                          ShoppingCartProductDataUpdated(data: updated));
+                      
+                      },
+                      
                       context: context,
                     );
                   }
