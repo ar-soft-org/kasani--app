@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:kasanipedido/helpers/storage/user_storage.dart';
 import 'package:kasanipedido/models/host/host_model.dart';
+import 'package:kasanipedido/models/vendor/vendor_model.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
@@ -12,7 +13,19 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
   loadVendorLogged() async {
-    // TODO: Login Vendor
+    emit(AuthLoading());
+    try {
+      final vendorJson = await UserStorage.getVendor();
+      if (vendorJson != null) {
+        final vendor = VendorModel.fromJson(json.decode(vendorJson));
+        log(vendor.toJson().toString());
+        emit(AuthVendorSuccess(vendor: vendor));
+      } else {
+        emit(AuthInitial());
+      }
+    } catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
   }
 
   loadUserLogged() async {
@@ -22,7 +35,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (hostJson != null) {
         final host = HostModel.fromJson(json.decode(hostJson));
         log(host.toJson().toString());
-        emit(AuthSuccess(host: host));
+        emit(AuthHostSuccess(host: host));
       } else {
         emit(AuthInitial());
       }

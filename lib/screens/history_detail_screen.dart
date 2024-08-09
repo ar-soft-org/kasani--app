@@ -58,7 +58,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
     super.initState();
     final state = context.read<AuthCubit>().state;
 
-    if (state is AuthSuccess) {
+    if (state is AuthHostSuccess) {
       context.read<OrderHistoryDetailCubit>().getOrderHistoryDetail(state.host);
     }
   }
@@ -89,7 +89,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
           onRefresh: () async {
             final state = context.read<AuthCubit>().state;
 
-            if (state is AuthSuccess) {
+            if (state is AuthHostSuccess) {
               context
                   .read<OrderHistoryDetailCubit>()
                   .getOrderHistoryDetail(state.host);

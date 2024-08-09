@@ -66,8 +66,25 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 verticalSpacer(20),
                 profileCategoryTile('Mi perfil', () {}),
-                // TODO: Login Vendor
-                // if (state is LoginHostSuccess) ...[
+                
+                if (state is LoginVendorSuccess) ...[
+                  Padding(
+                    padding: EdgeInsets.only(
+                    left: 10.w,
+                    right: 10.w,
+                    top: 30.h,
+                    ),
+                    child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${state.vendor.nombres} ${state.vendor.apellidos}'),
+                      Text(state.vendor.correo),
+                      SizedBox(height: 20.h),
+                      Divider(height: 2.h, thickness: 2.h),
+                      SizedBox(height: 20.h),
+                    ],
+                    ))
+                ],
                 if (state is LoginHostSuccess) ...[
                   Padding(
                       padding: EdgeInsets.only(

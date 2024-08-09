@@ -11,16 +11,15 @@ class SplashCubit extends Cubit<SplashState> {
     emit(SplashLoading());
     await Future.delayed(const Duration(seconds: 2));
     final hostJson = await UserStorage.getHost();
-
-    // TODO: Login Vendor
-    // final vendorJson = await UserStorage.getVendor();
-    
+    final vendorJson = await UserStorage.getVendor();
+  
     if (hostJson != null) {
-      emit(SplashSuccess(logedIn: true));
+      emit(SplashHostSuccess(logedIn: true));
+    } else if (vendorJson != null) {
+      emit(SplashVendorSuccess(logedIn: true));
     } else {
-      emit(SplashSuccess(logedIn: false));
+      emit(SplashHostSuccess(logedIn: false));
     }
-
-    // TODO emit role state
+    
   }
 }

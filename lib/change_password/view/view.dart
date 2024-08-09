@@ -179,11 +179,11 @@ class _InputsState extends State<_Inputs> {
 
     // validate userId
     final authCubit = context.read<AuthCubit>();
-    if (authCubit.state is! AuthSuccess) {
+    if (authCubit.state is! AuthHostSuccess) {
       // navigate to login page
       Navigator.of(context).pushReplacementNamed('login');
     } else {
-      user = (authCubit.state as AuthSuccess).host;
+      user = (authCubit.state as AuthHostSuccess).host;
     }
   }
 

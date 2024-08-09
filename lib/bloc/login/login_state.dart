@@ -14,10 +14,9 @@ final class LoginHostSuccess extends LoginState {
 }
 
 final class LoginVendorSuccess extends LoginState {
-  // TODO: Login Vendor
-  // final VendorModel vendor;
+  final VendorModel vendor;
 
-  // LoginVenderSuccess(this.host);
+  LoginVendorSuccess(this.vendor);
 }
 
 final class LoginFailure extends LoginState {

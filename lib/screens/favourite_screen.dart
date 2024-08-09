@@ -43,7 +43,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     super.initState();
     final state = context.read<AuthCubit>().state;
 
-    if (state is AuthSuccess) {
+    if (state is AuthHostSuccess) {
       BlocProvider.of<FavoriteProductsBloc>(context)
           .add(FavoriteProductsSuscribe(hostModel: state.host));
     }
@@ -61,7 +61,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           final state = context.read<AuthCubit>().state;
-          if (state is AuthSuccess) {
+          if (state is AuthHostSuccess) {
             BlocProvider.of<FavoriteProductsBloc>(context)
                 .add(FavoriteProductsSuscribe(hostModel: state.host));
           }

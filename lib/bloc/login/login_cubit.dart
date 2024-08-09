@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:kasanipedido/helpers/storage/user_storage.dart';
 import 'package:kasanipedido/models/host/host_model.dart';
+import 'package:kasanipedido/models/vendor/vendor_model.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -18,12 +19,10 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
 
     try {
-      final vendor = await repository.loginHost(email, password);
+      final vendor = await repository.loginVendor(email, password);
       await UserStorage.setVendor(json.encode(vendor.toJson()));
-      // TODO: Login Vendor
-      // FIXME
-      // final newState = LoginHostSuccess(vendor);
-      // emit(newState);
+      final newState = LoginVendorSuccess(vendor);
+      emit(newState);
     } on UnauthorizedException catch (e) {
       emit(LoginFailure(e.message));
     } catch (e) {
@@ -52,6 +51,9 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLogout());
   }
 
-  // TODO: Login Vendor
-  // logoutVendor() async {
+  logoutVendor() async {
+    emit(LoginLoading());
+    await UserStorage.deleteVendor();
+    emit(LoginLogout());
+  }
 }

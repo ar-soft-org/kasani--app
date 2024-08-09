@@ -216,7 +216,7 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
 
                     log('create order');
                     final state = context.read<AuthCubit>().state;
-                    if (state is AuthSuccess) {
+                    if (state is AuthHostSuccess) {
                       final productsData =
                           context.read<ShoppingCartBloc>().state;
 

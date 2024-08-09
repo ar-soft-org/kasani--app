@@ -65,8 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
             if (state is LoginHostSuccess) {
               BlocProvider.of<AuthCubit>(context).loadUserLogged();
             } else if (state is LoginVendorSuccess) {
-              // TODO: Login Vendor, revisar
-              // TODO: Cargar datos de vendedor
+              BlocProvider.of<AuthCubit>(context).loadVendorLogged();
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
@@ -80,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
-            if (state is AuthSuccess) {
+            if (state is AuthHostSuccess) {
               log('AuthSuccess');
               context.read<DioInterceptor>().removeInterceptors();
               context.read<DioInterceptor>().addInterceptor({

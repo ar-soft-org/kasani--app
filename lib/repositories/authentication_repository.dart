@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:kasanipedido/api/kasani.api/kasani_endpoints.dart';
 import 'package:kasanipedido/models/host/host_model.dart';
+import 'package:kasanipedido/models/vendor/vendor_model.dart';
 
 class UnauthorizedException implements Exception {
   final String message;
@@ -23,8 +24,7 @@ class AuthenticationRepository {
     throw UnimplementedError();
   }
 
-  // TODO: Login Vendor
-  Future<HostModel> loginVendor(String email, String password) async {
+  Future<VendorModel> loginVendor(String email, String password) async {
     const path = KasaniEndpoints.loginHost;
 
     final response = await _dio.post(
@@ -41,7 +41,7 @@ class AuthenticationRepository {
       throw UnauthorizedException(response.data['mensaje'] ?? 'Unauthorized');
     }
 
-    return HostModel.fromJson(response.data);
+    return VendorModel.fromJson(response.data);
   }
 
   Future<HostModel> loginHost(String email, String password) async {

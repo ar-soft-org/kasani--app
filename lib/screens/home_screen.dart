@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     final state = BlocProvider.of<AuthCubit>(context).state;
     // get categories and subcategories
-    if (state is AuthSuccess) {
+    if (state is AuthHostSuccess) {
       BlocProvider.of<HomeCubit>(context)
           .fetchCategoriesSubCategories(state.host);
       BlocProvider.of<HomeCubit>(context).fetchProducts(state.host);
@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: RefreshIndicator(
             onRefresh: () async {
               final state = BlocProvider.of<AuthCubit>(context).state;
-              if (state is AuthSuccess) {
+              if (state is AuthHostSuccess) {
                 BlocProvider.of<HomeCubit>(context)
                     .fetchCategoriesSubCategories(state.host);
               }

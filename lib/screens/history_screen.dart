@@ -52,7 +52,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     super.initState();
     final state = context.read<AuthCubit>().state;
 
-    if (state is AuthSuccess) {
+    if (state is AuthHostSuccess) {
       context.read<OrderHistoryCubit>().getOrdersHistory(state.host);
     }
   }
@@ -88,7 +88,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             if (state.tab == HostHomeTab.history) {
               final state = context.read<AuthCubit>().state;
 
-              if (state is AuthSuccess) {
+              if (state is AuthHostSuccess) {
                 context.read<OrderHistoryCubit>().getOrdersHistory(state.host);
               }
             }
@@ -114,7 +114,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           child: RefreshIndicator(
             onRefresh: () async {
               final state = context.read<AuthCubit>().state;
-              if (state is AuthSuccess) {
+              if (state is AuthHostSuccess) {
                 context.read<OrderHistoryCubit>().getOrdersHistory(state.host);
               }
             },

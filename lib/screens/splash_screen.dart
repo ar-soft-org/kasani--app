@@ -29,22 +29,23 @@ class _SplashScreenState extends State<SplashScreen> {
     return MultiBlocListener(
       listeners: [
         BlocListener<SplashCubit, SplashState>(
-          listenWhen: (previous, current) => current is SplashSuccess,
+          listenWhen: (previous, current) => current is SplashHostSuccess || current is SplashVendorSuccess,
           listener: (context, state) {
-            if (state is SplashSuccess && state.logedIn) {
+            if (state is SplashHostSuccess && state.logedIn) {
               BlocProvider.of<AuthCubit>(context).loadUserLogged();
             } else if (state is SplashVendorSuccess && state.logedIn) {
-              // TODO: Login Vendor
+              BlocProvider.of<AuthCubit>(context).loadVendorLogged();
             } 
-            
-            else if (state is SplashSuccess && !state.logedIn) {
+            else if (state is SplashHostSuccess && !state.logedIn) {
+              Navigator.of(context).pushReplacementNamed('login');
+            } else if (state is SplashVendorSuccess && !state.logedIn) {
               Navigator.of(context).pushReplacementNamed('login');
             }
           },
         ),
         BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
-            if (state is AuthSuccess) {
+            if (state is AuthHostSuccess) {
               context.read<DioInterceptor>().removeInterceptors();
               context.read<DioInterceptor>().addInterceptor({
                 HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
@@ -54,7 +55,19 @@ class _SplashScreenState extends State<SplashScreen> {
               } else {
                 Navigator.of(context).pushReplacementNamed('change-password');
               }
-            } else if (state is AuthLogout || state is AuthError) {
+            }
+            else if (state is AuthVendorSuccess) {
+              context.read<DioInterceptor>().removeInterceptors();
+              context.read<DioInterceptor>().addInterceptor({
+                HttpHeaders.authorizationHeader: 'Bearer ${state.vendor.token}'
+              });
+              if (state.vendor.requiereCambioContrasea == 'NO') {
+                Navigator.of(context).pushReplacementNamed('host');
+              } else {
+                Navigator.of(context).pushReplacementNamed('change-password');
+              }
+            }
+            else if (state is AuthLogout || state is AuthError) {
               // FIXME: Considerar delete de host
               Navigator.of(context).pushReplacementNamed('login');
             }
