@@ -25,14 +25,14 @@ class _LoginScreenState extends State<LoginScreen> {
   bool? isVendor = false;
 
   loadDevData() {
-    email.text = "info@restaurantsanceferino.com";
-    pw.text = "15122077273";
+    email.text = 'info@restaurantsanceferino.com';
+    pw.text = '15122077273';
   }
 
   @override
   void initState() {
     super.initState();
-    log("LoginScreen initState");
+    log('LoginScreen initState');
     // if (kDebugMode) {
     loadDevData();
     // }
@@ -54,16 +54,19 @@ class _LoginScreenState extends State<LoginScreen> {
       statusBarColor: Colors.transparent,
       systemNavigationBarColor: Colors.white,
     ));
-    log("LoginScreen build");
+    log('LoginScreen build');
     return MultiBlocListener(
       listeners: [
         BlocListener<LoginCubit, LoginState>(
           listenWhen: (previous, current) {
-            return current is LoginSuccess || current is LoginFailure;
+            return current is LoginHostSuccess || current is LoginFailure;
           },
           listener: (context, state) {
-            if (state is LoginSuccess) {
+            if (state is LoginHostSuccess) {
               BlocProvider.of<AuthCubit>(context).loadUserLogged();
+            } else if (state is LoginVendorSuccess) {
+              // TODO: Login Vendor, revisar
+              // TODO: Cargar datos de vendedor
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
@@ -88,6 +91,24 @@ class _LoginScreenState extends State<LoginScreen> {
               } else {
                 Navigator.of(context).pushReplacementNamed('change-password');
               }
+
+              // TODO: Borrar datos del vendedor
+            }
+            // TODO: Login Vendor
+            if (state is AuthVendorSuccess) {
+              log('AuthVendorSuccess');
+              context.read<DioInterceptor>().removeInterceptors();
+              context.read<DioInterceptor>().addInterceptor({
+                // HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
+              });
+              // TODO: navegar a la pantalla de vendedor
+              // if (state.host.requiereCambioContrasena == 'NO') {
+              //   Navigator.of(context).pushReplacementNamed('host');
+              // } else {
+              //   Navigator.of(context).pushReplacementNamed('change-password');
+              // }
+
+              // TODO: Borrar datos del cliente
             }
           },
         ),
@@ -140,8 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               email,
                               46,
                               296,
-                              "Email",
-                              "email",
+                              'Email',
+                              'email',
                               10,
                               AppColors.tfBg,
                               false,
@@ -150,18 +171,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               () {},
                               context),
                           verticalSpacer(10),
-                          textField(
-                              pw,
-                              46,
-                              296,
-                              "Password",
-                              "password",
-                              10,
-                              AppColors.tfBg,
-                              false,
-                              false,
-                              false,
-                              () {
+                          textField(pw, 46, 296, 'Password', 'password', 10,
+                              AppColors.tfBg, false, false, false, () {
                             setState(() {
                               isObscure = !isObscure;
                             });
@@ -179,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                               customText(
-                                  "Ingresar como vendedor",
+                                  'Ingresar como vendedor',
                                   FontWeight.w400,
                                   16,
                                   GoogleFonts.inter.toString(),
@@ -192,10 +203,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               context,
                               false,
                               state is LoginLoading
-                                  ? "Cargando..."
-                                  : "INGRESAR",
+                                  ? 'Cargando...'
+                                  : 'INGRESAR',
                               16, () {
-                            if (email.text == "Vendedor") {
+                            if (email.text == 'Vendedor') {
                               Navigator.of(context).pushNamed('vendor');
                               // Get.to(const VendorScreen());
                             } else {
@@ -212,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               showShadow: true),
                           verticalSpacer(20),
                           customText(
-                              "¿Perdiste tu contraseña?",
+                              '¿Perdiste tu contraseña?',
                               FontWeight.w600,
                               16,
                               GoogleFonts.inter.toString(),

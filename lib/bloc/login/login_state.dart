@@ -7,10 +7,17 @@ final class LoginInitial extends LoginState {}
 
 final class LoginLoading extends LoginState {}
 
-final class LoginSuccess extends LoginState {
+final class LoginHostSuccess extends LoginState {
   final HostModel host;
 
-  LoginSuccess(this.host);
+  LoginHostSuccess(this.host);
+}
+
+final class LoginVendorSuccess extends LoginState {
+  // TODO: Login Vendor
+  // final VendorModel vendor;
+
+  // LoginVenderSuccess(this.host);
 }
 
 final class LoginFailure extends LoginState {

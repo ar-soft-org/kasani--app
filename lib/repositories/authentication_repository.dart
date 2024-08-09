@@ -23,6 +23,27 @@ class AuthenticationRepository {
     throw UnimplementedError();
   }
 
+  // TODO: Login Vendor
+  Future<HostModel> loginVendor(String email, String password) async {
+    const path = KasaniEndpoints.loginHost;
+
+    final response = await _dio.post(
+      path,
+      data: {
+        'usuario': email,
+        'contraseña': password,
+        'id_aplicacion': 3,
+        'id_establecimiento': 64
+      },
+    );
+
+    if (response.data['codigo'] == '99' && response.data['mensaje'] is String) {
+      throw UnauthorizedException(response.data['mensaje'] ?? 'Unauthorized');
+    }
+
+    return HostModel.fromJson(response.data);
+  }
+
   Future<HostModel> loginHost(String email, String password) async {
     const path = KasaniEndpoints.loginHost;
 

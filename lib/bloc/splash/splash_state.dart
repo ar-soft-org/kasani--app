@@ -12,4 +12,11 @@ final class SplashSuccess extends SplashState {
   SplashSuccess({required this.logedIn});
 }
 
+// TODO: Login Vendor
+final class SplashVendorSuccess extends SplashState {
+  final bool logedIn;
+
+  SplashVendorSuccess({required this.logedIn});
+}
+
 

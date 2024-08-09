@@ -11,6 +11,10 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
+  loadVendorLogged() async {
+    // TODO: Login Vendor
+  }
+
   loadUserLogged() async {
     emit(AuthLoading());
     try {

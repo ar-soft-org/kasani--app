@@ -66,7 +66,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 verticalSpacer(20),
                 profileCategoryTile('Mi perfil', () {}),
-                if (state is LoginSuccess) ...[
+                // TODO: Login Vendor
+                // if (state is LoginHostSuccess) ...[
+                if (state is LoginHostSuccess) ...[
                   Padding(
                       padding: EdgeInsets.only(
                         left: 10.w,
@@ -101,6 +103,8 @@ class ProfileScreen extends StatelessWidget {
                 profileCategoryTile(
                   state is LoginLoading ? 'Cerrando Sesión' : 'Cerrar sesión',
                   showNavIcon: true,
+                  // TODO: Login Vendor
+                  // TODO: Si es vendedor usar logoutVendor
                   () {
                     context.read<DioInterceptor>().removeInterceptors();
                     context.read<LoginCubit>().logoutHost();

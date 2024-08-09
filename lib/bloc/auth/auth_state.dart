@@ -10,6 +10,13 @@ final class AuthSuccess extends AuthState {
 
   AuthSuccess({required this.host});
 }
+
+final class AuthVendorSuccess extends AuthState {
+  // TODO: Login Vendor
+  // final VendorModel host;
+
+  // AuthVendorSuccess({required this.host});
+}
 final class AuthError extends AuthState {
   final String message;
 

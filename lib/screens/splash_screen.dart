@@ -33,7 +33,11 @@ class _SplashScreenState extends State<SplashScreen> {
           listener: (context, state) {
             if (state is SplashSuccess && state.logedIn) {
               BlocProvider.of<AuthCubit>(context).loadUserLogged();
-            } else if (state is SplashSuccess && !state.logedIn) {
+            } else if (state is SplashVendorSuccess && state.logedIn) {
+              // TODO: Login Vendor
+            } 
+            
+            else if (state is SplashSuccess && !state.logedIn) {
               Navigator.of(context).pushReplacementNamed('login');
             }
           },

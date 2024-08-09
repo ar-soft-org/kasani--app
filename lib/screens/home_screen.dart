@@ -60,6 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
           .fetchCategoriesSubCategories(state.host);
       BlocProvider.of<HomeCubit>(context).fetchProducts(state.host);
     }
+
+    // TODO: Initial Data Vendor
+    // TODO: Load Vendor Data (Clientes)
   }
 
   @override
