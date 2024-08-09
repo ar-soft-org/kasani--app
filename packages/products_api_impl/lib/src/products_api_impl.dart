@@ -110,7 +110,7 @@ class ProductsApiImpl extends ProductsApi {
   }
 
   @override
-  Future<List<FavoriteProduct>> getFavoriteProducts(FavoriteProductsRequest data) async {
+  Future<List<Product>> getFavoriteProducts(FavoriteProductsRequest data) async {
     return _productService.fetchFavoriteProducts(data);
   }
 }

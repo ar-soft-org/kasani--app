@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/utils/images.dart';
 
+// TODO: Refactor
 class ProductCount extends StatefulWidget {
   const ProductCount({
     super.key,
-    required this.initialComment,
+    required this.initialQuantity,
     required this.onDelete,
   });
 
-  final String initialComment;
+  final String initialQuantity;
   final Function onDelete;
 
   @override
@@ -23,7 +25,7 @@ class _ProductCountState extends State<ProductCount> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(text: widget.initialComment);
+    controller = TextEditingController(text: widget.initialQuantity);
   }
 
   @override
@@ -42,7 +44,7 @@ class _ProductCountState extends State<ProductCount> {
       return;
     }
 
-    Navigator.of(context).pop({'comment': text});
+    Navigator.of(context).pop({'quantity': text});
   }
 
   @override
@@ -61,11 +63,12 @@ class _ProductCountState extends State<ProductCount> {
                 child: Image.asset(AppImages.deleteIcon, scale: 1.5.sp),
                 onTap: () {
                   controller.clear();
+                  controller.text = '1';
                   widget.onDelete.call();
                 },
               ),
               Text(
-                'Comentarios',
+                'Cantidad',
                 style: TextStyle(
                   fontFamily: GoogleFonts.inter().fontFamily,
                   color: const Color(0xff2D0C57),
@@ -82,8 +85,14 @@ class _ProductCountState extends State<ProductCount> {
           SizedBox(height: 20.h),
           TextField(
             controller: controller,
-            minLines: 3,
-            maxLines: 5,
+            // regex for only z numbers
+            inputFormatters: [
+              // custom by unid medida
+              LengthLimitingTextInputFormatter(7),
+              // use 2 decimal places
+              // FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+            ],
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14.r),

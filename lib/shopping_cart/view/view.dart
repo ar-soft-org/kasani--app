@@ -77,55 +77,57 @@ class CartScreen extends StatelessWidget {
                     final item = products[index];
                     final data = getProductData(item, productsData);
                     return addItemCard(
-                      headTitle: item.nombreProducto,
-                      title: item.descripcionProducto,
-                      comment: data.observation,
-                      data: data,
-                      count: data.quantity.toString(),
-                      mScale: item.unidadMedida,
-                      isHeadingVisible: true,
-                      showTopActions: true,
-                      increment: () {
-                        final updated =
-                            data.copyWith(quantity: data.quantity + 1);
-                        if (updated.quantity == 1) {
+                        headTitle: item.nombreProducto,
+                        title: item.descripcionProducto,
+                        comment: data.observation,
+                        data: data,
+                        count: data.quantity.toString(),
+                        mScale: item.unidadMedida,
+                        isHeadingVisible: true,
+                        showTopActions: true,
+                        increment: () {
+                          final updated =
+                              data.copyWith(quantity: data.quantity + 1);
+                          if (updated.quantity == 1) {
+                            context
+                                .read<ShoppingCartBloc>()
+                                .add(ShoppingCartProductDataAdd(data: updated));
+                          } else {
+                            context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataUpdated(data: updated));
+                          }
+                        },
+                        decrement: () {
+                          final updated =
+                              data.copyWith(quantity: data.quantity - 1);
+                          if (updated.greaterThanZero) {
+                            context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataUpdated(data: updated));
+                          } else {
+                            context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataDeleted(
+                                    id: updated.productId));
+                          }
+                        },
+                        onEdit: (String value) {
+                          final updated =
+                              data.copyWith(quantity: int.parse(value));
+                          context.read<ShoppingCartBloc>().add(
+                              ShoppingCartProductDataUpdated(data: updated));
+                        },
+                        context: context,
+                        onCountDelete: () {
+                          final updated = data.copyWith(quantity: 1);
                           context
                               .read<ShoppingCartBloc>()
                               .add(ShoppingCartProductDataAdd(data: updated));
-                        } else {
-                          context.read<ShoppingCartBloc>().add(
-                              ShoppingCartProductDataUpdated(data: updated));
-                        }
-                      },
-                      decrement: () {
-                        final updated =
-                            data.copyWith(quantity: data.quantity - 1);
-                        if (updated.greaterThanZero) {
-                          context.read<ShoppingCartBloc>().add(
-                              ShoppingCartProductDataUpdated(data: updated));
-                        } else {
-                          context.read<ShoppingCartBloc>().add(
-                              ShoppingCartProductDataDeleted(
-                                  id: updated.productId));
-                        }
-                      },
-                      onEdit: (String value) {
-                        final updated = data.copyWith(quantity: int.parse(value));
-                        context.read<ShoppingCartBloc>().add(
-                          ShoppingCartProductDataUpdated(data: updated));
-                      
-                      },
-                      
-                      context: context,
-                    );
-                  }
-                  else {
+                        });
+                  } else {
                     return Column(
                       children: [
-                        if(products.isEmpty) 
-                          Text(
-                            'Aún no se han agregado productos',
-                            style: TextStyle(fontSize: 13.sp)),
+                        if (products.isEmpty)
+                          Text('Aún no se han agregado productos',
+                              style: TextStyle(fontSize: 13.sp)),
                         verticalSpacer(20),
                         Align(
                           alignment: Alignment.center,
@@ -135,7 +137,9 @@ class CartScreen extends StatelessWidget {
                             'Agregar Producto',
                             12.sp,
                             () {
-                              context.read<HostHomeCubit>().setTab(HostHomeTab.home);
+                              context
+                                  .read<HostHomeCubit>()
+                                  .setTab(HostHomeTab.home);
                             },
                             170.sp,
                             31.sp,
@@ -147,7 +151,7 @@ class CartScreen extends StatelessWidget {
                         ),
                       ],
                     );
-                  }  
+                  }
                 },
               ),
             ),
@@ -166,7 +170,7 @@ class CartScreen extends StatelessWidget {
                     blurRadius: 4.0,
                   ),
                 ],
-              ),  
+              ),
               child: Center(
                 child: customButton(context, false, 'Continuar', 16, () {
                   if (products.isEmpty) {

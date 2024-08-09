@@ -12,6 +12,7 @@ class HomeState {
 
   final List<Product> products;
   final List<Product> currentProducts;
+  final Map<String, List<Product>>? productsByCategory;
 
   HomeState({
     this.status = HomeStatus.initial,
@@ -21,6 +22,7 @@ class HomeState {
     this.currentSubCategory,
     this.currentProducts = const [],
     this.errorMessage,
+    this.productsByCategory = const {},
   });
 
   copyWith({
@@ -31,6 +33,7 @@ class HomeState {
     String? Function()? errorMessage,
     List<Product>? products,
     List<Product>? currentProducts,
+    Map<String, List<Product>>? Function()? productsByCategory,
   }) {
     return HomeState(
       status: status ?? this.status,
@@ -43,6 +46,7 @@ class HomeState {
       errorMessage: errorMessage != null ? errorMessage() : this.errorMessage,
       products: products ?? this.products,
       currentProducts: currentProducts ?? this.currentProducts,
+      productsByCategory: productsByCategory != null ? productsByCategory() : this.productsByCategory,
     );
   }
 }

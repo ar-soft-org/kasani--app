@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
@@ -12,9 +13,11 @@ class RepositoryProviders extends StatelessWidget {
     required this.child,
     required this.shoppingCartRepository,
     required this.orderBookingRepository,
+    required this.dio,
   });
 
   final Widget child;
+  final Dio dio;
   final ShoppingCartRepository shoppingCartRepository;
   final OrderRepository orderBookingRepository;
 
@@ -22,7 +25,8 @@ class RepositoryProviders extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => AuthenticationRepository()),
+        RepositoryProvider(
+            create: (context) => AuthenticationRepository(dio: dio)),
         RepositoryProvider(create: (context) => CategoryRepository()),
         RepositoryProvider(create: (context) => ProductRepository()),
         RepositoryProvider.value(value: shoppingCartRepository),

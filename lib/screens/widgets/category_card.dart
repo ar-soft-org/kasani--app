@@ -114,10 +114,10 @@ Widget addItemCard({
   required void Function() increment,
   required void Function() decrement,
   void Function(String)? onEdit,
-
   String? comment,
   ProductData? data,
   required BuildContext context,
+  Function()? onCountDelete,
 }) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.end,
@@ -203,21 +203,20 @@ Widget addItemCard({
                                     borderRadius: BorderRadius.circular(17.r),
                                   ),
                                   child: ProductCount(
-                                    initialComment: comment ?? '',
-                                    onDelete: () {},
+                                    initialQuantity: data?.quantity.toString() ?? '1',
+                                    onDelete: () {
+                                      onCountDelete?.call();
+                                    },
                                   ),
                                 );
                               },
                             );
 
-                            final commentResult = result?['comment'];
+                            final quantityResult = result?['quantity'];
                             if (context.mounted &&
-                                data != null &&
-                                result is Map &&
-                                commentResult != null) {
-                                onEdit(commentResult);
-                            } 
-                            onEdit('hola');
+                                quantityResult != null) {
+                              onEdit(quantityResult);
+                            }
                           }
                         },
                         child: Text(

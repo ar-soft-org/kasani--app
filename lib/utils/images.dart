@@ -21,4 +21,5 @@ class AppImages {
   static String homeIcon = 'lib/assets/images/home_icon.svg';
   static String profileIcon = 'lib/assets/images/profile_icon.svg';
   static String cartIcon = 'lib/assets/images/cart_icon.svg';
+  static String checkCircle = 'assets/icons/check_circle.svg';
 }

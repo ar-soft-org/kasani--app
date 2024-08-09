@@ -1,19 +1,22 @@
 import 'package:kasanipedido/exports/exports.dart';
 
 Widget textField(
-    TextEditingController controller,
-    double height,
-    double width,
-    String hintText,
-    String indicator,
-    double borderRadius,
-    Color fillColor,
-    bool isShadow,
-    bool onTap,
-    bool isSearchIcon,
-    bool isShow,
-    void Function() onShow,
-    BuildContext context) {
+  TextEditingController controller,
+  double height,
+  double width,
+  String hintText,
+  String indicator,
+  double borderRadius,
+  Color fillColor,
+  bool isShadow,
+  bool isSearchIcon,
+  bool isShow,
+  void Function() onShow,
+  BuildContext context,
+  {
+    Function()? onTap,
+  }
+) {
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(borderRadius.r),
@@ -23,15 +26,9 @@ Widget textField(
         width: width.w,
         height: height.h,
         child: TextField(
-          onTap: onTap
-              ? () {
-                  // TODO: Navigate to the next screen (method)
-                  Navigator.of(context).pushNamed('continue_home');
-                }
-              : null,
-          onChanged: (value) {},
-          maxLines: indicator == "password" ? 1 : null,
-          obscureText: indicator == "password" ? isShow : false,
+          onTap: onTap,
+          maxLines: indicator == 'password' ? 1 : null,
+          obscureText: indicator == 'password' ? isShow : false,
           cursorColor: AppColors.lightCyan,
           cursorRadius: const Radius.circular(0),
           controller: controller,
@@ -64,14 +61,14 @@ Widget textField(
             prefixIcon: isSearchIcon
                 ? Image(image: AssetImage(AppImages.search))
                 : null,
-            suffixIcon: indicator == "password"
+            suffixIcon: indicator == 'password'
                 ? GestureDetector(
                     onTap: onShow,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 12.w, vertical: 12.h),
                       child: Text(
-                        isShow ? "Show" : "Hide",
+                        isShow ? 'Show' : 'Hide',
                         style: TextStyle(
                           color: AppColors.lightCyan,
                           fontSize: 16.sp,

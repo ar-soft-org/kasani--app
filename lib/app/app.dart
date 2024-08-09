@@ -35,6 +35,7 @@ class App extends StatelessWidget {
         child: RepositoryProviders(
           shoppingCartRepository: shoppingCartRepository,
           orderBookingRepository: orderBookingRepository,
+          dio: dio,
           child: const BlocProviders(
             child: AppView(),
           ),

@@ -38,7 +38,7 @@ abstract class ProductsApi {
 
   void clearProducts();
 
-  Future<List<FavoriteProduct>> getFavoriteProducts(FavoriteProductsRequest data);
+  Future<List<Product>> getFavoriteProducts(FavoriteProductsRequest data);
 
 }
 

@@ -45,7 +45,11 @@ class _SplashScreenState extends State<SplashScreen> {
               context.read<DioInterceptor>().addInterceptor({
                 HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
               });
-              Navigator.of(context).pushReplacementNamed('host');
+              if (state.host.requiereCambioContrasena == 'NO') {
+                Navigator.of(context).pushReplacementNamed('host');
+              } else {
+                Navigator.of(context).pushReplacementNamed('change-password');
+              }
             } else if (state is AuthLogout || state is AuthError) {
               // FIXME: Considerar delete de host
               Navigator.of(context).pushReplacementNamed('login');

@@ -83,7 +83,11 @@ class _LoginScreenState extends State<LoginScreen> {
               context.read<DioInterceptor>().addInterceptor({
                 HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
               });
-              Navigator.of(context).pushReplacementNamed('host');
+              if (state.host.requiereCambioContrasena == 'NO') {
+                Navigator.of(context).pushReplacementNamed('host');
+              } else {
+                Navigator.of(context).pushReplacementNamed('change-password');
+              }
             }
           },
         ),
@@ -143,7 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               false,
                               false,
                               false,
-                              false,
                               () {},
                               context),
                           verticalSpacer(10),
@@ -158,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               false,
                               false,
                               false,
-                              isObscure, () {
+                              () {
                             setState(() {
                               isObscure = !isObscure;
                             });

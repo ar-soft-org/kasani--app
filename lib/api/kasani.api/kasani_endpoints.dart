@@ -5,6 +5,8 @@ class KasaniEndpoints {
 
   //-----------------Auth-----------------
   static const String loginHost = '$apiServer/auth/acceso_aplicacion';
+  static const String changePassword = '$apiServer/auth/cambia_contraseña_usuario';
+
   //--------------------------------------
   
   //--------------Categories--------------

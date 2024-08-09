@@ -71,6 +71,8 @@ class HomeCubit extends Cubit<HomeState> {
         status: HomeStatus.success,
         products: products,
       ));
+
+      _updateProductsByCategory(products);
     } on UnauthorizedException catch (e) {
       emit(state.copyWith(
         status: HomeStatus.error,
@@ -84,6 +86,20 @@ class HomeCubit extends Cubit<HomeState> {
     } finally {
       emit(state.copyWith(errorMessage: () => null));
     }
+  }
+
+  _updateProductsByCategory(List<Product> products) {
+    final productsByCategory = <String, List<Product>>{};
+
+    for (var product in products) {
+      if (productsByCategory.containsKey(product.categoria)) {
+        productsByCategory[product.categoria]!.add(product);
+      } else {
+        productsByCategory[product.categoria] = [product];
+      }
+    }
+
+    emit(state.copyWith(productsByCategory: () => productsByCategory));
   }
 
   setCurrentCategory(String categoryId) {
@@ -107,11 +123,11 @@ class HomeCubit extends Cubit<HomeState> {
         currentSubCategory: () => subCategory, currentProducts: products));
   }
 
-  addProductData(Product product) {
-    _shoppingCartRepository.addProductData(
+  addProductData(Product product, {ProductData? data}) {
+    _shoppingCartRepository.addProductData(data ??
         ProductData.initialValue(product.idProducto, product.precio).copyWith(
-      quantity: 1,
-    ));
+          quantity: 1,
+        ));
   }
 
   updateProductData(ProductData data) {

@@ -7,12 +7,15 @@ import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
-import 'package:kasanipedido/utils/app_constant.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
+import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/list_wrapper.dart';
+import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/regular_text.dart';
 import 'package:kasanipedido/widgets/textfields.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
+
+import '../widgets/categories/categories.dart';
 
 class EditProductPage extends StatelessWidget {
   const EditProductPage({super.key});
@@ -22,9 +25,7 @@ class EditProductPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => EditProductBloc(
         shoppingCartRepository: context.read<ShoppingCartRepository>(),
-      )..add(
-          const EditProductProductsDataRequested(),
-        ),
+      )..add(const EditProductProductsDataRequested()),
       child: const EditProductView(),
     );
   }
@@ -47,6 +48,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController controller = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -58,12 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
       BlocProvider.of<HomeCubit>(context).fetchProducts(state.host);
     }
   }
-
-  int count1 = 3;
-
-  TextEditingController controller = TextEditingController();
-  List<int> counts = List<int>.filled(3, 0);
-  List<int> count = List<int>.filled(3, 0);
 
   @override
   void dispose() {
@@ -85,42 +82,53 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-            backgroundColor: AppColors.ice, // Dark background color
-            appBar: AppBar(
-              title: Text(
-                'Realiza tu Pedido',
-                style: TextStyle(
-                    color: AppColors.darkBlue,
-                    fontFamily: GoogleFonts.inter().fontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 17.sp),
-              ),
-              centerTitle: true,
-              elevation: 2,
-              shadowColor: AppColors.ice,
-              bottomOpacity: 0,
-              backgroundColor: Colors.white,
+          backgroundColor: AppColors.ice, // Dark background color
+          appBar: AppBar(
+            title: Text(
+              'Realiza tu Pedido',
+              style: TextStyle(
+                  color: AppColors.darkBlue,
+                  fontFamily: GoogleFonts.inter().fontFamily,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 17.sp),
             ),
-            body: RefreshIndicator(
-              onRefresh: () async {
-                final state = BlocProvider.of<AuthCubit>(context).state;
-                if (state is AuthSuccess) {
-                  BlocProvider.of<HomeCubit>(context)
-                      .fetchCategoriesSubCategories(state.host);
-                }
-              },
-              child: state.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 18.w),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
+            centerTitle: true,
+            elevation: 2,
+            shadowColor: AppColors.ice,
+            bottomOpacity: 0,
+            backgroundColor: Colors.white,
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              final state = BlocProvider.of<AuthCubit>(context).state;
+              if (state is AuthSuccess) {
+                BlocProvider.of<HomeCubit>(context)
+                    .fetchCategoriesSubCategories(state.host);
+              }
+            },
+            child: state.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 18.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
                           children: [
-                            Column(
-                              children: [
-                                verticalSpacer(15),
-                                textField(
+                            verticalSpacer(15),
+                            GestureDetector(
+                              onTap: () {
+                                final homeCubit = context.read<HomeCubit>();
+                                Navigator.of(context)
+                                    .pushNamed('continue_home', arguments: {
+                                  'cubit': homeCubit,
+                                });
+                              },
+                              child: AbsorbPointer(
+                                child: Hero(
+                                  tag: 'search',
+                                  child: textField(
                                     controller,
                                     46,
                                     356,
@@ -131,35 +139,44 @@ class _HomeScreenState extends State<HomeScreen> {
                                     true,
                                     true,
                                     true,
-                                    false,
                                     () {},
-                                    context),
-                                verticalSpacer(15),
-                                if (state.hasCategories)
-                                  SizedBox(
-                                    height: 65.h,
-                                    child: const CategoriesSection(),
-                                  )
-                                else
-                                  const Text('No hay categorías'),
-                                verticalSpacer(5),
-                                // subcategories
-                                if (state.hasCurrentCategory)
-                                  SizedBox(
-                                    height: 167.h,
-                                    child: const SubCategorySection(),
+                                    context,
                                   ),
-
-                                verticalSpacer(20),
-                              ],
+                                ),
+                              ),
                             ),
-                            // Products
-                            const Expanded(
-                              child: SingleChildScrollView(
-                                  child: ProductsSection()),
-                            )
-                          ])),
-            ));
+
+                            verticalSpacer(15),
+                            ListWrapper(
+                              count: state.hasCategories ? 1 : 0,
+                              emptyWidget:
+                                  const RegularText('No hay categorías'),
+                              child: SizedBox(
+                                height: 65.h,
+                                child: const CategoriesSection(),
+                              ),
+                            ),
+                            verticalSpacer(5),
+                            // subcategories
+                            if (state.hasCurrentCategory)
+                              SizedBox(
+                                height: 167.h,
+                                child: const SubCategorySection(),
+                              ),
+
+                            verticalSpacer(20),
+                          ],
+                        ),
+                        // Products
+                        const Expanded(
+                          child:
+                              SingleChildScrollView(child: ProductsSection()),
+                        )
+                      ],
+                    ),
+                  ),
+          ),
+        );
       },
     );
   }
@@ -307,86 +324,6 @@ class SubCategoryCard extends StatelessWidget {
       Colors.white,
       AppColors.darkBlue,
       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-    );
-  }
-}
-
-class CategoriesSection extends StatelessWidget {
-  const CategoriesSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        if (state.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final currentCategory = state.currentCategory;
-
-        return Align(
-          alignment: Alignment.centerLeft,
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: state.categories.length,
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              final item = state.categories[index];
-
-              return CategoryCard(
-                  categoryId: item.idCategoria,
-                  label: item.nombreCategoria,
-                  isSelected: currentCategory?.idCategoria == item.idCategoria,
-                  onTap: (String categoryId) {
-                    BlocProvider.of<HomeCubit>(context)
-                        .setCurrentCategory(categoryId);
-                  });
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class CategoryCard extends StatelessWidget {
-  const CategoryCard({
-    super.key,
-    required this.label,
-    required this.categoryId,
-    this.isSelected = false,
-    required this.onTap,
-  });
-
-  final String categoryId;
-  final String label;
-  final bool isSelected;
-  final Function(String) onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return circleCard(
-      context,
-      // FIXME: Add image
-      categoryId == '1'
-          ? AppImages.frecosIcon
-          : categoryId == '2'
-              ? AppImages.congeladosIcon
-              : AppImages.jellyfish,
-      label,
-      Colors.cyan,
-      0,
-      index == 1 ? Colors.cyan : AppColors.greyText,
-      // FIXME: onTap
-      () {
-        onTap(categoryId);
-        // setState(() {
-        //   index = 0;
-        // });
-      },
-      isSelected ? AppColors.blue : AppColors.purple,
-      isSelected ? FontWeight.w500 : FontWeight.w400,
     );
   }
 }
