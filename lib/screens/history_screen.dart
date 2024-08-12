@@ -10,6 +10,7 @@ import 'package:kasanipedido/domain/repository/order_booking/order_booking_repos
 import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
 import 'package:kasanipedido/order_history/cubit/order_history_cubit.dart';
 import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 import 'package:kasanipedido/widgets/app_bar.dart';
 import 'package:kasanipedido/widgets/custom_btn.dart';
 import 'package:kasanipedido/widgets/drop_down.dart';
@@ -47,14 +48,28 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  List<String> staticList = [
+    'Últimos 7 días',
+    'Últimos 14 días',
+    'Últimos 30 días',
+    'Desde siempre'
+  ];
+
+  final mapValues = {
+    'Últimos 7 días': '7',
+    'Últimos 14 días': '14',
+    'Últimos 30 días': '30',
+    'Desde siempre': '90',
+  };
+
+  int days = 90;
+
   @override
   void initState() {
     super.initState();
     final state = context.read<AuthCubit>().state;
 
-    if (state is AuthHostSuccess) {
-      context.read<OrderHistoryCubit>().getOrdersHistory(state.host);
-    }
+    getOrdersHistory(state, days);
   }
 
   @override
@@ -69,17 +84,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
     super.didUpdateWidget(oldWidget);
   }
 
+  getOrdersHistory(AuthState state, int days) {
+    if (state is AuthHostSuccess) {
+      context.read<OrderHistoryCubit>().getOrdersHistory(
+            state.host,
+            clientId: state.host.idCliente,
+            days: days,
+          );
+    } else if (state is AuthVendorSuccess) {
+      VendorState? vendorState = context.read<VendorBloc>().state;
+      context.read<OrderHistoryCubit>().getOrdersHistory(
+            state.vendor,
+            clientId: vendorState.currentClient?.idCliente,
+            employeeId: state.vendor.idEmpleado,
+            days: days,
+          );
+    } else {
+      throw Exception('Invalid state');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final history =
         context.select((OrderHistoryCubit cubit) => cubit.state.history);
 
-    List<String> staticList = [
-      'Últimos 7 días',
-      'Últimos 14 días',
-      'Últimos 30 días',
-      'Desde siempre'
-    ];
     return MultiBlocListener(
       listeners: [
         BlocListener<HostHomeCubit, HostHomeState>(
@@ -89,7 +118,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
               final state = context.read<AuthCubit>().state;
 
               if (state is AuthHostSuccess) {
-                context.read<OrderHistoryCubit>().getOrdersHistory(state.host);
+                context.read<OrderHistoryCubit>().getOrdersHistory(
+                      state.host,
+                      days: days,
+                    );
               }
             }
           },
@@ -114,9 +146,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           child: RefreshIndicator(
             onRefresh: () async {
               final state = context.read<AuthCubit>().state;
-              if (state is AuthHostSuccess) {
-                context.read<OrderHistoryCubit>().getOrdersHistory(state.host);
-              }
+              getOrdersHistory(state, days);
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,8 +154,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               children: [
                 verticalSpacer(40),
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 200.0,
+                  padding: EdgeInsets.only(
+                    left: 200.0.sp,
                   ),
                   // FIXME:
                   child: CustomDropdown(
@@ -133,18 +163,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         .map((e) =>
                             CustomDropdownMenuItem(value: e, key: e, data: e))
                         .toList(),
-                    // staticList[0].toString()
+                    initialValue: CustomDropdownMenuItem(
+                      value: staticList[3],
+                      key: staticList[3],
+                      data: staticList[3],
+                    ),
+                    onChanged: (item) {
+                      if (item != null) {
+                        days =
+                            num.parse(mapValues[item.key.toString()].toString())
+                                .toInt();
+                        final state = context.read<AuthCubit>().state;
+                        getOrdersHistory(state, days);
+                      }
+                    },
                   ),
                 ),
-                // ListView.builder(
-                //   itemCount: 5,
-                //   shrinkWrap: true,
-                //   padding: EdgeInsets.only(left: 200.w),
-                //   scrollDirection: Axis.vertical,
-                //   itemBuilder: (context, index) {
-                //     return bulletPoints();
-                //   },
-                // ),
                 verticalSpacer(20),
                 Text(
                   'Fecha',
@@ -156,20 +190,57 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
                 verticalSpacer(20),
-                Container(
-                  width: 375.w,
-                  height: 1.h,
-                  color: AppColors.strokeWhite,
-                ),
-                verticalSpacer(10),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: history.length,
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      final item = history[index];
-                      return customListWidget(context, item);
+                  child: Builder(
+                    builder: (_) {
+                      if (history.isEmpty) {
+                        return Center(
+                            child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            verticalSpacer(100),
+                            Text(
+                              'No hay pedidos',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: GoogleFonts.inter().fontFamily,
+                                fontSize: 14.sp,
+                                color: AppColors.blackShade,
+                              ),
+                            ),
+                            verticalSpacer(20),
+                            customButton(context, false, 'Consultar', 12.sp,
+                                () {
+                              final state = context.read<AuthCubit>().state;
+                              getOrdersHistory(state, days);
+                            }, 120.sp, 28, Colors.transparent,
+                                AppColors.lightCyan, 8,
+                                showShadow: true),
+                          ],
+                        ));
+                      }
+
+                      return Column(
+                        children: [
+                          Container(
+                            width: 375.w,
+                            height: 1.h,
+                            color: AppColors.strokeWhite,
+                          ),
+                          verticalSpacer(10),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: history.length,
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) {
+                                final item = history[index];
+                                return customListWidget(context, item);
+                              },
+                            ),
+                          ),
+                        ],
+                      );
                     },
                   ),
                 ),

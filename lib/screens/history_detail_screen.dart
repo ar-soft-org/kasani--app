@@ -58,8 +58,19 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
     super.initState();
     final state = context.read<AuthCubit>().state;
 
+    getOrderHistoryDetail(state);
+  }
+
+  getOrderHistoryDetail(AuthState state) {
     if (state is AuthHostSuccess) {
       context.read<OrderHistoryDetailCubit>().getOrderHistoryDetail(state.host);
+    } else if (state is AuthVendorSuccess) {
+      context.read<OrderHistoryDetailCubit>().getOrderHistoryDetail(
+            state.vendor,
+            employeeId: state.vendor.idEmpleado,
+          );
+    } else {
+      throw Exception('Invalid AuthState');
     }
   }
 
@@ -89,11 +100,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
           onRefresh: () async {
             final state = context.read<AuthCubit>().state;
 
-            if (state is AuthHostSuccess) {
-              context
-                  .read<OrderHistoryDetailCubit>()
-                  .getOrderHistoryDetail(state.host);
-            }
+            getOrderHistoryDetail(state);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -229,7 +236,7 @@ Widget historyItemCard(String title, String count, String mScale) {
             width: 90.w,
             height: 30.h,
             child: Align(
-              alignment: Alignment.centerRight, // Alinea el contenido a la derecha
+              alignment: Alignment.centerRight,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

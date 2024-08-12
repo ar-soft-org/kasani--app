@@ -5,7 +5,7 @@ import 'package:kasanipedido/domain/repository/order_booking/models/order_histor
 import 'package:kasanipedido/domain/repository/order_booking/models/order_history_detail_request.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_api.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
-import 'package:kasanipedido/models/host/host_model.dart';
+import 'package:kasanipedido/models/user/user_model.dart';
 
 part 'order_history_detail_state.dart';
 
@@ -20,17 +20,19 @@ class OrderHistoryDetailCubit extends Cubit<OrderHistoryDetailState> {
 
   final OrderRepository _orderRepository;
 
-  Future<void> getOrderHistoryDetail(HostModel host) async {
+  Future<void> getOrderHistoryDetail(
+    User user, {
+    String? employeeId,
+  }) async {
     emit(state.copyWith(status: OrderHistoryDetailStatus.loading));
 
     try {
       final data = OrderHistoryDetailRequest(
-        conexion: host.conexion,
-        idEmpresa: host.idEmpresa,
-        idSucursal: host.idSucursal,
-        idUsuario: host.idUsuario,
-        // FIXME:
-        idEmpleado: '',
+        conexion: user.conexion,
+        idEmpresa: user.idEmpresa,
+        idSucursal: user.idSucursal,
+        idUsuario: user.idUsuario,
+        idEmpleado: employeeId ?? '',
         idPedido: state.orderHistory.idPedido,
       );
 

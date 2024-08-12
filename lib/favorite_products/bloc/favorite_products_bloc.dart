@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kasanipedido/models/host/host_model.dart';
+import 'package:kasanipedido/models/user/user_model.dart';
 import 'package:products_api/products_api.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 part 'favorite_products_event.dart';
@@ -11,17 +11,16 @@ class FavoriteProductsBloc
       : _shoppingCartRepository = shoppingCartRepository,
         super(FavoriteProductsState()) {
     on<FavoriteProductsSuscribe>((event, emit) async {
-      final host = event.hostModel;
+      final user = event.user;
 
       try {
         FavoriteProductsRequest request = FavoriteProductsRequest(
-          conexion: host.conexion,
-          // FIXME: dynamic
-          idCliente: host.idCliente,
-          idEmpleado: '',
-          idEmpresa: host.idEmpresa,
-          idSucursal: host.idSucursal,
-          idUsuario: host.idUsuario,
+          conexion: user.conexion,
+          idCliente: event.clientId,
+          idEmpleado: event.employeeId ?? '',
+          idEmpresa: user.idEmpresa,
+          idSucursal: user.idSucursal,
+          idUsuario: user.idUsuario,
         );
 
         emit(state.copyWith(status: FavoriteProductsStatus.loading));

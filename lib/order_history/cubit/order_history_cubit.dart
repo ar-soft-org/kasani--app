@@ -4,7 +4,7 @@ import 'package:kasanipedido/domain/repository/order_booking/models/order_histor
 import 'package:kasanipedido/domain/repository/order_booking/models/order_history_request.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_api.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
-import 'package:kasanipedido/models/host/host_model.dart';
+import 'package:kasanipedido/models/user/user_model.dart';
 
 part 'order_history_state.dart';
 
@@ -16,21 +16,35 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
   final OrderRepository _orderRepository;
 
-  Future<void> getOrdersHistory(HostModel host) async {
+  Future<void> getOrdersHistory(
+    User host, {
+    String? clientId,
+    String? employeeId,
+    required int days,
+  }) async {
     emit(state.copyWith(status: OrderHistoryStatus.loading));
+
+    final now = DateTime.now().subtract(const Duration(days: 1));
+    // nowString format is '20240701'
+    final nowString =
+        '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+
+    final startDate = now.subtract(Duration(days: days == 0 ? 90 : days));
+
+    final startDateString =
+        '${startDate.year}${startDate.month.toString().padLeft(2, '0')}${startDate.day.toString().padLeft(2, '0')}';
 
     try {
       final data = OrderHistoryRequest(
-          conexion: host.conexion,
-          idEmpresa: host.idEmpresa,
-          idSucursal: host.idSucursal,
-          idUsuario: host.idUsuario,
-          // FIXME:
-          // idEmpleado: host.idEmpleado.isEmpty ? '2' : host.idEmpleado,
-          idEmpleado: '',
-          idCliente: host.idCliente,
-          fechaInicio: '20240701',
-          fechaFinal: '20240730');
+        conexion: host.conexion,
+        idEmpresa: host.idEmpresa,
+        idSucursal: host.idSucursal,
+        idUsuario: host.idUsuario,
+        idEmpleado: employeeId ?? '',
+        idCliente: clientId ?? '',
+        fechaInicio: startDateString,
+        fechaFinal: nowString,
+      );
 
       final history = await _orderRepository.getOrdersHistory(data);
       emit(

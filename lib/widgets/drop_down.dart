@@ -10,12 +10,12 @@ class CustomDropdown<T> extends StatelessWidget {
     super.key,
     required this.list,
     this.onChanged,
-    this.currentValue,
+    this.initialValue,
   });
 
   final List<CustomDropdownMenuItem<T>> list;
   final Function(CustomDropdownMenuItem<T>?)? onChanged;
-  final CustomDropdownMenuItem<T>? currentValue;
+  final CustomDropdownMenuItem<T>? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class CustomDropdown<T> extends StatelessWidget {
         GoogleFonts.beVietnamPro().fontFamily.toString(),
         Colors.black,
       ),
-      value: currentValue,
+      value: initialValue,
       isExpanded: true,
       isDense: true,
       alignment: Alignment.center,

@@ -4,6 +4,7 @@ import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/favorite_products/bloc/favorite_products_bloc.dart';
+import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class FavoriteProductsPage extends StatelessWidget {
@@ -43,9 +44,30 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     super.initState();
     final state = context.read<AuthCubit>().state;
 
+    getFavorites(state);
+  }
+
+  getFavorites(AuthState state) {
     if (state is AuthHostSuccess) {
       BlocProvider.of<FavoriteProductsBloc>(context)
-          .add(FavoriteProductsSuscribe(hostModel: state.host));
+          .add(FavoriteProductsSuscribe(
+        user: state.host,
+        clientId: state.host.idCliente,
+      ));
+    } else if (state is AuthVendorSuccess) {
+      VendorState? vendorState = context.read<VendorBloc>().state;
+      final client = vendorState.currentClient;
+      if (client == null) {
+        throw Exception('Client not found');
+      }
+      BlocProvider.of<FavoriteProductsBloc>(context)
+          .add(FavoriteProductsSuscribe(
+        user: state.vendor,
+        clientId: client.idCliente,
+        employeeId: state.vendor.idEmpleado,
+      ));
+    } else {
+      throw Exception('Invalid state');
     }
   }
 
@@ -61,77 +83,77 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       body: RefreshIndicator(
         onRefresh: () async {
           final state = context.read<AuthCubit>().state;
-          if (state is AuthHostSuccess) {
-            BlocProvider.of<FavoriteProductsBloc>(context)
-                .add(FavoriteProductsSuscribe(hostModel: state.host));
-          }
+          getFavorites(state);
         },
-        child: Builder(
-          builder: (context) {
+        child: Builder(builder: (context) {
+          final state = context.watch<FavoriteProductsBloc>().state;
 
-            final state = context.watch<FavoriteProductsBloc>().state;
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 18.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                verticalSpacer(60),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: products.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      final item = products[index];
+                      final data = productsData[item.idProducto] ??
+                          ProductData.initialValue(
+                              item.idProducto, item.precio);
 
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  verticalSpacer(60),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: products.length,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        final item = products[index];
-                        final data = productsData[item.idProducto] ??
-                            ProductData.initialValue(item.idProducto, item.precio);
-            
-                        return addItemCard(
-                          title: item.nombreProducto,
-                          count: data.quantity.toString(),
-                          mScale: item.unidadMedida,
-                          isHeadingVisible: true,
-                          showTopActions: false,
-                          data: data,
-                          increment: () {
-                            if (data.hasNotQuantity) {
-                              context.read<HomeCubit>().addProductData(item);
-                              context
-                                  .read<EditProductBloc>()
-                                  .add(EditProductAddProduct(product: item));
-                            } else {
-                              final updated =
-                                  data.copyWith(quantity: data.quantity + 1);
-                              context.read<HomeCubit>().updateProductData(updated);
-                            }
-                          },
-                          decrement: () {
-                            if (data.hasNotQuantity) {
-                              return;
-                            }
-            
+                      return addItemCard(
+                        title: item.nombreProducto,
+                        count: data.quantity.toString(),
+                        mScale: item.unidadMedida,
+                        isHeadingVisible: true,
+                        showTopActions: false,
+                        data: data,
+                        increment: () {
+                          if (data.hasNotQuantity) {
+                            context.read<HomeCubit>().addProductData(item);
+                            context
+                                .read<EditProductBloc>()
+                                .add(EditProductAddProduct(product: item));
+                          } else {
                             final updated =
-                                data.copyWith(quantity: data.quantity - 1);
-                            if (updated.hasNotQuantity) {
-                              context
-                                  .read<HomeCubit>()
-                                  .deleteProductData(updated.productId);
-                            } else {
-                              context.read<HomeCubit>().updateProductData(updated);
-                            }
-                          },
-                          context: context,
-                        );
-                      },
-                    ),
+                                data.copyWith(quantity: data.quantity + 1);
+                            context
+                                .read<HomeCubit>()
+                                .updateProductData(updated);
+                          }
+                        },
+                        decrement: () {
+                          if (data.hasNotQuantity) {
+                            return;
+                          }
+
+                          final updated =
+                              data.copyWith(quantity: data.quantity - 1);
+                          if (updated.hasNotQuantity) {
+                            context
+                                .read<HomeCubit>()
+                                .deleteProductData(updated.productId);
+                          } else {
+                            context
+                                .read<HomeCubit>()
+                                .updateProductData(updated);
+                          }
+                        },
+                        context: context,
+                      );
+                    },
                   ),
-                  /*
+                ),
+                /*
                   verticalSpacer(20),
                   Align(
                     alignment: Alignment.center,
@@ -155,11 +177,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     ),
                   ),
                   */
-                ],
-              ),
-            );
-          }
-        ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

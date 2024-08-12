@@ -153,7 +153,7 @@ class SubsidiarySelector extends StatelessWidget {
                 key: e.idLocal, value: e.nombreLocal, data: e),
           )
           .toList(),
-      currentValue: currentSubsidiary != null
+      initialValue: currentSubsidiary != null
           ? CustomDropdownMenuItem<Subsidiary>(
               key: currentSubsidiary.idLocal,
               value: currentSubsidiary.nombreLocal,

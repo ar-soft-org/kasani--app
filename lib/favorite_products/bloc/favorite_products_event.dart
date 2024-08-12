@@ -7,7 +7,11 @@ class FavoriteProductsEvent {
 
 class FavoriteProductsSuscribe extends FavoriteProductsEvent {
   FavoriteProductsSuscribe({
-    required this.hostModel,
+    required this.user,
+    required this.clientId,
+    this.employeeId,
   });
-  HostModel hostModel;
+  final User user;
+  final String clientId;
+  final String? employeeId;
 }
