@@ -7,6 +7,7 @@ import 'package:kasanipedido/order_booking/bloc/order_booking_bloc.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 import 'package:kasanipedido/widgets/custom_text.dart';
 import 'package:kasanipedido/widgets/horizontal_spacer.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
@@ -193,11 +194,15 @@ class _OrderSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.select((OrderBookingBloc bloc) => bloc.state);
 
+    final vendorState = context.select((VendorBloc? bloc) => bloc?.state);
+    final client = vendorState?.currentClient;
+
     final date = DateTime.parse(state.dateStr!);
     final formatted = DateFormat('dd/MM/yyyy').format(date);
 
     return Column(
       children: [
+        if (client != null) detailHeading('Cliente: ', ' ${client.nombres}'),
         detailHeading('Fecha de entrega: ', ' $formatted'),
         detailHeading(
             'Hora de entrega:  ', ' ${state.currentSubsidiary!.horaEntrega}'),

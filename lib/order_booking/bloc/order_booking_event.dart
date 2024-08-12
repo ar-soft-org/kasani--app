@@ -4,15 +4,17 @@ sealed class OrderBookingEvent extends Equatable {
   const OrderBookingEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 final class OrderBookingSubsidiariesRequested extends OrderBookingEvent {
-  const OrderBookingSubsidiariesRequested();
+  final List<Subsidiary> subsidiaries;
+
+  const OrderBookingSubsidiariesRequested({required this.subsidiaries});
 }
 
 final class OrderBookingSubsidiarySelected extends OrderBookingEvent {
-  final SubsidiaryModel subsidiary;
+  final Subsidiary subsidiary;
 
   const OrderBookingSubsidiarySelected({required this.subsidiary});
 
@@ -39,17 +41,26 @@ final class OrderBookingCommentSaved extends OrderBookingEvent {
 }
 
 final class OrderBookingOrderCreated extends OrderBookingEvent {
-  final HostModel host;
+  final User user;
+  final String? employeId;
+  final String? clientId;
+  final String email;
   final List<ProductData> productsData;
 
   const OrderBookingOrderCreated({
-    required this.host,
+    required this.user,
+    this.employeId,
+    this.clientId,
+    required this.email,
     required this.productsData,
   });
 
   @override
-  List<Object> get props => [
-        host,
+  List<Object?> get props => [
+        user,
+        employeId,
+        clientId,
+        email,
         productsData,
       ];
 }

@@ -29,7 +29,8 @@ class OrderHistoryDetailCubit extends Cubit<OrderHistoryDetailState> {
         idEmpresa: host.idEmpresa,
         idSucursal: host.idSucursal,
         idUsuario: host.idUsuario,
-        idEmpleado: host.idEmpleado,
+        // FIXME:
+        idEmpleado: '',
         idPedido: state.orderHistory.idPedido,
       );
 

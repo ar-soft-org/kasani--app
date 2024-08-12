@@ -15,6 +15,7 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
   })  : _clientRepository = clientRepository,
         super(const VendorState()) {
     on<LoadClientsEvent>(_onLoadClientsEvent);
+    on<SelectClientEvent>(_onSelectClientEvent);
   }
 
   final ClientRepository _clientRepository;
@@ -50,5 +51,14 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
         errorMessage: () => null,
       ));
     }
+  }
+
+  _onSelectClientEvent(
+    SelectClientEvent event,
+    Emitter<VendorState> emit,
+  ) {
+    emit(state.copyWith(
+      currentClient: () => event.client,
+    ));
   }
 }

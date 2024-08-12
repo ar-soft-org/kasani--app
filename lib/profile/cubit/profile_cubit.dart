@@ -13,6 +13,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final ShoppingCartRepository _shoppingCartRepository;
 
   clearProductsData() {
+    _shoppingCartRepository.clearProducts();
     _shoppingCartRepository.clearProductsData();
   }
 }

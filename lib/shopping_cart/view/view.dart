@@ -7,6 +7,7 @@ import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
 import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 import 'package:kasanipedido/widgets/app_bar.dart';
 import 'package:kasanipedido/widgets/custom_btn.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
@@ -182,8 +183,11 @@ class CartScreen extends StatelessWidget {
                     return;
                   }
                   final bloc = context.read<ShoppingCartBloc>();
-                  Navigator.of(context)
-                      .pushNamed('order_booking', arguments: {'bloc': bloc});
+                  final vendorBloc = context.read<VendorBloc>();
+                  Navigator.of(context).pushNamed('order_booking', arguments: {
+                    'bloc': bloc,
+                    'vendor_bloc': vendorBloc,
+                  });
                 }, 308, 58, Colors.transparent, AppColors.lightCyan, 100,
                     showShadow: true),
               ),

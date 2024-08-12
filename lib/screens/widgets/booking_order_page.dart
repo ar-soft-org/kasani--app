@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kasanipedido/models/subsidiary/subsidiary_model.dart';
+import 'package:kasanipedido/domain/repository/client/models/subsidiary.dart';
 import 'package:kasanipedido/order_booking/bloc/order_booking_bloc.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/widgets/calender.dart';
@@ -146,15 +146,15 @@ class SubsidiarySelector extends StatelessWidget {
     final subsidiaries = state.subsidiaries;
     final currentSubsidiary = state.currentSubsidiary;
 
-    return CustomDropdown<SubsidiaryModel>(
+    return CustomDropdown<Subsidiary>(
       list: subsidiaries
           .map(
-            (e) => CustomDropdownMenuItem<SubsidiaryModel>(
+            (e) => CustomDropdownMenuItem<Subsidiary>(
                 key: e.idLocal, value: e.nombreLocal, data: e),
           )
           .toList(),
       currentValue: currentSubsidiary != null
-          ? CustomDropdownMenuItem<SubsidiaryModel>(
+          ? CustomDropdownMenuItem<Subsidiary>(
               key: currentSubsidiary.idLocal,
               value: currentSubsidiary.nombreLocal,
               data: currentSubsidiary)

@@ -2,16 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kasanipedido/domain/repository/client/models/client.dart';
 import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
 import 'package:kasanipedido/profile/profile.dart';
 import 'package:kasanipedido/screens/favourite_screen.dart';
 import 'package:kasanipedido/screens/history_screen.dart';
 import 'package:kasanipedido/screens/home_screen.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
+import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
+import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 
 class HostHomePage extends StatelessWidget {
-  const HostHomePage({super.key});
+  const HostHomePage({super.key, this.client});
+
+  static Widget initWithVendorBloc(
+    VendorBloc bloc,
+    Client client,
+  ) {
+    return BlocProvider.value(
+      value: bloc,
+      child: HostHomePage(client: client),
+    );
+  }
+
+  final Client? client;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +53,9 @@ class HostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedTab =
         context.select((HostHomeCubit cubit) => cubit.state.tab);
+
+    final VendorState? vendorState =
+        context.select((VendorBloc? bloc) => bloc?.state);
     return Scaffold(
         body: IndexedStack(
           index: selectedTab.index,
@@ -49,6 +67,16 @@ class HostScreen extends StatelessWidget {
             ProfilePage(),
           ],
         ),
+        floatingActionButton: vendorState?.status == VendorStatus.loaded
+            ? FloatingActionButton(
+                onPressed: () {
+                  // Navigator.of(context).pushNamed(AppRouteNames.vendorPage);
+                  Navigator.of(context).pop();
+                },
+                backgroundColor: AppColors.lightCyan,
+                child: const Icon(Icons.person_outline),
+              )
+            : const SizedBox.shrink(),
         bottomNavigationBar: BottomAppBar(
           child: SizedBox(
             height: 70.h,

@@ -96,7 +96,8 @@ class _VendorScreenState extends State<VendorScreen> {
       ),
       body: BlocConsumer<VendorBloc, VendorState>(
         listenWhen: (previous, current) =>
-            current.errorMessage != null && current.errorMessage != '',
+            current.errorMessage != null && current.errorMessage != '' ||
+            current.currentClient != null,
         listener: (context, state) {
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(context)
@@ -106,6 +107,13 @@ class _VendorScreenState extends State<VendorScreen> {
                   content: Text(state.errorMessage!),
                 ),
               );
+          }
+
+          if (state.currentClient != null) {
+            Navigator.of(context).pushNamed('host', arguments: {
+              'client': state.currentClient,
+              'bloc': context.read<VendorBloc>(),
+            });
           }
         },
         builder: (context, state) {
@@ -256,8 +264,8 @@ Widget customListWidget(
           ),
           horizontalSpacer(40),
           customButton(context, false, 'Crear Pedido', 11, () {
-            Navigator.of(context).pushNamed('host');
-            // Get.to(const HostScreen());
+            /// navigation handle in bloc listener
+            context.read<VendorBloc>().add(SelectClientEvent(client: item));
           }, 120, 28, Colors.transparent, AppColors.lightCyan, 100,
               showShadow: true),
         ],

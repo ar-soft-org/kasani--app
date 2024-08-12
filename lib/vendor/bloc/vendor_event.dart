@@ -14,3 +14,8 @@ class LoadClientsEvent extends VendorEvent {
 
   const LoadClientsEvent({required this.vendor});
 }
+class SelectClientEvent extends VendorEvent {
+  final Client client;
+
+  const SelectClientEvent({required this.client});
+}

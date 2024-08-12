@@ -17,9 +17,9 @@ final class OrderBookingState extends Equatable {
 
   final OrderBookingStatus status;
   final CreateOrderStatus createOrderStatus;
-  final List<SubsidiaryModel> subsidiaries;
+  final List<Subsidiary> subsidiaries;
 
-  final SubsidiaryModel? currentSubsidiary;
+  final Subsidiary? currentSubsidiary;
   final String? dateStr;
   final String comment;
   final String errorMessage;
@@ -27,8 +27,8 @@ final class OrderBookingState extends Equatable {
   copyWith({
     OrderBookingStatus? status,
     CreateOrderStatus? createOrderStatus,
-    List<SubsidiaryModel>? subsidiaries,
-    SubsidiaryModel? Function()? currentSubsidiary,
+    List<Subsidiary>? subsidiaries,
+    Subsidiary? Function()? currentSubsidiary,
     String? Function()? dateStr,
     String? comment,
     String? errorMessage,

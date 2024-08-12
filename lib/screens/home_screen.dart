@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
+import 'package:kasanipedido/domain/repository/client/models/client.dart';
 import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
+import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/list_wrapper.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/regular_text.dart';
 import 'package:kasanipedido/widgets/textfields.dart';
@@ -61,8 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
       BlocProvider.of<HomeCubit>(context).fetchProducts(state.host);
     }
 
-    // TODO: Initial Data Vendor
-    // TODO: Load Vendor Data (Clientes)
+    if (state is AuthVendorSuccess) {
+      BlocProvider.of<HomeCubit>(context).fetchCategoriesSubCategories(
+          state.vendor,
+          employeId: state.vendor.idEmpleado);
+      BlocProvider.of<HomeCubit>(context)
+          .fetchProducts(state.vendor, employeId: state.vendor.idEmpleado);
+    }
   }
 
   @override
@@ -71,8 +78,22 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  getTitle(Client? client) {
+    StringBuffer title = StringBuffer();
+    title.write('Realiza tu Pedido');
+    if (client != null) {
+      title.write(' - ');
+      title.write(client.nombres);
+    }
+
+    return title.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final VendorState? vendorState =
+        context.select((VendorBloc? bloc) => bloc?.state);
+
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state.hasError) {
@@ -88,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: AppColors.ice, // Dark background color
           appBar: AppBar(
             title: Text(
-              'Realiza tu Pedido',
+              getTitle(vendorState?.currentClient),
               style: TextStyle(
                   color: AppColors.darkBlue,
                   fontFamily: GoogleFonts.inter().fontFamily,

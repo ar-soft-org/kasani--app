@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:kasanipedido/models/category/category_model.dart';
-import 'package:kasanipedido/models/host/host_model.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
+import 'package:kasanipedido/models/user/user_model.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
 import 'package:kasanipedido/repositories/category_repository.dart';
 import 'package:kasanipedido/repositories/product_repository.dart';
@@ -21,14 +21,14 @@ class HomeCubit extends Cubit<HomeState> {
   final ProductRepository productRepository;
   final ShoppingCartRepository _shoppingCartRepository;
 
-  fetchCategoriesSubCategories(HostModel host) async {
+  fetchCategoriesSubCategories(User host, {String? employeId}) async {
     emit(state.copyWith(status: HomeStatus.loading));
 
     try {
       final categories = await categoryRepository.fetchCategoriesSubCategories(
         token: host.token,
         conexion: host.conexion,
-        idEmpleado: host.idEmpleado,
+        idEmpleado: employeId ?? '',
         idEmpresa: host.idEmpresa,
         idSucursal: host.idSucursal,
         idUsuario: host.idUsuario,
@@ -54,7 +54,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  fetchProducts(HostModel host) async {
+  fetchProducts(User host, {String? employeId}) async {
     emit(state.copyWith(status: HomeStatus.loading));
 
     try {
@@ -64,7 +64,7 @@ class HomeCubit extends Cubit<HomeState> {
         idEmpresa: host.idEmpresa,
         idSucursal: host.idSucursal,
         idUsuario: host.idUsuario,
-        idEmpleado: host.idEmpleado,
+        idEmpleado: employeId!,
       );
 
       emit(state.copyWith(

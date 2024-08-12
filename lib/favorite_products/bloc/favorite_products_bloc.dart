@@ -16,8 +16,9 @@ class FavoriteProductsBloc
       try {
         FavoriteProductsRequest request = FavoriteProductsRequest(
           conexion: host.conexion,
+          // FIXME: dynamic
           idCliente: host.idCliente,
-          idEmpleado: host.idEmpleado,
+          idEmpleado: '',
           idEmpresa: host.idEmpresa,
           idSucursal: host.idSucursal,
           idUsuario: host.idUsuario,

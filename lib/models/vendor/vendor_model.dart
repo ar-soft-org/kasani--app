@@ -1,25 +1,21 @@
 import 'dart:convert';
 
+import 'package:kasanipedido/models/user/user_model.dart';
+
 VendorModel vendorFromJson(String str) =>
     VendorModel.fromJson(json.decode(str));
 
 String vendorToJson(VendorModel data) => json.encode(data.toJson());
 
-class VendorModel {
+class VendorModel extends User {
   final String codigo;
   final String respuesta;
   final String nombres;
   final String apellidos;
   final String correo;
   final String nombreCliente;
-  final String conexion;
-  final String idEmpresa;
-  final String idSucursal;
-  final String idUsuario;
   final String idEmpleado;
-  final String idCliente;
-  final String token;
-  final String requiereCambioContrasena;
+  // final String idCliente;
 
   VendorModel({
     required this.codigo,
@@ -28,14 +24,14 @@ class VendorModel {
     required this.apellidos,
     required this.correo,
     required this.nombreCliente,
-    required this.conexion,
-    required this.idEmpresa,
-    required this.idSucursal,
-    required this.idUsuario,
+    required super.conexion,
+    required super.idEmpresa,
+    required super.idSucursal,
+    required super.idUsuario,
     required this.idEmpleado,
-    required this.idCliente,
-    required this.token,
-    required this.requiereCambioContrasena,
+    // required this.idCliente,
+    required super.token,
+    required super.requiereCambioContrasena,
   });
 
   VendorModel copyWith({
@@ -50,7 +46,7 @@ class VendorModel {
     String? idSucursal,
     String? idUsuario,
     String? idEmpleado,
-    String? idCliente,
+    // String? idCliente,
     String? token,
     String? requiereCambioContrasea,
   }) =>
@@ -66,7 +62,7 @@ class VendorModel {
         idSucursal: idSucursal ?? this.idSucursal,
         idUsuario: idUsuario ?? this.idUsuario,
         idEmpleado: idEmpleado ?? this.idEmpleado,
-        idCliente: idCliente ?? this.idCliente,
+        // idCliente: idCliente ?? this.idCliente,
         token: token ?? this.token,
         requiereCambioContrasena:
             requiereCambioContrasea ?? this.requiereCambioContrasena,
@@ -84,7 +80,7 @@ class VendorModel {
         idSucursal: json['id_sucursal'],
         idUsuario: json['id_usuario'],
         idEmpleado: json['id_empleado'],
-        idCliente: json['id_cliente'],
+        // idCliente: json['id_cliente'],
         token: json['token'],
         requiereCambioContrasena: json['requiere_cambio_contraseña'],
       );
@@ -101,7 +97,7 @@ class VendorModel {
         'id_sucursal': idSucursal,
         'id_usuario': idUsuario,
         'id_empleado': idEmpleado,
-        'id_cliente': idCliente,
+        // 'id_cliente': idCliente,
         'token': token,
         'requiere_cambio_contraseña': requiereCambioContrasena,
       };

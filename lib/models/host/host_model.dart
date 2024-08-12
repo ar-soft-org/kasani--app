@@ -4,29 +4,24 @@
 
 import 'dart:convert';
 
-import 'package:kasanipedido/models/subsidiary/subsidiary_model.dart';
+import 'package:kasanipedido/domain/repository/client/models/subsidiary.dart';
+import 'package:kasanipedido/models/user/user_model.dart';
 
 HostModel hostModelFromJson(String str) => HostModel.fromJson(json.decode(str));
 
 String hostModelToJson(HostModel data) => json.encode(data.toJson());
 
-class HostModel {
+class HostModel extends User {
   final String codigo;
   final String respuesta;
   final String nombres;
   final String apellidos;
   final String correo;
   final String nombreCliente;
-  final String conexion;
-  final String idEmpresa;
-  final String idSucursal;
-  final String idUsuario;
-  final String idEmpleado;
+  
+  // final String idEmpleado;
   final String idCliente;
-  final List<SubsidiaryModel> locales;
-  final String token;
-  // FIXME: Problemas con símbolos especiales (ñ)
-  final String requiereCambioContrasena;
+  final List<Subsidiary> locales;
 
   HostModel({
     required this.codigo,
@@ -35,15 +30,15 @@ class HostModel {
     required this.apellidos,
     required this.correo,
     required this.nombreCliente,
-    required this.conexion,
-    required this.idEmpresa,
-    required this.idSucursal,
-    required this.idUsuario,
-    required this.idEmpleado,
+    // required this.idEmpleado,
     required this.idCliente,
     required this.locales,
-    required this.token,
-    required this.requiereCambioContrasena,
+    required super.conexion,
+    required super.idEmpresa,
+    required super.idSucursal,
+    required super.idUsuario,
+    required super.token,
+    required super.requiereCambioContrasena,
   });
 
   HostModel copyWith({
@@ -59,7 +54,7 @@ class HostModel {
     String? idUsuario,
     String? idEmpleado,
     String? idCliente,
-    List<SubsidiaryModel>? locales,
+    List<Subsidiary>? locales,
     String? token,
     String? requiereCambioContrasena,
   }) =>
@@ -74,7 +69,7 @@ class HostModel {
         idEmpresa: idEmpresa ?? this.idEmpresa,
         idSucursal: idSucursal ?? this.idSucursal,
         idUsuario: idUsuario ?? this.idUsuario,
-        idEmpleado: idEmpleado ?? this.idEmpleado,
+        // idEmpleado: idEmpleado ?? this.idEmpleado,
         idCliente: idCliente ?? this.idCliente,
         locales: locales ?? this.locales,
         token: token ?? this.token,
@@ -93,10 +88,10 @@ class HostModel {
         idEmpresa: json['id_empresa'],
         idSucursal: json['id_sucursal'],
         idUsuario: json['id_usuario'],
-        idEmpleado: json['id_empleado'],
+        // idEmpleado: json['id_empleado'],
         idCliente: json['id_cliente'],
-        locales: List<SubsidiaryModel>.from(
-            json['locales'].map((x) => SubsidiaryModel.fromJson(x))),
+        locales: List<Subsidiary>.from(
+            json['locales'].map((x) => Subsidiary.fromJson(x))),
         token: json['token'],
         requiereCambioContrasena: json['requiere_cambio_contraseña'],
       );
@@ -112,7 +107,7 @@ class HostModel {
         'id_empresa': idEmpresa,
         'id_sucursal': idSucursal,
         'id_usuario': idUsuario,
-        'id_empleado': idEmpleado,
+        // 'id_empleado': idEmpleado,
         'id_cliente': idCliente,
         'locales': List<dynamic>.from(locales.map((x) => x.toJson())),
         'token': token,

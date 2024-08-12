@@ -5,18 +5,19 @@ import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/widgets/horizontal_spacer.dart';
 
 Widget customButton(
-    BuildContext context,
-    bool isBack,
-    String text,
-    double fontSize,
-    Function()? onPressed,
-    double width,
-    double height,
-    Color borderColor,
-    Color bgColor,
-    double borderRadius,
-    {bool showShadow = true,
-    Color? color}) {
+  BuildContext context,
+  bool isBack,
+  String text,
+  double fontSize,
+  Function()? onPressed,
+  double width,
+  double height,
+  Color borderColor,
+  Color bgColor,
+  double borderRadius, {
+  bool showShadow = true,
+  Color? color,
+}) {
   return Container(
     width: width.w,
     height: height.h,
@@ -56,10 +57,10 @@ Widget customButton(
           ),
           isBack ? horizontalSpacer(10) : const SizedBox.shrink(),
           isBack
-              ? const Icon(
+              ? Icon(
                   Icons.arrow_forward_ios_outlined,
                   color: AppColors.whiteShade,
-                  size: 13,
+                  size: 13.sp,
                 )
               : const SizedBox.shrink(),
         ],

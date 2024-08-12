@@ -6,9 +6,21 @@ import 'package:kasanipedido/domain/repository/order_booking/order_booking_repos
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/order_booking/bloc/order_booking_bloc.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
+import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 
 class OrderBookingPage extends StatelessWidget {
   const OrderBookingPage({super.key});
+
+  static Widget initWithVendorBloc(
+    BuildContext context,
+    VendorBloc bloc,
+    ShoppingCartBloc shoppingCartBloc,
+  ) {
+    return BlocProvider.value(
+      value: bloc,
+      child: OrderBookingPage.init(context, shoppingCartBloc),
+    );
+  }
 
   static init(BuildContext context, ShoppingCartBloc shoppingCartBloc) {
     return MultiBlocProvider(providers: [
@@ -17,7 +29,7 @@ class OrderBookingPage extends StatelessWidget {
         create: (_) => OrderBookingBloc(
           orderBookingRepository:
               RepositoryProvider.of<OrderRepository>(context),
-        )..add(const OrderBookingSubsidiariesRequested()),
+        ),
       ),
     ], child: const OrderBookingPage());
   }
@@ -28,9 +40,7 @@ class OrderBookingPage extends StatelessWidget {
         create: (_) => OrderBookingBloc(
               orderBookingRepository:
                   RepositoryProvider.of<OrderRepository>(context),
-            )..add(
-                const OrderBookingSubsidiariesRequested(),
-              ),
+            ),
         child: const OrderBookingView());
   }
 }
@@ -90,6 +100,20 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
         _currentPage = _pageController!.page!.round();
       });
     });
+
+    final authState = context.read<AuthCubit>().state;
+    if (authState is AuthHostSuccess) {
+      context.read<OrderBookingBloc>().add(OrderBookingSubsidiariesRequested(
+          subsidiaries: authState.host.locales));
+    } else if (authState is AuthVendorSuccess) {
+      final vendorState = context.read<VendorBloc>().state as VendorState?;
+      if (vendorState != null && vendorState.currentClient != null) {
+        context.read<OrderBookingBloc>().add(OrderBookingSubsidiariesRequested(
+            subsidiaries: vendorState.currentClient!.locales));
+      }
+    } else {
+      throw UnimplementedError();
+    }
   }
 
   @override
@@ -216,20 +240,36 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
 
                     log('create order');
                     final state = context.read<AuthCubit>().state;
-                    if (state is AuthHostSuccess) {
-                      final productsData =
-                          context.read<ShoppingCartBloc>().state;
+                    final productsData = context.read<ShoppingCartBloc>().state;
 
+                    if (state is AuthHostSuccess) {
                       context
                           .read<OrderBookingBloc>()
                           .add(OrderBookingOrderCreated(
-                            host: state.host,
+                            user: state.host,
+                            clientId: state.host.idCliente,
+                            email: state.host.correo,
                             productsData:
                                 productsData.productsData.values.toList(),
                           ));
+                    } else if (state is AuthVendorSuccess) {
+                      final VendorState? vendorState =
+                          context.read<VendorBloc>().state;
+                      context
+                          .read<OrderBookingBloc>()
+                          .add(OrderBookingOrderCreated(
+                            user: state.vendor,
+                            employeId: state.vendor.idEmpleado,
+                            clientId: vendorState?.currentClient?.idCliente,
+                            // FIXME: Consultar que email se debe enviar
+                            email: state.vendor.correo,
+                            productsData:
+                                productsData.productsData.values.toList(),
+                          ));
+                    } else {
+                      throw UnimplementedError();
                     }
-
-                    // navigation throw listener
+                    // navigation through listener
 
                     return;
                   }

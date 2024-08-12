@@ -27,7 +27,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
           idUsuario: host.idUsuario,
           // FIXME:
           // idEmpleado: host.idEmpleado.isEmpty ? '2' : host.idEmpleado,
-          idEmpleado: host.idEmpleado,
+          idEmpleado: '',
           idCliente: host.idCliente,
           fechaInicio: '20240701',
           fechaFinal: '20240730');

@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:kasanipedido/domain/repository/client/models/subsidiary.dart';
 import 'package:kasanipedido/domain/repository/order_booking/models/create_order_request.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_api.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
-import 'package:kasanipedido/helpers/storage/user_storage.dart';
-import 'package:kasanipedido/models/host/host_model.dart';
-import 'package:kasanipedido/models/subsidiary/subsidiary_model.dart';
+import 'package:kasanipedido/models/user/user_model.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 part 'order_booking_event.dart';
@@ -35,16 +33,13 @@ class OrderBookingBloc extends Bloc<OrderBookingEvent, OrderBookingState> {
     emit(state.copyWith(status: OrderBookingStatus.loading));
 
     try {
-      final hostJson = await UserStorage.getHost();
-      if (hostJson != null) {
-        final host = HostModel.fromJson(json.decode(hostJson));
-        emit(state.copyWith(
-          subsidiaries: host.locales,
-          status: OrderBookingStatus.success,
-          currentSubsidiary:
-              host.locales.length == 1 ? () => host.locales.first : () => null,
-        ));
-      }
+      final subsidiaries = event.subsidiaries;
+      emit(state.copyWith(
+        subsidiaries: subsidiaries,
+        status: OrderBookingStatus.success,
+        currentSubsidiary:
+            subsidiaries.length == 1 ? () => subsidiaries.first : () => null,
+      ));
     } catch (e) {
       emit(state.copyWith(status: OrderBookingStatus.failure));
     }
@@ -79,16 +74,15 @@ class OrderBookingBloc extends Bloc<OrderBookingEvent, OrderBookingState> {
       createOrderStatus: CreateOrderStatus.loading,
     ));
 
-    final host = event.host;
+    final user = event.user;
     final data = CreateOrderRequest(
-      conexion: host.conexion,
-      idEmpresa: host.idEmpresa,
-      idSucursal: host.idSucursal,
-      idUsuario: host.idUsuario,
-      // FIXME
-      idEmpleado: host.idEmpleado.isEmpty ? '2' : host.idEmpleado,
-      idCliente: host.idCliente,
-      usuario: host.correo,
+      conexion: user.conexion,
+      idEmpresa: user.idEmpresa,
+      idSucursal: user.idSucursal,
+      idUsuario: user.idUsuario,
+      idEmpleado: event.employeId ?? '',
+      idCliente: event.clientId ?? '',
+      usuario: event.email,
       idLocal: state.currentSubsidiary!.idLocal,
       fechaEntrega: state.dateStr!,
       horaEntrega: state.currentSubsidiary!.horaEntrega,

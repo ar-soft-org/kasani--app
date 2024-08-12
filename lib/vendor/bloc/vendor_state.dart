@@ -7,21 +7,25 @@ class VendorState extends Equatable {
     this.status = VendorStatus.initial,
     this.clients = const [],
     this.errorMessage,
+    this.currentClient,
   });
 
   final VendorStatus status;
   final List<Client> clients;
+  final Client? currentClient;
   final String? errorMessage;
 
   VendorState copyWith({
     VendorStatus? status,
     List<Client>? clients,
     String? Function()? errorMessage,
+    Client? Function()? currentClient,
   }) {
     return VendorState(
       status: status ?? this.status,
       clients: clients ?? this.clients,
       errorMessage: errorMessage != null ? errorMessage() : this.errorMessage,
+      currentClient: currentClient != null ? currentClient() : this.currentClient,
     );
   }
 
@@ -30,6 +34,7 @@ class VendorState extends Equatable {
         status,
         clients,
         errorMessage,
+        currentClient,
       ];
 }
 
