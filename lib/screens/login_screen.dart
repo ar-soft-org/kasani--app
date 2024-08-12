@@ -7,6 +7,7 @@ import 'package:kasanipedido/api/dio_interceptor.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/login/login_cubit.dart';
 import 'package:kasanipedido/exports/exports.dart';
+import 'package:kasanipedido/utils/app_route_names.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,6 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   loadDevData() {
     email.text = 'info@restaurantsanceferino.com';
     pw.text = '15122077273';
+  }
+
+  loadDevVendorData() {
+    email.text = 'zakery_10@hotmail.com';
+    pw.text = '40852632';
   }
 
   @override
@@ -59,7 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
       listeners: [
         BlocListener<LoginCubit, LoginState>(
           listenWhen: (previous, current) {
-            return current is LoginHostSuccess || current is LoginFailure;
+            return current is LoginHostSuccess ||
+                current is LoginVendorSuccess ||
+                current is LoginFailure;
           },
           listener: (context, state) {
             if (state is LoginHostSuccess) {
@@ -90,24 +98,20 @@ class _LoginScreenState extends State<LoginScreen> {
               } else {
                 Navigator.of(context).pushReplacementNamed('change-password');
               }
-
-              // TODO: Borrar datos del vendedor
             }
-            // TODO: Login Vendor
+
             if (state is AuthVendorSuccess) {
               log('AuthVendorSuccess');
               context.read<DioInterceptor>().removeInterceptors();
               context.read<DioInterceptor>().addInterceptor({
-                // HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
+                HttpHeaders.authorizationHeader: 'Bearer ${state.vendor.token}'
               });
-              // TODO: navegar a la pantalla de vendedor
-              // if (state.host.requiereCambioContrasena == 'NO') {
-              //   Navigator.of(context).pushReplacementNamed('host');
-              // } else {
-              //   Navigator.of(context).pushReplacementNamed('change-password');
-              // }
-
-              // TODO: Borrar datos del cliente
+              if (state.vendor.requiereCambioContrasena == 'NO') {
+                Navigator.of(context)
+                    .pushReplacementNamed(AppRouteNames.vendorPage);
+              } else {
+                Navigator.of(context).pushReplacementNamed('change-password');
+              }
             }
           },
         ),
@@ -186,6 +190,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   setState(() {
                                     isVendor = value;
                                   });
+
+                                  if (value == true) {
+                                    loadDevVendorData();
+                                  } else {
+                                    loadDevData();
+                                  }
                                 },
                               ),
                               customText(

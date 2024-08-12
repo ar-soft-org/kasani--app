@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kasanipedido/api/dio_interceptor.dart';
+import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/login/login_cubit.dart';
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/profile/cubit/profile_cubit.dart';
@@ -34,6 +35,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.select((AuthCubit cubit) => cubit.state);
+
     return BlocConsumer<LoginCubit, LoginState>(
       listenWhen: (previous, current) {
         return current is LoginLogout;
@@ -66,26 +69,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 verticalSpacer(20),
                 profileCategoryTile('Mi perfil', () {}),
-                
-                if (state is LoginVendorSuccess) ...[
-                  Padding(
-                    padding: EdgeInsets.only(
-                    left: 10.w,
-                    right: 10.w,
-                    top: 30.h,
-                    ),
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${state.vendor.nombres} ${state.vendor.apellidos}'),
-                      Text(state.vendor.correo),
-                      SizedBox(height: 20.h),
-                      Divider(height: 2.h, thickness: 2.h),
-                      SizedBox(height: 20.h),
-                    ],
-                    ))
-                ],
-                if (state is LoginHostSuccess) ...[
+
+                if (authState is AuthVendorSuccess) ...[
                   Padding(
                       padding: EdgeInsets.only(
                         left: 10.w,
@@ -95,12 +80,32 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${state.host.nombres} ${state.host.apellidos}'),
-                          Text(state.host.correo),
+                          Text(
+                              '${authState.vendor.nombres} ${authState.vendor.apellidos}'),
+                          Text(authState.vendor.correo),
                           SizedBox(height: 20.h),
                           Divider(height: 2.h, thickness: 2.h),
                           SizedBox(height: 20.h),
-                          ...state.host.locales.map((e) {
+                        ],
+                      ))
+                ],
+                if (authState is AuthHostSuccess) ...[
+                  Padding(
+                      padding: EdgeInsets.only(
+                        left: 10.w,
+                        right: 10.w,
+                        top: 30.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              '${authState.host.nombres} ${authState.host.apellidos}'),
+                          Text(authState.host.correo),
+                          SizedBox(height: 20.h),
+                          Divider(height: 2.h, thickness: 2.h),
+                          SizedBox(height: 20.h),
+                          ...authState.host.locales.map((e) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -124,7 +129,11 @@ class ProfileScreen extends StatelessWidget {
                   // TODO: Si es vendedor usar logoutVendor
                   () {
                     context.read<DioInterceptor>().removeInterceptors();
-                    context.read<LoginCubit>().logoutHost();
+                    if (authState is AuthVendorSuccess) {
+                      context.read<LoginCubit>().logoutVendor();
+                    } else if (authState is AuthHostSuccess) {
+                      context.read<LoginCubit>().logoutHost();
+                    }
                   },
                 ),
               ],

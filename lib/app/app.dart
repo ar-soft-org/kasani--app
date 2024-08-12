@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:kasanipedido/config/providers/bloc_providers.dart';
 import 'package:kasanipedido/config/providers/repository_providers.dart';
 import 'package:kasanipedido/config/providers/service_providers.dart';
 import 'package:kasanipedido/config/router/app_router.dart';
 import 'package:kasanipedido/data/services/order_booking/order_service.dart';
+import 'package:kasanipedido/domain/repository/client/client_repository.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/utils/navigation_keys.dart';
@@ -16,11 +18,13 @@ class App extends StatelessWidget {
     required this.dio,
     required this.orderService,
     required this.orderBookingRepository,
+    required this.clientRepository,
   });
 
   final ShoppingCartRepository shoppingCartRepository;
   final OrderService orderService;
   final OrderRepository orderBookingRepository;
+  final ClientRepository clientRepository;
   final Dio dio;
 
   @override
@@ -35,6 +39,7 @@ class App extends StatelessWidget {
         child: RepositoryProviders(
           shoppingCartRepository: shoppingCartRepository,
           orderBookingRepository: orderBookingRepository,
+          clientRepository: clientRepository,
           dio: dio,
           child: const BlocProviders(
             child: AppView(),
@@ -63,7 +68,9 @@ class AppView extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      // FIXME: locales
+      locale: context.locale,
+      supportedLocales: context.supportedLocales,
+      localizationsDelegates: context.localizationDelegates,
     );
   }
 }

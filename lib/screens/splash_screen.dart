@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:kasanipedido/api/dio_interceptor.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/splash/splash_cubit.dart';
 import 'package:kasanipedido/exports/exports.dart';
+import 'package:kasanipedido/utils/app_route_names.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<SplashCubit>(context).validateLocalSession();
+    Intl.defaultLocale = 'es_PE';
   }
 
   @override
@@ -29,14 +32,14 @@ class _SplashScreenState extends State<SplashScreen> {
     return MultiBlocListener(
       listeners: [
         BlocListener<SplashCubit, SplashState>(
-          listenWhen: (previous, current) => current is SplashHostSuccess || current is SplashVendorSuccess,
+          listenWhen: (previous, current) =>
+              current is SplashHostSuccess || current is SplashVendorSuccess,
           listener: (context, state) {
             if (state is SplashHostSuccess && state.logedIn) {
               BlocProvider.of<AuthCubit>(context).loadUserLogged();
             } else if (state is SplashVendorSuccess && state.logedIn) {
               BlocProvider.of<AuthCubit>(context).loadVendorLogged();
-            } 
-            else if (state is SplashHostSuccess && !state.logedIn) {
+            } else if (state is SplashHostSuccess && !state.logedIn) {
               Navigator.of(context).pushReplacementNamed('login');
             } else if (state is SplashVendorSuccess && !state.logedIn) {
               Navigator.of(context).pushReplacementNamed('login');
@@ -55,20 +58,17 @@ class _SplashScreenState extends State<SplashScreen> {
               } else {
                 Navigator.of(context).pushReplacementNamed('change-password');
               }
-            }
-            else if (state is AuthVendorSuccess) {
+            } else if (state is AuthVendorSuccess) {
               context.read<DioInterceptor>().removeInterceptors();
               context.read<DioInterceptor>().addInterceptor({
                 HttpHeaders.authorizationHeader: 'Bearer ${state.vendor.token}'
               });
-              if (state.vendor.requiereCambioContrasea == 'NO') {
-                Navigator.of(context).pushReplacementNamed('host');
+              if (state.vendor.requiereCambioContrasena == 'NO') {
+                Navigator.of(context).pushReplacementNamed(AppRouteNames.vendorPage);
               } else {
                 Navigator.of(context).pushReplacementNamed('change-password');
               }
-            }
-            else if (state is AuthLogout || state is AuthError) {
-              // FIXME: Considerar delete de host
+            } else if (state is AuthLogout || state is AuthError) {
               Navigator.of(context).pushReplacementNamed('login');
             }
           },

@@ -7,7 +7,6 @@ import 'package:kasanipedido/profile/profile.dart';
 import 'package:kasanipedido/screens/favourite_screen.dart';
 import 'package:kasanipedido/screens/history_screen.dart';
 import 'package:kasanipedido/screens/home_screen.dart';
-import 'package:kasanipedido/screens/vendor_screen.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
 import 'package:kasanipedido/utils/images.dart';
 
@@ -43,9 +42,7 @@ class HostScreen extends StatelessWidget {
         body: IndexedStack(
           index: selectedTab.index,
           children: const [
-            // TODO: Login Vendor
-            // EditProductPage(),
-            VendorScreen(),
+            EditProductPage(),
             HistoryPage(),
             ShoppingCartPage(),
             FavoriteProductsPage(),

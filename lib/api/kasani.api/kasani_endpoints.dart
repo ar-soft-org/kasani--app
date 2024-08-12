@@ -24,4 +24,7 @@ class KasaniEndpoints {
   static const String orderHistory = '$apiServer/prepedido/consultar';
   static const String orderHistoryDetail = '$apiServer/prepedido/consultar_detalle';
   //--------------------------------------
+
+  //----------------Orders----------------
+  static const String clients = '$apiServer/cliente/clientes_vendedor';
 }

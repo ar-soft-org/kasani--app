@@ -19,6 +19,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (vendorJson != null) {
         final vendor = VendorModel.fromJson(json.decode(vendorJson));
         log(vendor.toJson().toString());
+        _deleteHostData();
         emit(AuthVendorSuccess(vendor: vendor));
       } else {
         emit(AuthInitial());
@@ -35,6 +36,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (hostJson != null) {
         final host = HostModel.fromJson(json.decode(hostJson));
         log(host.toJson().toString());
+        _deleteVendorData();
         emit(AuthHostSuccess(host: host));
       } else {
         emit(AuthInitial());
@@ -43,4 +45,14 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(message: e.toString()));
     }
   }
+
+  _deleteHostData() async {
+    await UserStorage.deleteHost();
+  }
+
+  _deleteVendorData() async {
+    await UserStorage.deleteVendor();
+  }
+
+  
 }

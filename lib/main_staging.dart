@@ -1,12 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kasanipedido/app/app.dart';
 import 'package:kasanipedido/bootstrap.dart';
+import 'package:kasanipedido/data/services/client/client_service.dart';
 import 'package:kasanipedido/data/services/order_booking/order_service.dart';
+import 'package:kasanipedido/domain/repository/client/client_api_impl.dart';
+import 'package:kasanipedido/domain/repository/client/client_repository.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_api_impl.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/firebase_options.dart';
+import 'package:kasanipedido/translation/supported_locales.dart';
 import 'package:products_api_impl/products_api_impl.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
@@ -17,13 +22,20 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await EasyLocalization.ensureInitialized();
+
   final dioInstance = Dio();
 
   final productService = ProductService(dio: dioInstance);
   final productsApi = ProductsApiImpl(productService: productService);
 
+  final clientService = ClientService(dio: dioInstance);
+  final clientApi = ClientApiImpl(service: clientService);
+
   final shoppingCartRepository =
       ShoppingCartRepository(productsApi: productsApi);
+
+  final clientRepository = ClientRepository(clientApi: clientApi);
 
   final orderService = OrderService(dio: dioInstance);
   final orderBookingApi = OrderBookingApiImpl(orderService: orderService);
@@ -32,11 +44,17 @@ Future<void> main() async {
       OrderRepository(orderBookingApi: orderBookingApi);
 
   bootstrap(() {
-    return App(
-      shoppingCartRepository: shoppingCartRepository,
-      dio: dioInstance,
-      orderService: orderService,
-      orderBookingRepository: orderBookingRepository,
+    return EasyLocalization(
+      supportedLocales: SupportedLocales.locales,
+      path: 'assets/translations',
+      fallbackLocale: const Locale('es', 'PE'),
+      child: App(
+        shoppingCartRepository: shoppingCartRepository,
+        dio: dioInstance,
+        orderService: orderService,
+        orderBookingRepository: orderBookingRepository,
+        clientRepository: clientRepository,
+      ),
     );
   });
 }
