@@ -8,7 +8,7 @@ import 'package:kasanipedido/screens/history_screen.dart';
 import 'package:kasanipedido/screens/home_screen_continution.dart';
 import 'package:kasanipedido/screens/login_screen.dart';
 import 'package:kasanipedido/screens/order_check_out_screen.dart';
-import 'package:kasanipedido/screens/vendor_screen.dart';
+import 'package:kasanipedido/vendor/view/vendor_page.dart';
 import 'package:kasanipedido/screens/welcome_screen.dart';
 import 'package:kasanipedido/screens/widgets/order_completed_screen.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
