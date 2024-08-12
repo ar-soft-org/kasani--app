@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = BlocProvider.of<LoginCubit>(context).state;
+    final state = context.select((LoginCubit bloc) => bloc.state);
 
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.light,
@@ -214,20 +214,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               state is LoginLoading
                                   ? 'Cargando...'
                                   : 'INGRESAR',
-                              16, () {
-                            if (email.text == 'Vendedor') {
-                              Navigator.of(context).pushNamed('vendor');
-                              // Get.to(const VendorScreen());
-                            } else {
-                              if (isVendor == true) {
-                                BlocProvider.of<LoginCubit>(context)
-                                    .loginVendor(email.text, pw.text);
-                              } else {
-                                BlocProvider.of<LoginCubit>(context)
-                                    .loginHost(email.text, pw.text);
-                              }
-                            }
-                          }, 308, 58, Colors.transparent, AppColors.lightCyan,
+                              16,
+                              state is LoginLoading
+                                  ? null
+                                  : () {
+                                      if (isVendor == true) {
+                                        BlocProvider.of<LoginCubit>(context)
+                                            .loginVendor(email.text, pw.text);
+                                      } else {
+                                        BlocProvider.of<LoginCubit>(context)
+                                            .loginHost(email.text, pw.text);
+                                      }
+                                    },
+                              308,
+                              58,
+                              Colors.transparent,
+                              AppColors.lightCyan,
                               100,
                               showShadow: true),
                           verticalSpacer(20),

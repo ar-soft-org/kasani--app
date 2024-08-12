@@ -22,4 +22,7 @@ class AppImages {
   static String profileIcon = 'lib/assets/images/profile_icon.svg';
   static String cartIcon = 'lib/assets/images/cart_icon.svg';
   static String checkCircle = 'assets/icons/check_circle.svg';
+
+  // subcategory
+  static String mariscosCat = 'assets/icons/mariscos.png';
 }

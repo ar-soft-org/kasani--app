@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:kasanipedido/api/kasani.api/kasani_endpoints.dart';
 import 'package:kasanipedido/domain/repository/order_booking/models/create_order_request.dart';
@@ -19,7 +21,14 @@ class OrderService {
     const path = KasaniEndpoints.orderRegister;
 
     try {
-      final response = await _dio.post(path, data: data.toMap());
+      final dataJson = {
+        ...data.toMap(),
+        // FIXME: This is a hardcoded value
+        'id_empleado': '2',
+      };
+      inspect(dataJson);
+
+      final response = await _dio.post(path, data: dataJson);
 
       final responseCode = response.data['codigo'];
       if (responseCode is String && responseCode != '00') {
@@ -30,6 +39,15 @@ class OrderService {
       return CreateOrderResponse.fromJson(response.data);
     } on CreateOrderException catch (e) {
       throw CreateOrderException(message: e.message);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.badResponse) {
+        throw CreateOrderException(
+            message: e.response?.data['mensaje'] ??
+                e.response?.data['error'] ??
+                e.message);
+      }
+
+      throw CreateOrderException(message: e.error?.toString() ?? e.toString());
     } catch (e) {
       throw CreateOrderException(message: e.toString());
     }

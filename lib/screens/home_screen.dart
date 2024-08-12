@@ -250,7 +250,7 @@ class ProductCard extends StatelessWidget {
       title: item.nombreProducto,
       count: data.quantity.toString(),
       mScale: item.unidadMedida,
-      isHeadingVisible: false,
+      // isHeadingVisible: false,
       showTopActions: false,
       increment: () {
         if (data.hasNotQuantity) {
@@ -337,17 +337,26 @@ class SubCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String getImage(String id) {
+      switch (id) {
+        case '1':
+          return AppImages.fish;
+        case '2':
+          return AppImages.mariscosCat;
+        default:
+          return AppImages.jellyfish;
+      }
+    }
+
     return categoryCard(
-      AppImages.fish,
+      getImage(item.idSubCategoria),
       item.nombreSubCategoria,
       () {
-        // FIXME: Add onTap
-        // setState(() {});
         onTap(item.idSubCategoria);
       },
-      Colors.white,
-      AppColors.darkBlue,
-      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+      isSelected ? AppColors.lightCyan : Colors.white,
+      isSelected ? AppColors.whiteFill : AppColors.darkBlue,
+      fontWeight: FontWeight.w700,
     );
   }
 }

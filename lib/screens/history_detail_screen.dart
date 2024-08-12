@@ -176,15 +176,14 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                       itemCount: detail.detalle.length,
                       itemBuilder: (_, index) {
                         final item = detail.detalle[index];
-                        return historyItemCard(item.nombreProducto,
-                            item.cantidad, item.unidadMedida);
+                        return historyItemCard(
+                          item.nombreProducto,
+                          item.cantidad,
+                          item.unidadMedida,
+                        );
                       },
                     ),
                   ),
-                // historyItemCard(
-                //     'In et eros eget lectus lobortis viverra.', '10', 'Doc'),
-                // historyItemCard(
-                //     'In et eros eget lectus lobortis viverra.', '9', 'kg'),
               ],
             ),
           ),
@@ -209,15 +208,15 @@ Widget historyItemCard(String title, String count, String mScale) {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Langostino Jumbo',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontFamily: GoogleFonts.inter().fontFamily,
-                    fontSize: 16.sp,
-                    color: AppColors.lightCyan,
-                  ),
-                ),
+                // Text(
+                //   'Langostino Jumbo',
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.w500,
+                //     fontFamily: GoogleFonts.inter().fontFamily,
+                //     fontSize: 16.sp,
+                //     color: AppColors.lightCyan,
+                //   ),
+                // ),
                 Text(
                   title,
                   maxLines: null,
@@ -233,7 +232,7 @@ Widget historyItemCard(String title, String count, String mScale) {
           ),
           const SizedBox(width: 8),
           SizedBox(
-            width: 90.w,
+            width: 110.w,
             height: 30.h,
             child: Align(
               alignment: Alignment.centerRight,

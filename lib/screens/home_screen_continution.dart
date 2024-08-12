@@ -1,15 +1,18 @@
 import 'dart:developer';
-
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
-import 'package:kasanipedido/exports/exports.dart';
+import 'package:kasanipedido/screens/widgets/category_card.dart';
+import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/debouncer.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/list_wrapper.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/regular_text.dart';
 import 'package:kasanipedido/widgets/categories/category_section.dart';
-import 'package:products_api/products_api.dart';
+import 'package:kasanipedido/widgets/textfields.dart';
+import 'package:kasanipedido/widgets/vertical_spacer.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class ContinueHomePage extends StatelessWidget {
@@ -151,26 +154,38 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  verticalSpacer(20),
-                  Hero(
-                    tag: 'search',
-                    child: textField(controller, 46, 356, 'Langostino', '', 100,
-                        Colors.white, true, false, true, () {}, context),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                verticalSpacer(20),
+                Hero(
+                  tag: 'search',
+                  child: textField(
+                    controller,
+                    46,
+                    356,
+                    'Buscar',
+                    '',
+                    100,
+                    Colors.white,
+                    true,
+                    false,
+                    true,
+                    () {},
+                    context,
+                    textColor: const Color(0xff222222),
                   ),
-                  verticalSpacer(15),
-                  Builder(builder: (_) {
+                ),
+                verticalSpacer(15),
+                Expanded(
+                  child: Builder(builder: (_) {
                     if (searching) {
                       return ListWrapper(
                         count: filteredProducts.length,
                         emptyWidget: const RegularText('No hay productos'),
                         child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.35,
+                          // height: MediaQuery.of(context).size.height * 0.35,
                           child: CategoryAndProducts(
                             categoryName: 'Resultados de búsqueda',
                             products: filteredProducts,
@@ -190,24 +205,56 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                         ),
                       ),
                       verticalSpacer(20),
-                      ...productsByCategory!.entries.map((entry) {
-                        final category = entry.key;
-                        final products = entry.value;
-                        return SingleChildScrollView(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.35,
+                      Builder(builder: (_) {
+                        if (state.currentCategory != null) {
+                          final categoryName =
+                              state.currentCategory!.nombreCategoria;
+                          final products = productsByCategory![
+                              state.currentCategory!.nombreCategoria];
+                          return Expanded(
                             child: CategoryAndProducts(
-                              categoryName: category,
-                              products: products,
+                              categoryName: categoryName,
+                              products: products!,
                               productsData: productsData,
+                            ),
+                          );
+                        }
+
+                        return Expanded(
+                          child: Scrollbar(
+                            thickness: 10,
+                            thumbVisibility: true,
+                            radius: const Radius.circular(10),
+                            interactive: true,
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 20.w),
+                                child: Column(
+                                  children:
+                                      productsByCategory!.entries.map((entry) {
+                                    final category = entry.key;
+                                    final products = entry.value;
+                                    return SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.35,
+                                      child: CategoryAndProducts(
+                                        categoryName: category,
+                                        products: products,
+                                        productsData: productsData,
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
                             ),
                           ),
                         );
-                      }).toList(),
+                      })
                     ]);
                   }),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
@@ -267,7 +314,7 @@ class CategoryAndProducts extends StatelessWidget {
                   title: item.nombreProducto,
                   count: data.quantity.toString(),
                   mScale: item.unidadMedida,
-                  isHeadingVisible: true,
+                  // isHeadingVisible: true,
                   showTopActions: false,
                   data: data,
                   increment: () {

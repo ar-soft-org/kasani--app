@@ -36,7 +36,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(
           status: HomeStatus.success,
           categories: categories,
-          currentCategory: () => null,
+          currentCategory: () => categories.isEmpty ? null : categories.first,
           currentSubCategory: () => null,
           currentProducts: []));
     } on UnauthorizedException catch (e) {
@@ -64,12 +64,13 @@ class HomeCubit extends Cubit<HomeState> {
         idEmpresa: host.idEmpresa,
         idSucursal: host.idSucursal,
         idUsuario: host.idUsuario,
-        idEmpleado: employeId!,
+        idEmpleado: employeId ?? '',
       );
 
       emit(state.copyWith(
         status: HomeStatus.success,
         products: products,
+        currentProducts: products,
       ));
 
       _updateProductsByCategory(products);
@@ -105,6 +106,17 @@ class HomeCubit extends Cubit<HomeState> {
   setCurrentCategory(String categoryId) {
     final category = state.categories
         .firstWhere((element) => element.idCategoria == categoryId);
+
+    // if current category is the same as the new one, deselect it
+
+    if (state.currentCategory?.idCategoria == category.idCategoria) {
+      emit(state.copyWith(
+        currentCategory: () => null,
+        currentSubCategory: () => null,
+        currentProducts: state.products,
+      ));
+      return;
+    }
 
     emit(state.copyWith(
       currentCategory: () => category,

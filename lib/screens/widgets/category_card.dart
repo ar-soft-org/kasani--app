@@ -48,8 +48,13 @@ Widget categoryCard(
               ),
             ),
             verticalSpacer(5),
-            customText(title, fontWeight ?? FontWeight.w700, 16,
-                GoogleFonts.roboto().fontFamily.toString(), clrText),
+            customText(
+              title,
+              fontWeight ?? FontWeight.w700,
+              16,
+              GoogleFonts.roboto().fontFamily.toString(),
+              clrText,
+            ),
           ],
         ),
 
@@ -103,11 +108,11 @@ Widget circleCard(
 }
 
 Widget addItemCard({
-  String? headTitle,
+  // String? headTitle,
   required String title,
   required String count,
   required String mScale,
-  required bool isHeadingVisible,
+  // required bool isHeadingVisible,
 
   /// show comment and delete icon
   required bool showTopActions,
@@ -133,17 +138,17 @@ Widget addItemCard({
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                isHeadingVisible
-                    ? Text(
-                        headTitle ?? '--',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: GoogleFonts.inter().fontFamily,
-                          fontSize: 16.sp,
-                          color: AppColors.lightCyan,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
+                // isHeadingVisible
+                //     ? Text(
+                //         headTitle ?? '--',
+                //         style: TextStyle(
+                //           fontWeight: FontWeight.w500,
+                //           fontFamily: GoogleFonts.inter().fontFamily,
+                //           fontSize: 16.sp,
+                //           color: AppColors.lightCyan,
+                //         ),
+                //       )
+                //     : const SizedBox.shrink(),
                 Text(
                   title,
                   maxLines: null,
@@ -161,7 +166,10 @@ Widget addItemCard({
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (showTopActions) ...[
-                TopActions(comment: comment, data: data),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: TopActions(comment: comment, data: data),
+                ),
                 SizedBox(
                   height: 8.h,
                 )
@@ -203,7 +211,8 @@ Widget addItemCard({
                                     borderRadius: BorderRadius.circular(17.r),
                                   ),
                                   child: ProductCount(
-                                    initialQuantity: data?.quantity.toString() ?? '1',
+                                    initialQuantity:
+                                        data?.quantity.toString() ?? '1',
                                     onDelete: () {
                                       onCountDelete?.call();
                                     },
@@ -213,8 +222,7 @@ Widget addItemCard({
                             );
 
                             final quantityResult = result?['quantity'];
-                            if (context.mounted &&
-                                quantityResult != null) {
+                            if (context.mounted && quantityResult != null) {
                               onEdit(quantityResult);
                             }
                           }
@@ -337,7 +345,7 @@ class TopActions extends StatelessWidget {
             color: comment != null && comment!.isNotEmpty ? Colors.blue : null,
           ),
         ),
-        SizedBox(width: 10.w),
+        SizedBox(width: 20.w),
         InkWell(
           onTap: () async {
             // FIXME: add confirm

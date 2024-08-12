@@ -12,11 +12,10 @@ Widget textField(
   bool isSearchIcon,
   bool isShow,
   void Function() onShow,
-  BuildContext context,
-  {
-    Function()? onTap,
-  }
-) {
+  BuildContext context, {
+  Function()? onTap,
+  Color? textColor,
+}) {
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(borderRadius.r),
@@ -34,8 +33,10 @@ Widget textField(
           controller: controller,
           autocorrect: true,
           keyboardType: TextInputType.visiblePassword,
-          style: const TextStyle(fontSize: 14, color: AppColors.greyText),
+          style:
+              TextStyle(fontSize: 14, color: textColor ?? AppColors.greyText),
           decoration: InputDecoration(
+            
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: isShadow == false
@@ -87,7 +88,7 @@ Widget textField(
                 fontStyle: FontStyle.normal),
             fillColor: fillColor,
             contentPadding:
-                EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
             filled: true,
           ),
         )),

@@ -1,12 +1,20 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
-import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/order_booking/bloc/order_booking_bloc.dart';
+import 'package:kasanipedido/screens/widgets/booking_order_page.dart';
+import 'package:kasanipedido/screens/widgets/check_out_stepper.dart';
+import 'package:kasanipedido/screens/widgets/order_added_detail_page.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
+import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
+import 'package:kasanipedido/widgets/app_bar.dart';
+import 'package:kasanipedido/widgets/custom_btn.dart';
+import 'package:kasanipedido/widgets/vertical_spacer.dart';
 
 class OrderBookingPage extends StatelessWidget {
   const OrderBookingPage({super.key});
@@ -64,6 +72,7 @@ class OrderBookingScreen extends StatefulWidget {
 class _OrderBookingScreenState extends State<OrderBookingScreen> {
   String? _selectedValue;
   PageController? _pageController;
+  late FocusNode focusNode;
 
   late GlobalKey<FormState> formKey;
 
@@ -106,7 +115,7 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
       context.read<OrderBookingBloc>().add(OrderBookingSubsidiariesRequested(
           subsidiaries: authState.host.locales));
     } else if (authState is AuthVendorSuccess) {
-      final vendorState = context.read<VendorBloc>().state as VendorState?;
+      VendorState? vendorState = context.read<VendorBloc?>()?.state;
       if (vendorState != null && vendorState.currentClient != null) {
         context.read<OrderBookingBloc>().add(OrderBookingSubsidiariesRequested(
             subsidiaries: vendorState.currentClient!.locales));
@@ -114,11 +123,14 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
     } else {
       throw UnimplementedError();
     }
+
+    focusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _pageController?.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
@@ -134,6 +146,22 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
     }
   }
 
+  removeFocus() {
+    focusNode.unfocus();
+  }
+
+  back() {
+    if (_currentPage == 0) {
+      Navigator.of(context).pop();
+    } else {
+      _pageController!.animateToPage(
+        _currentPage - 1,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final createOrderStatus =
@@ -142,13 +170,15 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
     return Scaffold(
       backgroundColor: _currentPage == 2 ? Colors.white : AppColors.ice,
       appBar: customAppBar(
-          context,
-          _currentPage == 0
-              ? 'Datos de Entrega'
-              : _currentPage == 1
-                  ? 'Datos del Pedido'
-                  : '',
-          _currentPage == 2 ? false : true),
+        context,
+        _currentPage == 0
+            ? 'Datos de Entrega'
+            : _currentPage == 1
+                ? 'Datos del Pedido'
+                : '',
+        _currentPage == 2 ? false : true,
+        onPressed: () => back(),
+      ),
       body: BlocListener<OrderBookingBloc, OrderBookingState>(
         listenWhen: (previous, current) {
           return previous.errorMessage != current.errorMessage ||
@@ -176,9 +206,17 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            verticalSpacer(30),
-            buildIndicator(_currentPage),
-            verticalSpacer(10),
+            GestureDetector(
+                onTap: () => removeFocus(),
+                child: ColoredBox(
+                    color: AppColors.ice,
+                    child: Column(
+                      children: [
+                        verticalSpacer(30),
+                        buildIndicator(_currentPage),
+                        verticalSpacer(10),
+                      ],
+                    ))),
             Expanded(
               child: Center(
                 child: PageView(
@@ -197,6 +235,7 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
                     ),
                     OrderDetailedPageView(
                       formKey: formKey,
+                      focusNode: focusNode,
                       onSavedComment: (String value) {
                         context
                             .read<OrderBookingBloc>()
@@ -253,8 +292,8 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
                                 productsData.productsData.values.toList(),
                           ));
                     } else if (state is AuthVendorSuccess) {
-                      final VendorState? vendorState =
-                          context.read<VendorBloc>().state;
+                      VendorState? vendorState =
+                          context.read<VendorBloc?>()?.state;
                       context
                           .read<OrderBookingBloc>()
                           .add(OrderBookingOrderCreated(

@@ -92,10 +92,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             days: days,
           );
     } else if (state is AuthVendorSuccess) {
-      VendorState? vendorState = context.read<VendorBloc>().state;
+      VendorState? vendorState = context.read<VendorBloc?>()?.state;
       context.read<OrderHistoryCubit>().getOrdersHistory(
             state.vendor,
-            clientId: vendorState.currentClient?.idCliente,
+            clientId: vendorState?.currentClient?.idCliente,
             employeeId: state.vendor.idEmpleado,
             days: days,
           );

@@ -55,8 +55,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         clientId: state.host.idCliente,
       ));
     } else if (state is AuthVendorSuccess) {
-      VendorState? vendorState = context.read<VendorBloc>().state;
-      final client = vendorState.currentClient;
+      VendorState? vendorState = context.read<VendorBloc?>()?.state;
+      final client = vendorState?.currentClient;
       if (client == null) {
         throw Exception('Client not found');
       }
@@ -114,7 +114,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         title: item.nombreProducto,
                         count: data.quantity.toString(),
                         mScale: item.unidadMedida,
-                        isHeadingVisible: true,
+                        // isHeadingVisible: true,
                         showTopActions: false,
                         data: data,
                         increment: () {

@@ -78,13 +78,13 @@ class CartScreen extends StatelessWidget {
                     final item = products[index];
                     final data = getProductData(item, productsData);
                     return addItemCard(
-                        headTitle: item.nombreProducto,
-                        title: item.descripcionProducto,
+                        // title: item.descripcionProducto,
+                        title: item.nombreProducto,
                         comment: data.observation,
                         data: data,
                         count: data.quantity.toString(),
                         mScale: item.unidadMedida,
-                        isHeadingVisible: true,
+                        // isHeadingVisible: true,
                         showTopActions: true,
                         increment: () {
                           final updated =
@@ -173,23 +173,37 @@ class CartScreen extends StatelessWidget {
                 ],
               ),
               child: Center(
-                child: customButton(context, false, 'Continuar', 16, () {
-                  if (products.isEmpty) {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(const SnackBar(
-                          content: Text(
-                              'No hay productos en el carrito de compras')));
-                    return;
-                  }
-                  final bloc = context.read<ShoppingCartBloc>();
-                  final vendorBloc = context.read<VendorBloc>();
-                  Navigator.of(context).pushNamed('order_booking', arguments: {
-                    'bloc': bloc,
-                    'vendor_bloc': vendorBloc,
-                  });
-                }, 308, 58, Colors.transparent, AppColors.lightCyan, 100,
-                    showShadow: true),
+                child: customButton(
+                  context,
+                  false,
+                  'Continuar',
+                  16,
+                  () {
+                    if (products.isEmpty) {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(const SnackBar(
+                            content: Text(
+                                'No hay productos en el carrito de compras')));
+                      return;
+                    }
+                    final bloc = context.read<ShoppingCartBloc>();
+                    VendorBloc? vendorBloc = context.read<VendorBloc?>();
+                    Navigator.of(context).pushNamed(
+                      'order_booking',
+                      arguments: {
+                        'bloc': bloc,
+                        'vendor_bloc': vendorBloc,
+                      },
+                    );
+                  },
+                  308,
+                  58,
+                  Colors.transparent,
+                  AppColors.lightCyan,
+                  100,
+                  showShadow: true,
+                ),
               ),
             ),
           ],
