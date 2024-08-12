@@ -275,6 +275,20 @@ class ProductCard extends StatelessWidget {
           context.read<HomeCubit>().updateProductData(updated);
         }
       },
+      onEdit: (String value) {
+        if (data.hasNotQuantity) {
+          context.read<HomeCubit>().addProductData(
+                item,
+                data: data.copyWith(quantity: num.parse(value).toInt()),
+              );
+          context
+              .read<EditProductBloc>()
+              .add(EditProductAddProduct(product: item));
+        } else {
+          final updated = data.copyWith(quantity: num.parse(value).toInt());
+          context.read<HomeCubit>().updateProductData(updated);
+        }
+      },
       context: context,
     );
   }
