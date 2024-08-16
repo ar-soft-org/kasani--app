@@ -174,7 +174,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                     true,
                     () {},
                     context,
-                    textColor: const Color(0xff222222),
+                    textColor: AppColors.textInputColor,
                   ),
                 ),
                 verticalSpacer(15),

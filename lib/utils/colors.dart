@@ -26,4 +26,6 @@ class AppColors {
   static const darkGrey = Color(0XFF4C4C4C);
   static const whiteFill = Color(0XFFF1F1F1);
   static const strokeWhite = Color(0XFFE0E0E0);
+
+  static const textInputColor = Color(0xff222222);
 }
