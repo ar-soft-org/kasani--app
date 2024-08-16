@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kasanipedido/domain/repository/client/models/client.dart';
+import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
 import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
 import 'package:kasanipedido/profile/profile.dart';
 import 'package:kasanipedido/screens/favourite_screen.dart';
@@ -12,6 +13,7 @@ import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class HostHomePage extends StatelessWidget {
   const HostHomePage({super.key, this.client});
@@ -20,18 +22,25 @@ class HostHomePage extends StatelessWidget {
     VendorBloc bloc,
     Client client,
   ) {
-    return BlocProvider.value(
-      value: bloc,
-      child: HostHomePage(client: client),
-    );
+    return HostHomePage(client: client);
   }
 
   final Client? client;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HostHomeCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => HostHomeCubit(),
+        ),
+        BlocProvider(
+          create: (context) => EditProductBloc(
+              shoppingCartRepository:
+                  RepositoryProvider.of<ShoppingCartRepository>(context))
+            ..add(const EditProductProductsDataRequested()),
+        ),
+      ],
       child: const HostHomeView(),
     );
   }
@@ -53,6 +62,9 @@ class HostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedTab =
         context.select((HostHomeCubit cubit) => cubit.state.tab);
+
+    final countProducts =
+        context.select((EditProductBloc bloc) => bloc.state.countProducts);
 
     final VendorState? vendorState =
         context.select((VendorBloc? bloc) => bloc?.state);
@@ -103,6 +115,8 @@ class HostScreen extends StatelessWidget {
                     label: 'Carrito',
                     groupValue: selectedTab,
                     value: HostHomeTab.cart,
+                    badgeValue:
+                        countProducts != null ? countProducts.toString() : '',
                   ),
                   _HomeTabButton(
                     icon: AppImages.fav,
@@ -185,15 +199,22 @@ class _HomeTabButton extends StatelessWidget {
     required this.label,
     required this.value,
     required this.groupValue,
+    this.badgeValue = '',
   });
 
   final String icon;
   final String label;
   final HostHomeTab groupValue;
   final HostHomeTab value;
+  final String badgeValue;
 
   @override
   Widget build(BuildContext context) {
+    final svgIcon = SvgPicture.asset(icon,
+        color: groupValue != value
+            ? const Color(0xff9586a8)
+            : const Color(0xff008fad));
+
     return InkWell(
       onTap: () => context.read<HostHomeCubit>().setTab(value),
       child: Padding(
@@ -203,10 +224,13 @@ class _HomeTabButton extends StatelessWidget {
             ConstrainedBox(
               constraints: BoxConstraints(minHeight: 37.h),
               child: Center(
-                child: SvgPicture.asset(icon,
-                    color: groupValue != value
-                        ? const Color(0xff9586a8)
-                        : const Color(0xff008fad)),
+                child: badgeValue.isNotEmpty
+                    ? Badge(
+                        backgroundColor: AppColors.lightCyan,
+                        label: Text(badgeValue),
+                        child: svgIcon,
+                      )
+                    : svgIcon,
               ),
             ),
             ConstrainedBox(

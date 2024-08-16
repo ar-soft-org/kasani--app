@@ -34,3 +34,15 @@ final class EditProductState extends Equatable {
         productsData,
       ];
 }
+
+extension EditProductStateX on EditProductState {
+  bool get isLoading => status == EditProductStatus.loading;
+  bool get isSuccess => status == EditProductStatus.success;
+  bool get isFailure => status == EditProductStatus.failure;
+
+  int? get countProducts {
+    if (productsData.isEmpty) return null;
+
+    return productsData.values.map((e) => e.quantity).reduce((a, b) => a + b);
+  }
+}

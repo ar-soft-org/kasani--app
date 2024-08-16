@@ -6,11 +6,14 @@ import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/domain/repository/order_booking/models/order_history.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/order_history_detail/cubit/order_history_detail_cubit.dart';
+import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/bottom_button.dart';
 import 'package:kasanipedido/widgets/app_bar.dart';
 import 'package:kasanipedido/widgets/custom_text.dart';
 import 'package:kasanipedido/widgets/horizontal_spacer.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
+import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
 class HistoryDetailPage extends StatelessWidget {
   const HistoryDetailPage({super.key});
@@ -26,11 +29,23 @@ class HistoryDetailPage extends StatelessWidget {
       throw Exception('orderHistory not found in map argument');
     }
 
-    return BlocProvider(
-      create: (context) => OrderHistoryDetailCubit(
-        orderHistory: orderHistory,
-        orderRepository: RepositoryProvider.of<OrderRepository>(context),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => OrderHistoryDetailCubit(
+            orderHistory: orderHistory,
+            orderRepository: RepositoryProvider.of<OrderRepository>(context),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => ShoppingCartBloc(
+            shoppingCartRepository:
+                RepositoryProvider.of<ShoppingCartRepository>(context),
+          )
+            ..add(const ShoppingCartSubscriptionRequested())
+            ..add(const ShoppingCartProductsDataRequested()),
+        ),
+      ],
       child: const HistoryDetailView(),
     );
   }
@@ -81,6 +96,8 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
 
     final status =
         context.select((OrderHistoryDetailCubit cubit) => cubit.state.status);
+
+    final cartState = context.select((ShoppingCartBloc bloc) => bloc.state);
 
     return BlocListener<OrderHistoryDetailCubit, OrderHistoryDetailState>(
       listenWhen: (previous, current) {
@@ -183,6 +200,57 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                         );
                       },
                     ),
+                  ),
+                verticalSpacer(20),
+                if (detail != null && detail.detalle.isNotEmpty)
+                  BottomButon(
+                    label: 'Volver a pedir',
+                    onPressed: () async {
+                      late bool result;
+                      if (cartState.productsData.isNotEmpty) {
+                        // show dialog to confirm delete all products and their data
+                        final r = await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('¿Estás seguro?'),
+                              content: const Text(
+                                  'Si vuelves a pedir, se eliminarán los productos actuales de tu carrito.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                  },
+                                  child: const Text('Aceptar'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+
+                        result = r == true;
+                      }
+
+                      if (result != true) {
+                        return;
+                      }
+
+                      if (!mounted || !context.mounted) {
+                        return;
+                      }
+
+                      context
+                          .read<ShoppingCartBloc>()
+                          .add(const ShoppingCartAllDataCleared());
+
+                      // TODO: add products to cart
+                    },
                   ),
               ],
             ),

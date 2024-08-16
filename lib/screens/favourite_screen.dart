@@ -171,30 +171,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     },
                   ),
                 ),
-                /*
-                  verticalSpacer(20),
-                  Align(
-                    alignment: Alignment.center,
-                    child: customButton(context, true, 'Continuar comprando', 12,
-                        () {}, 175, 31, Colors.transparent, AppColors.blue, 8,
-                        showShadow: true),
-                  ),
-                  const Spacer(),
-                  Container(
-                    height: 150,
-                    padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(60.r),
-                            topRight: Radius.circular(60.r))),
-                    child: Center(
-                      child: customButton(context, false, 'Continuar', 16, () {}, 308,
-                          58, Colors.transparent, AppColors.lightCyan, 100,
-                          showShadow: true),
-                    ),
-                  ),
-                  */
               ],
             ),
           );

@@ -52,4 +52,8 @@ class OrderHistoryDetailCubit extends Cubit<OrderHistoryDetailState> {
           status: OrderHistoryDetailStatus.initial, errorMessage: ''));
     }
   }
+
+  orderAgain() {
+    // TODO: Implement order again
+  }
 }
