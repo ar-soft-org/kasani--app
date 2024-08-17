@@ -175,6 +175,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                     () {},
                     context,
                     textColor: AppColors.textInputColor,
+                    bold: true,
                   ),
                 ),
                 verticalSpacer(15),
@@ -350,14 +351,14 @@ class CategoryAndProducts extends StatelessWidget {
                       context.read<HomeCubit>().addProductData(
                             item,
                             data: data.copyWith(
-                                quantity: num.parse(value).toInt()),
+                                quantity: num.parse(value).toDouble()),
                           );
                       context
                           .read<EditProductBloc>()
                           .add(EditProductAddProduct(product: item));
                     } else {
                       final updated =
-                          data.copyWith(quantity: num.parse(value).toInt());
+                          data.copyWith(quantity: num.parse(value).toDouble());
                       context.read<HomeCubit>().updateProductData(updated);
                     }
                   });

@@ -43,6 +43,6 @@ extension EditProductStateX on EditProductState {
   int? get countProducts {
     if (productsData.isEmpty) return null;
 
-    return productsData.values.map((e) => e.quantity).reduce((a, b) => a + b);
+    return productsData.values.length;
   }
 }

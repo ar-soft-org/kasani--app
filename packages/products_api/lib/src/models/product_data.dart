@@ -2,7 +2,7 @@ import 'package:products_api/products_api.dart';
 
 class ProductData {
   final String productId;
-  final int quantity;
+  final double quantity;
   final double price;
   final String observation;
 
@@ -24,7 +24,7 @@ class ProductData {
 
   ProductData copyWith({
     String? productId,
-    int? quantity,
+    double? quantity,
     double? price,
     String? observation,
   }) =>
@@ -37,7 +37,7 @@ class ProductData {
 
   factory ProductData.fromJson(JsonMap json) => ProductData(
         productId: json['id_producto'],
-        quantity: num.parse(json['cantidad']).toInt(),
+        quantity: num.parse(json['cantidad']).toDouble(),
         price: num.parse(json['precio']).toDouble(),
         observation: json['observacion'] != null ? json['observacion'] : '',
       );

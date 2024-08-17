@@ -15,6 +15,7 @@ Widget textField(
   BuildContext context, {
   Function()? onTap,
   Color? textColor,
+  bool bold = false,
 }) {
   return Card(
     shape: RoundedRectangleBorder(
@@ -38,17 +39,14 @@ Widget textField(
           decoration: InputDecoration(
             
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: isShadow == false
-                      ? AppColors.tfBorder
-                      : Colors.transparent,
-                ),
+              borderSide: const BorderSide(
+                color: AppColors.tfBorder,
+              ),
+
                 borderRadius: BorderRadius.circular(borderRadius.r)),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: isShadow == false
-                      ? AppColors.tfBorder
-                      : Colors.transparent,
+                borderSide: const BorderSide(
+                  color: AppColors.tfBorder,
                 ),
                 borderRadius: BorderRadius.circular(borderRadius.r)),
             border: OutlineInputBorder(
@@ -83,7 +81,7 @@ Widget textField(
             hintStyle: TextStyle(
                 color: AppColors.greyText,
                 fontSize: 16.sp,
-                fontWeight: FontWeight.w400,
+                fontWeight: bold ? FontWeight.bold : FontWeight.w400,
                 fontFamily: GoogleFonts.inter().fontFamily,
                 fontStyle: FontStyle.normal),
             fillColor: fillColor,

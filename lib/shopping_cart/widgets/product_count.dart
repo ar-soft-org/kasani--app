@@ -90,7 +90,7 @@ class _ProductCountState extends State<ProductCount> {
               // custom by unid medida
               LengthLimitingTextInputFormatter(7),
               // use 2 decimal places
-              // FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
             ],
             keyboardType: TextInputType.number,
             decoration: InputDecoration(

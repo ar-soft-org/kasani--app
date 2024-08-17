@@ -112,7 +112,7 @@ class CartScreen extends StatelessWidget {
                         },
                         onEdit: (String value) {
                           final updated =
-                              data.copyWith(quantity: int.parse(value));
+                              data.copyWith(quantity: double.parse(value));
                           context.read<ShoppingCartBloc>().add(
                               ShoppingCartProductDataUpdated(data: updated));
                         },

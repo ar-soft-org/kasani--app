@@ -152,19 +152,24 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: AbsorbPointer(
                                 child: Hero(
                                   tag: 'search',
-                                  child: textField(
-                                    controller,
-                                    46,
-                                    356,
-                                    'Buscar',
-                                    '',
-                                    100,
-                                    Colors.white,
-                                    true,
-                                    true,
-                                    true,
-                                    () {},
-                                    context,
+                                  child: Container(
+                                    padding: EdgeInsets.zero,
+                                    
+                                    child: textField(
+                                      controller,
+                                      46,
+                                      356,
+                                      'Buscar',
+                                      '',
+                                      100,
+                                      Colors.white,
+                                      true,
+                                      true,
+                                      true,
+                                      () {},
+                                      context,
+                                      bold: true,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -279,13 +284,13 @@ class ProductCard extends StatelessWidget {
         if (data.hasNotQuantity) {
           context.read<HomeCubit>().addProductData(
                 item,
-                data: data.copyWith(quantity: num.parse(value).toInt()),
+                data: data.copyWith(quantity: num.parse(value).toDouble()),
               );
           context
               .read<EditProductBloc>()
               .add(EditProductAddProduct(product: item));
         } else {
-          final updated = data.copyWith(quantity: num.parse(value).toInt());
+          final updated = data.copyWith(quantity: num.parse(value).toDouble());
           context.read<HomeCubit>().updateProductData(updated);
         }
       },

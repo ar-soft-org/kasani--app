@@ -172,14 +172,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               false,
                               false,
                               () {},
-                              context),
+                              context,
+                              textColor: AppColors.textInputColor,
+                              ),
                           verticalSpacer(10),
                           textField(pw, 46, 296, 'Password', 'password', 10,
                               AppColors.tfBg, false, false, false, () {
                             setState(() {
                               isObscure = !isObscure;
                             });
-                          }, context),
+                          }, context, textColor: AppColors.textInputColor),
                           verticalSpacer(10),
                           // checkbox is vendor
                           Row(
