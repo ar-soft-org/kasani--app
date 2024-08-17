@@ -61,8 +61,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
   late TextEditingController controller;
 
   bool searching = false;
-  final filteredList = [];
-  final List<Product> filteredProducts = [];
+  final Map<String, List<Product>> productsByCategory = {};
 
   final _debouncer = Debouncer(milliseconds: 500);
 
@@ -96,13 +95,19 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
 
   searchProduct(String text) {
     final products = context.read<HomeCubit>().state.products;
-    final filtered = products.where((product) {
-      return product.nombreProducto.toLowerCase().contains(text.toLowerCase());
-    }).toList();
+
+    // filter products by categories
+    final Map<String, List<Product>> productsByCategory = {};
+    for (final product in products) {
+      if (!productsByCategory.containsKey(product.categoria)) {
+        productsByCategory[product.categoria] = [];
+      }
+      productsByCategory[product.categoria]!.add(product);
+    }
 
     setState(() {
-      filteredProducts.clear();
-      filteredProducts.addAll(filtered);
+      this.productsByCategory.clear();
+      this.productsByCategory.addAll(productsByCategory);
     });
   }
 
@@ -183,14 +188,30 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                   child: Builder(builder: (_) {
                     if (searching) {
                       return ListWrapper(
-                        count: filteredProducts.length,
+                        count: productsByCategory?.length ?? 0,
                         emptyWidget: const RegularText('No hay productos'),
-                        child: SizedBox(
-                          // height: MediaQuery.of(context).size.height * 0.35,
-                          child: CategoryAndProducts(
-                            categoryName: 'Resultados de búsqueda',
-                            products: filteredProducts,
-                            productsData: productsData,
+                        child: Scrollbar(
+                          thickness: 10,
+                          thumbVisibility: true,
+                          radius: const Radius.circular(10),
+                          interactive: true,
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.only(right: 20.w),
+                            child: Column(
+                                children:
+                                    productsByCategory!.entries.map((entry) {
+                              final category = entry.key;
+                              final products = entry.value;
+                              return SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.35,
+                                child: CategoryAndProducts(
+                                  categoryName: category,
+                                  products: products,
+                                  productsData: productsData,
+                                ),
+                              );
+                            }).toList()),
                           ),
                         ),
                       );

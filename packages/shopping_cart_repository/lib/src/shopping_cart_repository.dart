@@ -20,18 +20,25 @@ class ShoppingCartRepository {
 
   void updateProduct(Product product) => _productsApi.updateProduct(product);
 
-  void updateProductData(ProductData data) => _productsApi.updateProductData(data);
+  void updateProductData(ProductData data) =>
+      _productsApi.updateProductData(data);
 
   void deleteProduct(String id) => _productsApi.deleteProduct(id);
 
   void deleteProductData(String id) => _productsApi.deleteProductData(id);
 
   void clearProductsData() => _productsApi.clearProductsData();
-  
+
   void clearProducts() => _productsApi.clearProducts();
 
   Future<void> close() => _productsApi.close();
 
-  Future<List<Product>> getFavoriteProducts(FavoriteProductsRequest data) => _productsApi.getFavoriteProducts(data);
+  Future<List<Product>> getFavoriteProducts(FavoriteProductsRequest data) =>
+      _productsApi.getFavoriteProducts(data);
 
+  List<Product> getFilteredProducts(Iterable<String> ids) =>
+      _productsApi.getFilteredProducts(ids);
+
+  void clearAndAddDbProducts(List<Product> products) =>
+      _productsApi.clearAndAddDbProducts(products);
 }

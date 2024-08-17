@@ -46,6 +46,7 @@ class OrderDetail {
     final String cantidad;
     final String unidadMedida;
     final String stock;
+    final String precio;
     final String observacion;
 
     OrderDetail({
@@ -55,6 +56,7 @@ class OrderDetail {
         required this.cantidad,
         required this.unidadMedida,
         required this.stock,
+        required this.precio,
         required this.observacion,
     });
 
@@ -65,6 +67,7 @@ class OrderDetail {
         String? cantidad,
         String? unidadMedida,
         String? stock,
+        String? precio,
         String? observacion,
     }) => 
         OrderDetail(
@@ -74,6 +77,7 @@ class OrderDetail {
             cantidad: cantidad ?? this.cantidad,
             unidadMedida: unidadMedida ?? this.unidadMedida,
             stock: stock ?? this.stock,
+            precio: precio ?? this.precio,
             observacion: observacion ?? this.observacion,
         );
 
@@ -84,6 +88,7 @@ class OrderDetail {
         cantidad: json['cantidad'],
         unidadMedida: json['unidad_medida'],
         stock: json['stock'],
+        precio: json['precio'],
         observacion: json['observacion'],
     );
 
@@ -94,6 +99,7 @@ class OrderDetail {
         'cantidad': cantidad,
         'unidad_medida': unidadMedida,
         'stock': stock,
+        'precio': precio,
         'observacion': observacion,
     };
 }

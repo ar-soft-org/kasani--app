@@ -4,7 +4,7 @@ abstract class ProductsApi {
 
   const ProductsApi();
 
-  /// Provides a [Stream] of all products
+  /// Provides a [Stream] of all products selected by the user
   Stream<List<Product>> getProducts();
 
   void addProductData(ProductData productData);
@@ -39,6 +39,13 @@ abstract class ProductsApi {
   void clearProducts();
 
   Future<List<Product>> getFavoriteProducts(FavoriteProductsRequest data);
+
+  /// Provides a [Stream] of all products from db
+  Stream<List<Product>> getProductsFromDb();
+
+  void clearAndAddDbProducts(List<Product> products);
+
+  List<Product> getFilteredProducts(Iterable<String> ids);
 
 }
 

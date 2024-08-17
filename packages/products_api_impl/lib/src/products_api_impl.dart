@@ -5,11 +5,14 @@ import 'package:rxdart/rxdart.dart';
 class ProductsApiImpl extends ProductsApi {
   ProductsApiImpl({
     required ProductService productService,
-  }):_productService = productService;
+  }) : _productService = productService;
 
   final ProductService _productService;
 
   late final _productsStreamController =
+      BehaviorSubject<List<Product>>.seeded(const []);
+
+  late final _productsFromDbStreamController =
       BehaviorSubject<List<Product>>.seeded(const []);
 
   late final _productsDataStreamController =
@@ -20,6 +23,11 @@ class ProductsApiImpl extends ProductsApi {
   @override
   Stream<List<Product>> getProducts() {
     return _productsStreamController.asBroadcastStream();
+  }
+
+  @override
+  Stream<List<Product>> getProductsFromDb() {
+    return _productsFromDbStreamController.asBroadcastStream();
   }
 
   @override
@@ -110,7 +118,24 @@ class ProductsApiImpl extends ProductsApi {
   }
 
   @override
-  Future<List<Product>> getFavoriteProducts(FavoriteProductsRequest data) async {
+  Future<List<Product>> getFavoriteProducts(
+      FavoriteProductsRequest data) async {
     return _productService.fetchFavoriteProducts(data);
+  }
+
+  @override
+  List<Product> getFilteredProducts(Iterable<String> ids) {
+    final products = [..._productsFromDbStreamController.value];
+
+    final filteredProducts =
+        products.where((product) => ids.contains(product.idProducto)).toList();
+
+    return filteredProducts;
+  }
+
+  @override
+  void clearAndAddDbProducts(List<Product> products) {
+    _productsFromDbStreamController.add(const []);
+    _productsFromDbStreamController.add(products);
   }
 }

@@ -72,6 +72,7 @@ class HomeCubit extends Cubit<HomeState> {
         products: products,
         currentProducts: products,
       ));
+      _shoppingCartRepository.clearAndAddDbProducts(products);
 
       _updateProductsByCategory(products);
     } on UnauthorizedException catch (e) {

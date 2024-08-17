@@ -35,6 +35,8 @@ class HistoryDetailPage extends StatelessWidget {
           create: (context) => OrderHistoryDetailCubit(
             orderHistory: orderHistory,
             orderRepository: RepositoryProvider.of<OrderRepository>(context),
+            shoppingCartRepository:
+                RepositoryProvider.of<ShoppingCartRepository>(context),
           ),
         ),
         BlocProvider(
@@ -101,13 +103,18 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
 
     return BlocListener<OrderHistoryDetailCubit, OrderHistoryDetailState>(
       listenWhen: (previous, current) {
-        return previous.errorMessage != current.errorMessage;
+        return previous.errorMessage != current.errorMessage ||
+            previous.message != current.message;
       },
       listener: (context, state) {
         if (state.errorMessage.isNotEmpty) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        } else if (state.message != null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(state.message!)));
         }
       },
       child: Scaffold(
@@ -206,7 +213,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                   BottomButon(
                     label: 'Volver a pedir',
                     onPressed: () async {
-                      late bool result;
+                      bool result = true;
                       if (cartState.productsData.isNotEmpty) {
                         // show dialog to confirm delete all products and their data
                         final r = await showDialog(
@@ -245,11 +252,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                         return;
                       }
 
-                      context
-                          .read<ShoppingCartBloc>()
-                          .add(const ShoppingCartAllDataCleared());
-
-                      // TODO: add products to cart
+                      context.read<OrderHistoryDetailCubit>().orderAgain();
                     },
                   ),
               ],
