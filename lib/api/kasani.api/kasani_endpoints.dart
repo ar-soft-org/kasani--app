@@ -7,6 +7,7 @@ class KasaniEndpoints {
   static const String loginHost = '$apiServer/auth/acceso_aplicacion';
   static const String changePassword = '$apiServer/auth/cambia_contraseña_usuario';
   static const String loginVendor = '$apiServer/auth/acceso_aplicacion';
+  static const String forgotPassword = '$apiServer/auth/verifica_usuario';
   //--------------------------------------
   
   //--------------Categories--------------

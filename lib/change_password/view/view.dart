@@ -6,8 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/login/login_cubit.dart';
 import 'package:kasanipedido/change_password/cubit/change_password_cubit.dart';
-import 'package:kasanipedido/models/host/host_model.dart';
+import 'package:kasanipedido/models/user/user_model.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
+import 'package:kasanipedido/utils/app_route_names.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 
@@ -116,8 +117,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                             padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                             child: ElevatedButton(
                               onPressed: () {
+                                context.read<AuthCubit>().deleteUserData();
                                 Navigator.of(context)
-                                    .pushReplacementNamed('host');
+                                    .pushReplacementNamed(AppRouteNames.login);
                               },
                               style: ElevatedButton.styleFrom(
                                 elevation: 0,
@@ -165,7 +167,7 @@ class _InputsState extends State<_Inputs> {
   bool obscureTextP1 = true;
   bool obscureTextP2 = true;
 
-  HostModel? user;
+  User? user;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -179,11 +181,16 @@ class _InputsState extends State<_Inputs> {
 
     // validate userId
     final authCubit = context.read<AuthCubit>();
-    if (authCubit.state is! AuthHostSuccess) {
+    if (authCubit.state is! AuthHostSuccess &&
+        authCubit.state is! AuthVendorSuccess) {
       // navigate to login page
       Navigator.of(context).pushReplacementNamed('login');
-    } else {
+    } else if (authCubit.state is AuthVendorSuccess) {
+      user = (authCubit.state as AuthVendorSuccess).vendor;
+    } else if (authCubit.state is AuthHostSuccess) {
       user = (authCubit.state as AuthHostSuccess).host;
+    } else {
+      throw Exception('Invalid user type');
     }
   }
 

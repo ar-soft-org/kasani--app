@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kasanipedido/domain/repository/auth/auth_repository.dart';
 import 'package:kasanipedido/domain/repository/client/client_repository.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
@@ -16,6 +17,7 @@ class RepositoryProviders extends StatelessWidget {
     required this.orderBookingRepository,
     required this.dio,
     required this.clientRepository,
+    required this.authRepository,
   });
 
   final Widget child;
@@ -23,6 +25,7 @@ class RepositoryProviders extends StatelessWidget {
   final ShoppingCartRepository shoppingCartRepository;
   final OrderRepository orderBookingRepository;
   final ClientRepository clientRepository;
+  final AuthRepository authRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +38,7 @@ class RepositoryProviders extends StatelessWidget {
         RepositoryProvider.value(value: shoppingCartRepository),
         RepositoryProvider.value(value: orderBookingRepository),
         RepositoryProvider.value(value: clientRepository),
+        RepositoryProvider.value(value: authRepository),
       ],
       child: child,
     );

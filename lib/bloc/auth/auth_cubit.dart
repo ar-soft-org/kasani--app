@@ -46,6 +46,17 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  deleteUserData() async {
+    emit(AuthLoading());
+    try {
+      await UserStorage.deleteHost();
+      await UserStorage.deleteVendor();
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
+  }
+
   _deleteHostData() async {
     await UserStorage.deleteHost();
   }

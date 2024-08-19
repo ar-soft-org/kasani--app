@@ -56,7 +56,8 @@ class _SplashScreenState extends State<SplashScreen> {
               if (state.host.requiereCambioContrasena == 'NO') {
                 Navigator.of(context).pushReplacementNamed('host');
               } else {
-                Navigator.of(context).pushReplacementNamed('change-password');
+                Navigator.of(context)
+                    .pushReplacementNamed(AppRouteNames.changePassword);
               }
             } else if (state is AuthVendorSuccess) {
               context.read<DioInterceptor>().removeInterceptors();
@@ -64,9 +65,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 HttpHeaders.authorizationHeader: 'Bearer ${state.vendor.token}'
               });
               if (state.vendor.requiereCambioContrasena == 'NO') {
-                Navigator.of(context).pushReplacementNamed(AppRouteNames.vendorPage);
+                Navigator.of(context)
+                    .pushReplacementNamed(AppRouteNames.vendorPage);
               } else {
-                Navigator.of(context).pushReplacementNamed('change-password');
+                Navigator.of(context)
+                    .pushReplacementNamed(AppRouteNames.changePassword);
               }
             } else if (state is AuthLogout || state is AuthError) {
               Navigator.of(context).pushReplacementNamed('login');

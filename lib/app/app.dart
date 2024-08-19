@@ -5,6 +5,7 @@ import 'package:kasanipedido/config/providers/repository_providers.dart';
 import 'package:kasanipedido/config/providers/service_providers.dart';
 import 'package:kasanipedido/config/router/app_router.dart';
 import 'package:kasanipedido/data/services/order_booking/order_service.dart';
+import 'package:kasanipedido/domain/repository/auth/auth_repository.dart';
 import 'package:kasanipedido/domain/repository/client/client_repository.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/exports/exports.dart';
@@ -19,12 +20,14 @@ class App extends StatelessWidget {
     required this.orderService,
     required this.orderBookingRepository,
     required this.clientRepository,
+    required this.authRepository,
   });
 
   final ShoppingCartRepository shoppingCartRepository;
   final OrderService orderService;
   final OrderRepository orderBookingRepository;
   final ClientRepository clientRepository;
+  final AuthRepository authRepository;
   final Dio dio;
 
   @override
@@ -41,6 +44,7 @@ class App extends StatelessWidget {
           orderBookingRepository: orderBookingRepository,
           clientRepository: clientRepository,
           dio: dio,
+          authRepository: authRepository,
           child: const BlocProviders(
             child: AppView(),
           ),

@@ -4,8 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kasanipedido/app/app.dart';
 import 'package:kasanipedido/bootstrap.dart';
+import 'package:kasanipedido/data/services/auth/auth_service.dart';
 import 'package:kasanipedido/data/services/client/client_service.dart';
 import 'package:kasanipedido/data/services/order_booking/order_service.dart';
+import 'package:kasanipedido/domain/repository/auth/auth_repository.dart';
 import 'package:kasanipedido/domain/repository/client/client_api_impl.dart';
 import 'package:kasanipedido/domain/repository/client/client_repository.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_api_impl.dart';
@@ -40,6 +42,9 @@ Future<void> main() async {
   final orderService = OrderService(dio: dioInstance);
   final orderBookingApi = OrderBookingApiImpl(orderService: orderService);
 
+  final authService = AuthService(dio: dioInstance);
+  final authRepository = AuthRepository(authService);
+
   final orderBookingRepository =
       OrderRepository(orderBookingApi: orderBookingApi);
 
@@ -54,6 +59,7 @@ Future<void> main() async {
         orderService: orderService,
         orderBookingRepository: orderBookingRepository,
         clientRepository: clientRepository,
+        authRepository: authRepository,
       ),
     );
   });

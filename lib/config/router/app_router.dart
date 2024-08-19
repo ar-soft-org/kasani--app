@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/change_password/view/view.dart';
 import 'package:kasanipedido/domain/repository/client/models/client.dart';
+import 'package:kasanipedido/forgot_password/view/forgot_password_page.dart';
 import 'package:kasanipedido/host_home/host_home.dart';
 import 'package:kasanipedido/profile/view/view.dart';
 import 'package:kasanipedido/screens/history_detail_screen.dart';
@@ -21,7 +22,7 @@ class AppRoutes {
 
   // FIXME: use const for route names
   static Map<String, Widget Function(BuildContext)> routes = {
-    'login': (context) => const LoginScreen(),
+    AppRouteNames.login: (context) => const LoginScreen(),
     'welcome': (context) => const WelcomeScreen(),
     'order_booking': (context) {
       final map =
@@ -45,7 +46,7 @@ class AppRoutes {
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
       return ContinueHomePage(homeCubit: map['cubit'] as HomeCubit);
     },
-    'host': (context) {
+    AppRouteNames.host: (context) {
       final map =
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
       final Client? client = map?['client'];
@@ -59,8 +60,9 @@ class AppRoutes {
     },
     'history_detail': (context) => const HistoryDetailPage(),
     'order_completed': (context) => const OrderCompletedPageView(),
-    'change-password': (context) => const ChangePasswordPage(),
+    AppRouteNames.changePassword: (context) => const ChangePasswordPage(),
     AppRouteNames.vendorPage: (context) => const VendorPage(),
     AppRouteNames.profilePage: (context) => const ProfilePage(),
+    AppRouteNames.forgotPassword: (context) => const ForgotPasswordPage(),
   };
 }

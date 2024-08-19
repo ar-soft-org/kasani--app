@@ -154,7 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   tag: 'search',
                                   child: Container(
                                     padding: EdgeInsets.zero,
-                                    
                                     child: textField(
                                       controller,
                                       46,

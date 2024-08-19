@@ -1,13 +1,21 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/api/dio_interceptor.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/login/login_cubit.dart';
-import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/utils/app_route_names.dart';
+import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/utils/images.dart';
+import 'package:kasanipedido/widgets/custom_btn.dart';
+import 'package:kasanipedido/widgets/custom_text.dart';
+import 'package:kasanipedido/widgets/textfields.dart';
+import 'package:kasanipedido/widgets/vertical_spacer.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -161,27 +169,40 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           textField(
-                              email,
-                              46,
-                              296,
-                              'Email',
-                              'email',
-                              10,
-                              AppColors.tfBg,
-                              false,
-                              false,
-                              false,
-                              () {},
-                              context,
-                              textColor: AppColors.textInputColor,
-                              ),
+                            email,
+                            46,
+                            296,
+                            'Email',
+                            'email',
+                            10,
+                            AppColors.tfBg,
+                            false,
+                            false,
+                            false,
+                            () {},
+                            context,
+                            textColor: AppColors.textInputColor,
+                          ),
                           verticalSpacer(10),
-                          textField(pw, 46, 296, 'Password', 'password', 10,
-                              AppColors.tfBg, false, false, false, () {
-                            setState(() {
-                              isObscure = !isObscure;
-                            });
-                          }, context, textColor: AppColors.textInputColor),
+                          textField(
+                            pw,
+                            46,
+                            296,
+                            'Password',
+                            'password',
+                            10,
+                            AppColors.tfBg,
+                            false,
+                            false,
+                            isObscure,
+                            () {
+                              setState(() {
+                                isObscure = !isObscure;
+                              });
+                            },
+                            context,
+                            textColor: AppColors.textInputColor,
+                          ),
                           verticalSpacer(10),
                           // checkbox is vendor
                           Row(
@@ -235,12 +256,18 @@ class _LoginScreenState extends State<LoginScreen> {
                               100,
                               showShadow: true),
                           verticalSpacer(20),
-                          customText(
-                              '¿Perdiste tu contraseña?',
-                              FontWeight.w600,
-                              16,
-                              GoogleFonts.inter.toString(),
-                              AppColors.lightCyan),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(AppRouteNames.forgotPassword);
+                            },
+                            child: customText(
+                                '¿Perdiste tu contraseña?',
+                                FontWeight.w600,
+                                16,
+                                GoogleFonts.inter.toString(),
+                                AppColors.lightCyan),
+                          ),
                         ],
                       ),
                     ),

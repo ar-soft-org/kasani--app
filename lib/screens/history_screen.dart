@@ -152,34 +152,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                verticalSpacer(40),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 200.0.sp,
-                  ),
-                  // FIXME:
-                  child: CustomDropdown(
-                    list: staticList
-                        .map((e) =>
-                            CustomDropdownMenuItem(value: e, key: e, data: e))
-                        .toList(),
-                    initialValue: CustomDropdownMenuItem(
-                      value: staticList[3],
-                      key: staticList[3],
-                      data: staticList[3],
-                    ),
-                    onChanged: (item) {
-                      if (item != null) {
-                        days =
-                            num.parse(mapValues[item.key.toString()].toString())
-                                .toInt();
-                        final state = context.read<AuthCubit>().state;
-                        getOrdersHistory(state, days);
-                      }
-                    },
-                  ),
-                ),
                 verticalSpacer(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Expanded(child: SizedBox.shrink()),
+                    Flexible(
+                      child: CustomDropdown(
+                        list: staticList
+                            .map((e) => CustomDropdownMenuItem(
+                                value: e, key: e, data: e))
+                            .toList(),
+                        initialValue: CustomDropdownMenuItem(
+                          value: staticList[3],
+                          key: staticList[3],
+                          data: staticList[3],
+                        ),
+                        onChanged: (item) {
+                          if (item != null) {
+                            days = num.parse(
+                                    mapValues[item.key.toString()].toString())
+                                .toInt();
+                            final state = context.read<AuthCubit>().state;
+                            getOrdersHistory(state, days);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                verticalSpacer(5),
                 Text(
                   'Fecha',
                   style: TextStyle(
