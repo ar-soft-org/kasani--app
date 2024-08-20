@@ -8,10 +8,12 @@ import 'package:kasanipedido/domain/repository/client/client_repository.dart';
 import 'package:kasanipedido/domain/repository/client/models/client.dart';
 import 'package:kasanipedido/utils/app_route_names.dart';
 import 'package:kasanipedido/utils/colors.dart';
+import 'package:kasanipedido/utils/debouncer.dart';
 import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/custom_button.dart';
 import 'package:kasanipedido/widgets/custom_btn.dart';
 import 'package:kasanipedido/widgets/horizontal_spacer.dart';
+import 'package:kasanipedido/widgets/textfields.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
 
 class VendorPage extends StatelessWidget {
@@ -47,8 +49,12 @@ class _VendorScreenState extends State<VendorScreen> {
   final now = DateTime.now();
   final df = DateFormat('dd MMM yyyy');
 
+  late TextEditingController controller;
 
-  // TODO filteredList = []
+  bool searching = false;
+  List<Client> filteredClient = [];
+
+  final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void initState() {
@@ -61,6 +67,31 @@ class _VendorScreenState extends State<VendorScreen> {
           .read<VendorBloc>()
           .add(LoadClientsEvent(vendor: authState.vendor));
     }
+    controller = TextEditingController();
+    controller.addListener(() {
+      _debouncer.run(() {
+        final text = controller.text;
+        searchClient(text);
+        if (text.isEmpty) {
+          setState(() {
+            searching = false;
+          });
+          return;
+        }
+
+        setState(() {
+          searching = true;
+        });
+      });
+    });
+  }
+
+  searchClient(String text){
+    final clients = context.read<VendorBloc>().state.clients;
+    final filteredList = clients.where((element) => element.nombres.toLowerCase().contains(text.toLowerCase())).toList();
+    setState(() {
+      filteredClient = filteredList;
+    });
   }
 
   @override
@@ -119,8 +150,7 @@ class _VendorScreenState extends State<VendorScreen> {
             });
           }
 
-          // call search function (controller.text ?? '')
-
+          searchClient(controller.text);
 
         },
         builder: (context, state) {
@@ -175,6 +205,25 @@ class _VendorScreenState extends State<VendorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Hero(
+                  tag: 'search',
+                  child: textField(
+                    controller,
+                    46,
+                    356,
+                    'Buscar',
+                    '',
+                    100,
+                    Colors.white,
+                    true,
+                    false,
+                    true,
+                    () {},
+                    context,
+                    textColor: AppColors.textInputColor,
+                    bold: true,
+                  ),
+                ),
                   verticalSpacer(20),
                   Text(
                     df.format(now),
@@ -217,13 +266,15 @@ class _VendorScreenState extends State<VendorScreen> {
                     color: AppColors.strokeWhite,
                   ),
                   verticalSpacer(10),
-                  ListView.builder(
-                    itemCount: state.clients.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      final item = state.clients[index];
-                      return customListWidget(context, item: item);
-                    },
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredClient.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final item = filteredClient[index];
+                        return customListWidget(context, item: item);
+                      },
+                    ),
                   ),
                   verticalSpacer(20),
                 ],
