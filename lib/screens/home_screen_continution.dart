@@ -96,9 +96,14 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
   searchProduct(String text) {
     final products = context.read<HomeCubit>().state.products;
 
+    final filteredList = products
+        .where((product) =>
+            product.nombreProducto.toLowerCase().contains(text.toLowerCase()))
+        .toList();
+
     // filter products by categories
     final Map<String, List<Product>> productsByCategory = {};
-    for (final product in products) {
+    for (final product in filteredList) {
       if (!productsByCategory.containsKey(product.categoria)) {
         productsByCategory[product.categoria] = [];
       }
@@ -127,7 +132,6 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
         }
       },
       builder: (context, state) {
-        final productsByCategory = state.productsByCategory;
         final productsData =
             context.select((EditProductBloc bloc) => bloc.state.productsData);
 
@@ -188,7 +192,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                   child: Builder(builder: (_) {
                     if (searching) {
                       return ListWrapper(
-                        count: productsByCategory?.length ?? 0,
+                        count: productsByCategory.length,
                         emptyWidget: const RegularText('No hay productos'),
                         child: Scrollbar(
                           thickness: 10,
@@ -199,7 +203,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                             padding: EdgeInsets.only(right: 20.w),
                             child: Column(
                                 children:
-                                    productsByCategory!.entries.map((entry) {
+                                    productsByCategory.entries.map((entry) {
                               final category = entry.key;
                               final products = entry.value;
                               return SizedBox(
@@ -231,7 +235,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                         if (state.currentCategory != null) {
                           final categoryName =
                               state.currentCategory!.nombreCategoria;
-                          final products = productsByCategory![
+                          final products = productsByCategory[
                               state.currentCategory!.nombreCategoria];
                           return Expanded(
                             child: CategoryAndProducts(
@@ -253,7 +257,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                                 padding: EdgeInsets.only(right: 20.w),
                                 child: Column(
                                   children:
-                                      productsByCategory!.entries.map((entry) {
+                                      productsByCategory.entries.map((entry) {
                                     final category = entry.key;
                                     final products = entry.value;
                                     return SizedBox(
@@ -334,7 +338,7 @@ class CategoryAndProducts extends StatelessWidget {
               final data = getProductData(item);
               return addItemCard(
                   title: item.nombreProducto,
-                  count: data.quantity.toString(),
+                  count: data.getQuantity,
                   mScale: item.unidadMedida,
                   // isHeadingVisible: true,
                   showTopActions: false,

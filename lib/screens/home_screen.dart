@@ -252,7 +252,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return addItemCard(
       title: item.nombreProducto,
-      count: data.quantity.toString(),
+      count: data.getQuantity,
       mScale: item.unidadMedida,
       // isHeadingVisible: false,
       showTopActions: false,

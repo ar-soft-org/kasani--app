@@ -52,4 +52,11 @@ class ProductData {
   bool get greaterThanZero => quantity > 0;
 
   bool get hasNotQuantity => quantity == 0;
+
+  String get getQuantity {
+// show decimal only if it's different from 0
+    return quantity % 1 == 0
+        ? quantity.toInt().toString()
+        : quantity.toString();
+  }
 }

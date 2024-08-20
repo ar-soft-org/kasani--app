@@ -82,7 +82,7 @@ class CartScreen extends StatelessWidget {
                         title: item.nombreProducto,
                         comment: data.observation,
                         data: data,
-                        count: data.quantity.toString(),
+                        count: data.getQuantity,
                         mScale: item.unidadMedida,
                         // isHeadingVisible: true,
                         showTopActions: true,

@@ -47,6 +47,9 @@ class _VendorScreenState extends State<VendorScreen> {
   final now = DateTime.now();
   final df = DateFormat('dd MMM yyyy');
 
+
+  // TODO filteredList = []
+
   @override
   void initState() {
     super.initState();
@@ -97,7 +100,7 @@ class _VendorScreenState extends State<VendorScreen> {
       body: BlocConsumer<VendorBloc, VendorState>(
         listenWhen: (previous, current) =>
             current.errorMessage != null && current.errorMessage != '' ||
-            current.currentClient != null,
+            current.currentClient != null && current.clients.isNotEmpty,
         listener: (context, state) {
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(context)
@@ -115,6 +118,10 @@ class _VendorScreenState extends State<VendorScreen> {
               'bloc': context.read<VendorBloc>(),
             });
           }
+
+          // call search function (controller.text ?? '')
+
+
         },
         builder: (context, state) {
           if (state.isLoading) {

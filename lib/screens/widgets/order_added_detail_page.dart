@@ -82,7 +82,7 @@ class _OrderDetailedPageViewState extends State<OrderDetailedPageView> {
                       final data = getProductData(item, productsData);
                       return addItemCard(
                         title: item.nombreProducto,
-                        count: data.quantity.toString(),
+                        count: data.getQuantity,
                         mScale: item.unidadMedida,
                         comment: data.observation,
                         data: data,
