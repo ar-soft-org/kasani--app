@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,8 @@ import 'package:kasanipedido/widgets/custom_text.dart';
 import 'package:kasanipedido/widgets/textfields.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
 
+enum KUserType { host, vendor }
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -31,9 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isObscure = true;
 
-  bool? isVendor = false;
+  KUserType userType = KUserType.host;
 
-  loadDevData() {
+  loadDevHostData() {
     email.text = 'info@restaurantsanceferino.com';
     pw.text = '15122077273';
   }
@@ -48,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     log('LoginScreen initState');
     // if (kDebugMode) {
-    loadDevData();
+    loadDevHostData();
     // }
   }
 
@@ -205,30 +208,30 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           verticalSpacer(10),
                           // checkbox is vendor
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: isVendor,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isVendor = value;
-                                  });
-
-                                  if (value == true) {
+                          if (kDebugMode)
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (userType == KUserType.host) {
                                     loadDevVendorData();
-                                  } else {
-                                    loadDevData();
+                                    userType = KUserType.vendor;
+                                  } else if (userType == KUserType.vendor) {
+                                    loadDevHostData();
+                                    userType = KUserType.host;
                                   }
-                                },
+                                });
+                              },
+                              child: Text(
+                                userType == KUserType.host
+                                    ? 'load vendedor data'
+                                    : 'load host data',
+                                style: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.lightCyan,
+                                ),
                               ),
-                              customText(
-                                  'Ingresar como vendedor',
-                                  FontWeight.w400,
-                                  16,
-                                  GoogleFonts.inter.toString(),
-                                  AppColors.lightCyan),
-                            ],
-                          ),
+                            ),
                           verticalSpacer(10),
                           const Spacer(),
                           customButton(
@@ -241,13 +244,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               state is LoginLoading
                                   ? null
                                   : () {
-                                      if (isVendor == true) {
-                                        BlocProvider.of<LoginCubit>(context)
-                                            .loginVendor(email.text, pw.text);
-                                      } else {
-                                        BlocProvider.of<LoginCubit>(context)
-                                            .loginHost(email.text, pw.text);
-                                      }
+                                      BlocProvider.of<LoginCubit>(context)
+                                          .loginUser(email.text, pw.text);
                                     },
                               308,
                               58,

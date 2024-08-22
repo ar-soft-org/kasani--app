@@ -240,7 +240,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                           return Expanded(
                             child: CategoryAndProducts(
                               categoryName: categoryName,
-                              products: products!,
+                              products: products ?? [],
                               productsData: productsData,
                             ),
                           );

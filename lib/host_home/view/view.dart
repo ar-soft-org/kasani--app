@@ -22,7 +22,10 @@ class HostHomePage extends StatelessWidget {
     VendorBloc bloc,
     Client client,
   ) {
-    return HostHomePage(client: client);
+    return BlocProvider.value(
+      value: bloc,
+      child: HostHomePage(client: client),
+    );
   }
 
   final Client? client;

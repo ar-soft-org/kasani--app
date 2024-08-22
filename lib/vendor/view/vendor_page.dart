@@ -89,6 +89,21 @@ class _VendorScreenState extends State<VendorScreen> {
   searchClient(String text){
     final clients = context.read<VendorBloc>().state.clients;
     final filteredList = clients.where((element) => element.nombres.toLowerCase().contains(text.toLowerCase())).toList();
+
+    // sort by pedidoHoy field (Si/No)
+    filteredList.sort((a, b) {
+      if (a.pedidoHoy == 'Sí' && b.pedidoHoy == 'No') {
+        return -1;
+      } else if (a.pedidoHoy == 'No' && b.pedidoHoy == 'Sí') {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    filteredList.reversed;
+
+
     setState(() {
       filteredClient = filteredList;
     });
@@ -131,7 +146,7 @@ class _VendorScreenState extends State<VendorScreen> {
       body: BlocConsumer<VendorBloc, VendorState>(
         listenWhen: (previous, current) =>
             current.errorMessage != null && current.errorMessage != '' ||
-            current.currentClient != null && current.clients.isNotEmpty,
+            current.currentClient != null || current.clients.isNotEmpty,
         listener: (context, state) {
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(context)
@@ -300,7 +315,7 @@ Widget customListWidget(
         children: [
           Text(
             // 'Sí',
-            '--',
+            item.pedidoHoy,
             style: TextStyle(
               fontWeight: FontWeight.w400,
               fontFamily: GoogleFonts.inter().fontFamily,
