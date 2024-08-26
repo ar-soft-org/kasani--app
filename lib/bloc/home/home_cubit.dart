@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:kasanipedido/models/category/category_model.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
 import 'package:kasanipedido/models/user/user_model.dart';
@@ -119,10 +120,22 @@ class HomeCubit extends Cubit<HomeState> {
       return;
     }
 
-    emit(state.copyWith(
-      currentCategory: () => category,
-      currentSubCategory: () => category.subCategorias.first,
-    ));
+    final subCategory = state.currentSubCategory ?? category.subCategorias.first;
+
+    // filter products by category
+    final products = state.products
+        .where((element) =>
+            element.categoria == category.nombreCategoria &&
+            element.subCategoria == subCategory.nombreSubCategoria)
+        .toList();
+
+    emit(
+      state.copyWith(
+        currentCategory: () => category,
+        currentSubCategory: () => subCategory,
+        currentProducts: products,
+      ),
+    );
   }
 
   setCurrentSubCategory(String subCategoryId) {
@@ -144,7 +157,13 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   updateProductData(ProductData data) {
-    _shoppingCartRepository.updateProductData(data);
+    // FIXME: Considerar emilinar producto de cart si la cantidad es 0
+    ProductData updatedData = data.copyWith();
+    if (data.quantity < 0) {
+      updatedData = data.copyWith(quantity: 0);
+    }
+
+    _shoppingCartRepository.updateProductData(updatedData);
   }
 
   deleteProductData(String id) {

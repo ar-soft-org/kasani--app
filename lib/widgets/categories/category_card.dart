@@ -22,7 +22,6 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return circleCard(
       context,
-      // FIXME: Add image
       categoryId == '1'
           ? AppImages.frecosIcon
           : categoryId == '2'
@@ -31,7 +30,6 @@ class CategoryCard extends StatelessWidget {
       label,
       Colors.cyan,
       0,
-      // FIXME: Revisar
       index == 1 ? Colors.cyan : AppColors.greyText,
       () => onTap(categoryId),
       isSelected ? AppColors.blue : AppColors.purple,

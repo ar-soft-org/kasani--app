@@ -85,6 +85,8 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
         });
       });
     });
+
+    searchProduct(controller.text);
   }
 
   @override

@@ -126,10 +126,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ), // Change weekday label color
             ),
             calendarStyle: CalendarStyle(
-              todayDecoration: const BoxDecoration(),
+              todayDecoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: AppColors.lightCyan),
               selectedDecoration: const BoxDecoration(
                   shape: BoxShape.circle, color: Colors.red),
-              todayTextStyle: const TextStyle(color: Colors.black),
+              todayTextStyle: const TextStyle(color: Colors.white),
               tablePadding:
                   EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
               cellPadding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
@@ -138,7 +139,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             availableGestures: AvailableGestures.all,
             selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             focusedDay: _selectedDay,
-            firstDay: DateTime.now().add(const Duration(days: -5)),
+            firstDay: DateTime.now(),
             lastDay: DateTime.now().add(const Duration(days: 90)),
             onDaySelected: _onDaySelected,
           ),

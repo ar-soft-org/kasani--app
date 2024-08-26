@@ -44,6 +44,12 @@ class ProductsApiImpl extends ProductsApi {
 
   @override
   void addProductData(ProductData productData) {
+    // validate quantity
+
+    if (productData.quantity < 0) {
+      throw Exception('Quantity must be greater than 0');
+    }
+
     final map = {..._productsDataStreamController.value};
     map[productData.productId] = productData;
     _productsDataStreamController.add(map);
@@ -64,6 +70,10 @@ class ProductsApiImpl extends ProductsApi {
 
   @override
   void updateProductData(ProductData productData) {
+    if (productData.quantity < 0) {
+      throw Exception('Quantity must be greater than 0');
+    }
+
     final map = {..._productsDataStreamController.value};
     final element = map.containsKey(productData.productId);
     if (!element) {

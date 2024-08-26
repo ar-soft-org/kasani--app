@@ -2,7 +2,7 @@ part of 'home_cubit.dart';
 
 enum HomeStatus { initial, loading, success, error }
 
-class HomeState {
+class HomeState extends Equatable {
   final HomeStatus status;
   final String? errorMessage;
 
@@ -46,9 +46,23 @@ class HomeState {
       errorMessage: errorMessage != null ? errorMessage() : this.errorMessage,
       products: products ?? this.products,
       currentProducts: currentProducts ?? this.currentProducts,
-      productsByCategory: productsByCategory != null ? productsByCategory() : this.productsByCategory,
+      productsByCategory: productsByCategory != null
+          ? productsByCategory()
+          : this.productsByCategory,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        status,
+        categories,
+        products,
+        currentCategory,
+        currentSubCategory,
+        currentProducts,
+        errorMessage,
+        productsByCategory,
+      ];
 }
 
 extension HomeStateX on HomeState {

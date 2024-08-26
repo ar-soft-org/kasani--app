@@ -87,6 +87,7 @@ Widget circleCard(
               width: 44.w,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
+                  border: Border.all(color: bgColor, width: 1.w),
                   image: DecorationImage(
                       image: AssetImage(image), fit: BoxFit.cover)),
             ),
