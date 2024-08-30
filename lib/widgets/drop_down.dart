@@ -57,12 +57,14 @@ class CustomDropdown<T> extends StatelessWidget {
           value: item,
           child: Padding(
             padding: const EdgeInsets.all(2.0),
-            child: customText(
-              item.value,
-              FontWeight.w400,
-              11,
-              GoogleFonts.beVietnamPro().fontFamily.toString(),
-              Colors.black,
+            child: Center(
+              child: customText(
+                item.value,
+                FontWeight.w400,
+                11,
+                GoogleFonts.beVietnamPro().fontFamily.toString(),
+                Colors.black,
+              ),
             ),
           ),
         );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/screens/widgets/check_out_stepper.dart';
+import 'package:kasanipedido/utils/app_route_names.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 import 'package:kasanipedido/widgets/custom_text.dart';
@@ -50,7 +51,7 @@ class OrderCompletedPageView extends StatelessWidget {
                   // FIXME: make global
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('host');
+                      Navigator.of(context).pushNamed(AppRouteNames.vendorPage);
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 0,

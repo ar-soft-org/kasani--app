@@ -185,6 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             () {},
                             context,
                             textColor: AppColors.textInputColor,
+                            maxLines: 1,
                           ),
                           verticalSpacer(10),
                           textField(

@@ -49,7 +49,9 @@ class CartScreen extends StatelessWidget {
         context.select((ShoppingCartBloc bloc) => bloc.state.productsData);
     return Scaffold(
       backgroundColor: AppColors.ice,
-      appBar: customAppBar(context, 'Carrito', true),
+      appBar: customAppBar(context, 'Carrito', true, onPressed: (){
+        context.read<HostHomeCubit>().setTab(HostHomeTab.home);
+      }),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 18.w),
         child: Column(

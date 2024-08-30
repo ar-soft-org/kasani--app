@@ -4,6 +4,7 @@ import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
 import 'package:kasanipedido/exports/exports.dart';
 import 'package:kasanipedido/favorite_products/bloc/favorite_products_bloc.dart';
+import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
 import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
@@ -77,104 +78,111 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         context.select((FavoriteProductsBloc bloc) => bloc.state.products);
     final productsData =
         context.select((EditProductBloc bloc) => bloc.state.productsData);
-    return Scaffold(
-      backgroundColor: AppColors.ice,
-      appBar: customAppBar(context, 'FAVORITOS', true),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          final state = context.read<AuthCubit>().state;
-          getFavorites(state);
-        },
-        child: Builder(builder: (context) {
-          final state = context.watch<FavoriteProductsBloc>().state;
-
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 18.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                verticalSpacer(60),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: products.length,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      final item = products[index];
-                      final data = productsData[item.idProducto] ??
-                          ProductData.initialValue(
-                              item.idProducto, item.precio);
-
-                      return addItemCard(
-                        title: item.nombreProducto,
-                        count: data.getQuantity,
-                        mScale: item.unidadMedida,
-                        // isHeadingVisible: true,
-                        showTopActions: false,
-                        data: data,
-                        increment: () {
-                          if (data.hasNotQuantity) {
-                            context.read<HomeCubit>().addProductData(item);
-                            context
-                                .read<EditProductBloc>()
-                                .add(EditProductAddProduct(product: item));
-                          } else {
-                            final updated =
-                                data.copyWith(quantity: data.quantity + 1);
-                            context
-                                .read<HomeCubit>()
-                                .updateProductData(updated);
-                          }
-                        },
-                        decrement: () {
-                          if (data.hasNotQuantity) {
-                            return;
-                          }
-
-                          final updated =
-                              data.copyWith(quantity: data.quantity - 1);
-                          if (updated.hasNotQuantity) {
-                            context
-                                .read<HomeCubit>()
-                                .deleteProductData(updated.productId);
-                          } else {
-                            context
-                                .read<HomeCubit>()
-                                .updateProductData(updated);
-                          }
-                        },
-                        onEdit: (String value) {
-                          if (data.hasNotQuantity) {
-                            context.read<HomeCubit>().addProductData(
-                                  item,
-                                  data: data.copyWith(
-                                      quantity: num.parse(value).toDouble()),
-                                );
-                            context
-                                .read<EditProductBloc>()
-                                .add(EditProductAddProduct(product: item));
-                          } else {
-                            final updated = data.copyWith(
-                                quantity: num.parse(value).toDouble());
-                            context
-                                .read<HomeCubit>()
-                                .updateProductData(updated);
-                          }
-                        },
-                        context: context,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.ice,
+        appBar: customAppBar(context, 'FAVORITOS', true, onPressed: () {
+          context.read<HostHomeCubit>().setTab(HostHomeTab.home);
         }),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            final state = context.read<AuthCubit>().state;
+            getFavorites(state);
+          },
+          child: Builder(builder: (context) {
+            final state = context.watch<FavoriteProductsBloc>().state;
+      
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+      
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  verticalSpacer(60),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: products.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        final item = products[index];
+                        final data = productsData[item.idProducto] ??
+                            ProductData.initialValue(
+                                item.idProducto, item.precio);
+      
+                        return addItemCard(
+                          title: item.nombreProducto,
+                          count: data.getQuantity,
+                          mScale: item.unidadMedida,
+                          // isHeadingVisible: true,
+                          showTopActions: false,
+                          data: data,
+                          increment: () {
+                            if (data.hasNotQuantity) {
+                              context.read<HomeCubit>().addProductData(item);
+                              context
+                                  .read<EditProductBloc>()
+                                  .add(EditProductAddProduct(product: item));
+                            } else {
+                              final updated =
+                                  data.copyWith(quantity: data.quantity + 1);
+                              context
+                                  .read<HomeCubit>()
+                                  .updateProductData(updated);
+                            }
+                          },
+                          decrement: () {
+                            if (data.hasNotQuantity) {
+                              return;
+                            }
+      
+                            final updated =
+                                data.copyWith(quantity: data.quantity - 1);
+                            if (updated.hasNotQuantity) {
+                              context
+                                  .read<HomeCubit>()
+                                  .deleteProductData(updated.productId);
+                            } else {
+                              context
+                                  .read<HomeCubit>()
+                                  .updateProductData(updated);
+                            }
+                          },
+                          onEdit: (String value) {
+                            if (data.hasNotQuantity) {
+                              context.read<HomeCubit>().addProductData(
+                                    item,
+                                    data: data.copyWith(
+                                        quantity: num.parse(value).toDouble()),
+                                  );
+                              context
+                                  .read<EditProductBloc>()
+                                  .add(EditProductAddProduct(product: item));
+                            } else {
+                              final updated = data.copyWith(
+                                  quantity: num.parse(value).toDouble());
+                              context
+                                  .read<HomeCubit>()
+                                  .updateProductData(updated);
+                            }
+                          },
+                          context: context,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

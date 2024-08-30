@@ -16,6 +16,7 @@ Widget textField(
   Function()? onTap,
   Color? textColor,
   bool bold = false,
+  int? maxLines,
 }) {
   return Card(
     shape: RoundedRectangleBorder(
@@ -27,7 +28,7 @@ Widget textField(
         height: height.h,
         child: TextField(
           onTap: onTap,
-          maxLines: indicator == 'password' ? 1 : null,
+          maxLines: indicator == 'password' || maxLines == 1 ? 1 : null,
           obscureText: indicator == 'password' ? isShow : false,
           cursorColor: AppColors.lightCyan,
           cursorRadius: const Radius.circular(0),
