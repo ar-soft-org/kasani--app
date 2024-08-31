@@ -69,7 +69,7 @@ class HostScreen extends StatelessWidget {
     final countProducts =
         context.select((EditProductBloc bloc) => bloc.state.countProducts);
 
-    final VendorState? vendorState =
+    final VendorState? vendorState = 
         context.select((VendorBloc? bloc) => bloc?.state);
     return Scaffold(
         body: IndexedStack(
@@ -103,7 +103,7 @@ class HostScreen extends StatelessWidget {
                 children: [
                   _HomeTabButton(
                     icon: AppImages.homeIcon,
-                    label: 'Incio',
+                    label: 'Inicio',
                     groupValue: selectedTab,
                     value: HostHomeTab.home,
                   ),

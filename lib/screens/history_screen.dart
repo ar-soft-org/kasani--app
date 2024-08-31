@@ -128,7 +128,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         BlocListener<OrderHistoryCubit, OrderHistoryState>(
           listenWhen: (previous, current) =>
-              previous.errorMessage != current.errorMessage,
+              previous.errorMessage != current.errorMessage && previous.status == OrderHistoryStatus.failure,
           listener: (context, state) {
             if (state.errorMessage.isNotEmpty) {
               ScaffoldMessenger.of(context)

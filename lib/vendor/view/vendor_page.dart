@@ -115,7 +115,7 @@ class _VendorScreenState extends State<VendorScreen> {
       backgroundColor: AppColors.ice,
       appBar: AppBar(
         title: Text(
-          'INFORMACIÓN',
+          'CLIENTES',
           style: TextStyle(
               color: AppColors.darkBlue,
               fontFamily: GoogleFonts.inter().fontFamily,
@@ -220,6 +220,7 @@ class _VendorScreenState extends State<VendorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  verticalSpacer(15),
                   Hero(
                   tag: 'search',
                   child: textField(
@@ -262,7 +263,7 @@ class _VendorScreenState extends State<VendorScreen> {
                           color: AppColors.sand,
                         ),
                       ),
-                      horizontalSpacer(40),
+                      horizontalSpacer(20),
                       Text(
                         'Nombre',
                         style: TextStyle(
@@ -323,7 +324,7 @@ Widget customListWidget(
               color: AppColors.blackShade.withOpacity(0.9),
             ),
           ),
-          horizontalSpacer(75),
+          horizontalSpacer(60),
           Flexible(
             child: Text(
               item.nombres,
@@ -335,7 +336,7 @@ Widget customListWidget(
               ),
             ),
           ),
-          horizontalSpacer(40),
+          horizontalSpacer(20),
           customButton(context, false, 'Crear Pedido', 11, () {
             /// navigation handle in bloc listener
             context.read<VendorBloc>().add(SelectClientEvent(client: item));
