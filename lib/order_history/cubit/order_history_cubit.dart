@@ -24,7 +24,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   }) async {
     emit(state.copyWith(status: OrderHistoryStatus.loading));
 
-    final now = DateTime.now().subtract(const Duration(days: 1));
+    final now = DateTime.now().add(const Duration(days: 30));
     // nowString format is '20240701'
     final nowString =
         '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';

@@ -215,7 +215,7 @@ class _VendorScreenState extends State<VendorScreen> {
               }
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -259,17 +259,17 @@ class _VendorScreenState extends State<VendorScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontFamily: GoogleFonts.beVietnamPro().fontFamily,
-                          fontSize: 14.sp,
+                          fontSize: 10.sp,
                           color: AppColors.sand,
                         ),
                       ),
-                      horizontalSpacer(20),
+                      horizontalSpacer(10),
                       Text(
                         'Nombre',
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontFamily: GoogleFonts.inter().fontFamily,
-                          fontSize: 14.sp,
+                          fontSize: 10.sp,
                           color: AppColors.sand,
                         ),
                       ),
@@ -324,8 +324,8 @@ Widget customListWidget(
               color: AppColors.blackShade.withOpacity(0.9),
             ),
           ),
-          horizontalSpacer(60),
-          Flexible(
+          horizontalSpacer(30),
+          Expanded(
             child: Text(
               item.nombres,
               style: TextStyle(
@@ -336,7 +336,7 @@ Widget customListWidget(
               ),
             ),
           ),
-          horizontalSpacer(20),
+          horizontalSpacer(10),
           customButton(context, false, 'Crear Pedido', 11, () {
             /// navigation handle in bloc listener
             context.read<VendorBloc>().add(SelectClientEvent(client: item));

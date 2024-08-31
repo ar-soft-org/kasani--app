@@ -55,7 +55,7 @@ class OrderBookingPageView extends StatelessWidget {
                 elevation: cardElevation,
                 child: Container(
                   // height: 94.h,
-                  height: 70.h,
+                  // height: 70.h,
                   width: 322.w,
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
@@ -70,15 +70,16 @@ class OrderBookingPageView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          height: 38.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.tfBg.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(color: AppColors.strokeWhite),
-                          ),
-                          child: const Center(
-                            child: SubsidiarySelector(),
-                          ))
+                        // height: 38.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.tfBg.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(color: AppColors.strokeWhite),
+                        ),
+                        child: const Center(
+                          child: SubsidiarySelector(),
+                        ),
+                      )
                     ],
                   ),
                 ),

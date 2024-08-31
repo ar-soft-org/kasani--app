@@ -128,7 +128,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         BlocListener<OrderHistoryCubit, OrderHistoryState>(
           listenWhen: (previous, current) =>
-              previous.errorMessage != current.errorMessage && previous.status == OrderHistoryStatus.failure,
+              previous.errorMessage != current.errorMessage &&
+              previous.status == OrderHistoryStatus.failure,
           listener: (context, state) {
             if (state.errorMessage.isNotEmpty) {
               ScaffoldMessenger.of(context)
@@ -183,7 +184,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
                 verticalSpacer(5),
                 Text(
-                  'Fecha',
+                  'Fecha de creación',
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontFamily: GoogleFonts.beVietnamPro().fontFamily,

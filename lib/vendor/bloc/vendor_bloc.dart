@@ -57,6 +57,7 @@ class VendorBloc extends Bloc<VendorEvent, VendorState> {
     SelectClientEvent event,
     Emitter<VendorState> emit,
   ) {
+    emit(state.copyWith(currentClient: () => null));
     emit(state.copyWith(
       currentClient: () => event.client,
     ));
