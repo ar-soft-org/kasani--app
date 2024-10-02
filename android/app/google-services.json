@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "759255728703",
+    "project_id": "arsoft-development",
+    "storage_bucket": "arsoft-development.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759255728703:android:45c8cba7f7a4af4247ae8a",
+        "android_client_info": {
+          "package_name": "com.example.kasanipedido"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7NjlCPxGPL8sf372djHSRAEI4x6k0o04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759255728703:android:5af5cb56c9967c5747ae8a",
+        "android_client_info": {
+          "package_name": "com.example.kasanipedido.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7NjlCPxGPL8sf372djHSRAEI4x6k0o04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

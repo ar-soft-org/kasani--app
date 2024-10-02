@@ -1,0 +1,11 @@
+name: products_api
+description: The interface and models for an API providing access to products.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: '>=3.2.1 <4.0.0'
+
+dependencies:
+  equatable: ^2.0.3
+  meta: ^1.7.0

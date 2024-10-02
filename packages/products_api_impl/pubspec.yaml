@@ -1,0 +1,17 @@
+name: products_api_impl
+description: A Flutter implementation of the ShoppingCartApi that uses backend endpoinds.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: '>=3.2.1 <4.0.0'
+  flutter: ^3.19.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  meta: ^1.7.0
+  rxdart: ^0.28.0
+  products_api:
+    path: ../products_api
+  dio: ^5.5.0+1

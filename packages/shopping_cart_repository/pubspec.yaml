@@ -1,0 +1,11 @@
+name: shopping_cart_repository
+description: A repository that handles product related requests.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: '>=3.2.1 <4.0.0'
+
+dependencies:
+  products_api:
+    path: ../products_api
