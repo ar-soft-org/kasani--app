@@ -1,4 +1,4 @@
-package com.example.kasanipedido
+package com.kasani.fish
 
 import io.flutter.embedding.android.FlutterActivity
 

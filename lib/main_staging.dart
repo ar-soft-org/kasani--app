@@ -14,6 +14,7 @@ import 'package:kasanipedido/domain/repository/order_booking/order_booking_api_i
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/firebase_options.dart';
 import 'package:kasanipedido/translation/supported_locales.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:products_api_impl/products_api_impl.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 
@@ -25,6 +26,10 @@ Future<void> main() async {
   );
 
   await EasyLocalization.ensureInitialized();
+
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize("0b6de201-cba8-42b8-906c-9e2c3bf40a39");
+  OneSignal.Notifications.requestPermission(true);
 
   final dioInstance = Dio();
 

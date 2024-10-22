@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.kasanipedido"
+    namespace "com.kasani.fish"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
@@ -41,10 +41,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.kasanipedido"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        applicationId "com.kasani.fish"
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -53,28 +50,30 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+ 
             signingConfig signingConfigs.debug
         }
     }
 
     flavorDimensions "default"
-    productFlavors { 
+    productFlavors {
         development {
             dimension "default"
             applicationIdSuffix ".dev"
             manifestPlaceholders = [appName: "[DEV] Kasani Pedidos"]
+            buildConfigField "String", "FLUTTER_TARGET", "\"lib/main_development.dart\""
         }
         production {
             dimension "default"
             applicationIdSuffix ""
             manifestPlaceholders = [appName: "Kasani Pedidos"]
+            buildConfigField "String", "FLUTTER_TARGET", "\"lib/main.dart\""
         }
         staging {
             dimension "default"
             applicationIdSuffix ".stg"
             manifestPlaceholders = [appName: "[STG] Kasani Pedidos"]
+            buildConfigField "String", "FLUTTER_TARGET", "\"lib/main_staging.dart\""
         }
     }
 }

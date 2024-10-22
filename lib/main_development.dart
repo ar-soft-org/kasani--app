@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/widgets.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:kasanipedido/app/app.dart';
 import 'package:kasanipedido/bootstrap.dart';
 import 'package:kasanipedido/data/services/auth/auth_service.dart';
@@ -25,6 +26,10 @@ Future<void> main() async {
   );
 
   await EasyLocalization.ensureInitialized();
+
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize("0b6de201-cba8-42b8-906c-9e2c3bf40a39");
+  OneSignal.Notifications.requestPermission(true);
 
   final dioInstance = Dio();
 
