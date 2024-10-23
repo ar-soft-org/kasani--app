@@ -37,13 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
   KUserType userType = KUserType.host;
 
   loadDevHostData() {
-    email.text = 'info@restaurantsanceferino.com';
-    pw.text = '15122077273';
+    email.text = '';
+    pw.text = '';
   }
 
   loadDevVendorData() {
-    email.text = 'zakery_10@hotmail.com';
-    pw.text = '40852632';
+    email.text = '';
+    pw.text = '';
   }
 
   @override

@@ -12,15 +12,8 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
 android {
     namespace "com.kasani.fish"
@@ -47,11 +40,28 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
+    
+    signingConfigs {
+        release {
+            keyAlias 'kasanipedidos'
+            keyPassword 'kasani$$'
+            storeFile file('/Users/andree/kasanipedidos-keystore.jks')
+            storePassword 'kasani$$'
+        }
+    }
 
     buildTypes {
         release {
- 
+            signingConfig signingConfigs.release
+            minifyEnabled true 
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [appName: "Kasani Pedidos"]
+        }
+        debug {
             signingConfig signingConfigs.debug
+            applicationIdSuffix ".debug"
+            manifestPlaceholders = [appName: "[DEBUG] Kasani Pedidos"]
         }
     }
 
@@ -67,7 +77,8 @@ android {
             dimension "default"
             applicationIdSuffix ""
             manifestPlaceholders = [appName: "Kasani Pedidos"]
-            buildConfigField "String", "FLUTTER_TARGET", "\"lib/main.dart\""
+            buildConfigField "String", "FLUTTER_TARGET", "\"lib/main_production.dart\""
+            signingConfig signingConfigs.release
         }
         staging {
             dimension "default"
@@ -82,4 +93,5 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+}
