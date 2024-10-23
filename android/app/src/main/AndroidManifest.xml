@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.kasani.fish">
 
+    <!-- Permisos necesarios -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" tools:targetApi="34" />
 
     <application
         android:label="${appName}"
@@ -14,6 +17,9 @@
         android:allowBackup="false"
         android:theme="@style/LaunchTheme">
 
+        <!-- Eliminar el permiso si no es necesario -->
+        <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+
         <!-- Meta-data para OneSignal -->
         <meta-data android:name="com.onesignal.NotificationOpened.DEFAULT" android:value="DISABLE" />
         <meta-data android:name="com.onesignal.NotificationWillShowInForeground.DEFAULT" android:value="DISABLE" />
@@ -22,6 +28,7 @@
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_launcher"/>
         <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/colorAccent"/>
 
+        <!-- Definición de la actividad principal -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
