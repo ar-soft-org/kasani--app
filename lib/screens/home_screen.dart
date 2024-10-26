@@ -54,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     final state = BlocProvider.of<AuthCubit>(context).state;
-    // get categories and subcategories
     if (state is AuthSuccess) {
       BlocProvider.of<HomeCubit>(context)
           .fetchCategoriesSubCategories(state.host);
