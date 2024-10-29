@@ -5,27 +5,32 @@ import 'package:kasanipedido/repositories/authentication_repository.dart';
 part 'change_password_state.dart';
 
 class ChangePasswordCubit extends Cubit<ChangePasswordState> {
-  ChangePasswordCubit(
-    AuthenticationRepository repository,
-  )   : _repository = repository,
-        super(ChangePasswordInitial());
-
   final AuthenticationRepository _repository;
+  final String token; 
 
-  changePassword(String userId, String password) async {
+  ChangePasswordCubit({
+    required AuthenticationRepository repository,
+    required this.token,
+  }) : _repository = repository, super(ChangePasswordInitial());
+
+  Future<void> changePassword(String userId, String password) async {
     emit(ChangePasswordLoading());
     try {
       await _repository.changePassword(
         userId: userId,
         password: password,
+        token: token,
       );
       emit(ChangePasswordSuccess());
     } on BadRequestException catch (e) {
-      emit(ChangePasswordFailure(message: e.message));
+      final errorMessage = e.message ?? 'Ocurrió un error en la solicitud';
+      emit(ChangePasswordFailure(message: errorMessage));
     } on UnauthorizedException catch (e) {
-      emit(ChangePasswordFailure(message: e.message));
+      final errorMessage = e.message ?? 'Acceso no autorizado';
+      emit(ChangePasswordFailure(message: errorMessage));
     } catch (e) {
-      emit(ChangePasswordFailure(message: e.toString()));
+      final errorMessage = e.toString();
+      emit(ChangePasswordFailure(message: errorMessage));
     }
   }
 }

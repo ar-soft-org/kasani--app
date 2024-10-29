@@ -28,13 +28,15 @@ class CategoriesSection extends StatelessWidget {
               final item = state.categories[index];
 
               return CategoryCard(
-                  categoryId: item.idCategoria,
-                  label: item.nombreCategoria,
-                  isSelected: currentCategory?.idCategoria == item.idCategoria,
-                  onTap: (String categoryId) {
-                    BlocProvider.of<HomeCubit>(context)
-                        .setCurrentCategory(categoryId);
-                  });
+                categoryId: item.idCategoria,
+                label: item.nombreCategoria,
+                isSelected: currentCategory?.idCategoria == item.idCategoria &&
+                    state.currentSubCategory == null,
+                onTap: (String categoryId) {
+                  BlocProvider.of<HomeCubit>(context)
+                      .setCurrentSelection(id: categoryId, isCategory: true);
+                },
+              );
             },
           ),
         );

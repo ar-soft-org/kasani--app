@@ -68,8 +68,7 @@ class ProfileScreen extends StatelessWidget {
                           fit: BoxFit.fill)),
                 ),
                 verticalSpacer(20),
-                profileCategoryTile('Mi perfil', () {}),
-
+                profileTitle('PERFIL', () {}),
                 if (authState is AuthVendorSuccess) ...[
                   Padding(
                       padding: EdgeInsets.only(
@@ -118,15 +117,9 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ))
                 ],
-                // profileCategoryTile('Historial de pedidos', () {
-                //   Navigator.of(context).pushNamed('history_screen');
-                // }),
                 verticalSpacer(20),
                 profileCategoryTile(
-                  state is LoginLoading ? 'Cerrando Sesión' : 'Cerrar sesión',
-                  showNavIcon: true,
-                  // TODO: Login Vendor
-                  // TODO: Si es vendedor usar logoutVendor
+                  state is LoginLoading ? 'CERRANDO SESIÓN' : 'CERRAR SESIÓN',
                   () {
                     context.read<DioInterceptor>().removeInterceptors();
                     if (authState is AuthVendorSuccess) {
@@ -145,24 +138,44 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-Widget profileCategoryTile(String title, void Function() onTap,
-    {bool showNavIcon = false}) {
-  return Padding(
-    padding: EdgeInsets.only(left: 10.w, right: 75.w, top: 30.h),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        customText(title, FontWeight.w400, 14,
-            GoogleFonts.beVietnamPro().fontFamily.toString(), AppColors.black),
-        if (showNavIcon)
-          GestureDetector(
-              onTap: onTap,
-              child: const Icon(
-                Icons.arrow_forward_ios_outlined,
-                color: AppColors.black,
-                size: 18,
-              )),
-      ],
+Widget profileCategoryTile(String title, void Function() onTap) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Padding(
+      padding: EdgeInsets.only(left: 10.w, right: 75.w, top: 30.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          customText(
+            title,
+            FontWeight.w400,
+            14,
+            GoogleFonts.beVietnamPro().fontFamily.toString(),
+            AppColors.black,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget profileTitle(String title, void Function() onTap) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Padding(
+      padding: EdgeInsets.only(left: 10.w, right: 75.w, top: 30.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          customText(
+            title,
+            FontWeight.w700,
+            14,
+            GoogleFonts.beVietnamPro().fontFamily.toString(),
+            AppColors.selectCat,
+          ),
+        ],
+      ),
     ),
   );
 }

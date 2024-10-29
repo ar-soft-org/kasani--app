@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:kasanipedido/api/kasani.api/kasani_endpoints.dart';
 import 'package:products_api/products_api.dart';
 
 class ProductService {
@@ -10,7 +11,7 @@ class ProductService {
 
   Future<List<Product>> fetchFavoriteProducts(
       FavoriteProductsRequest data) async {
-    const path = 'http://108.174.198.156:4501/api/producto/favoritos';
+    final path = KasaniEndpoints.favoriteProducts;
     try {
       final response = await _dio.post(path, data: data.toJson());
       return (response.data as List).map((e) => Product.fromJson(e)).toList();

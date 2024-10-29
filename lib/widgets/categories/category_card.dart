@@ -32,8 +32,8 @@ class CategoryCard extends StatelessWidget {
       0,
       index == 1 ? Colors.cyan : AppColors.greyText,
       () => onTap(categoryId),
-      isSelected ? AppColors.blue : AppColors.purple,
-      isSelected ? FontWeight.w500 : FontWeight.w400,
+      isSelected ? AppColors.selectCat : AppColors.purple,
+      isSelected ? FontWeight.w700 : FontWeight.w400,
     );
   }
 }

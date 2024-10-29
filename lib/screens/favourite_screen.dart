@@ -120,7 +120,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         return addItemCard(
                           title: item.nombreProducto,
                           count: data.getQuantity,
-                          mScale: item.unidadMedida,
+                          mScale: getAbbreviatedUnit(item.unidadMedida),
                           // isHeadingVisible: true,
                           showTopActions: false,
                           data: data,

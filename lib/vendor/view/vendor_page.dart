@@ -86,9 +86,12 @@ class _VendorScreenState extends State<VendorScreen> {
     });
   }
 
-  searchClient(String text){
+  searchClient(String text) {
     final clients = context.read<VendorBloc>().state.clients;
-    final filteredList = clients.where((element) => element.nombres.toLowerCase().contains(text.toLowerCase())).toList();
+    final filteredList = clients
+        .where((element) =>
+            element.nombres.toLowerCase().contains(text.toLowerCase()))
+        .toList();
 
     // sort by pedidoHoy field (Si/No)
     filteredList.sort((a, b) {
@@ -102,7 +105,6 @@ class _VendorScreenState extends State<VendorScreen> {
     });
 
     filteredList.reversed;
-
 
     setState(() {
       filteredClient = filteredList;
@@ -146,7 +148,8 @@ class _VendorScreenState extends State<VendorScreen> {
       body: BlocConsumer<VendorBloc, VendorState>(
         listenWhen: (previous, current) =>
             current.errorMessage != null && current.errorMessage != '' ||
-            current.currentClient != null || current.clients.isNotEmpty,
+            current.currentClient != null ||
+            current.clients.isNotEmpty,
         listener: (context, state) {
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(context)
@@ -166,7 +169,6 @@ class _VendorScreenState extends State<VendorScreen> {
           }
 
           searchClient(controller.text);
-
         },
         builder: (context, state) {
           if (state.isLoading) {
@@ -220,26 +222,26 @@ class _VendorScreenState extends State<VendorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  verticalSpacer(15),
+                  verticalSpacer(20),
                   Hero(
-                  tag: 'search',
-                  child: textField(
-                    controller,
-                    46,
-                    356,
-                    'Buscar',
-                    '',
-                    100,
-                    Colors.white,
-                    true,
-                    false,
-                    true,
-                    () {},
-                    context,
-                    textColor: AppColors.textInputColor,
-                    bold: true,
+                    tag: 'search',
+                    child: textField(
+                      controller,
+                      46,
+                      356,
+                      'Buscar',
+                      '',
+                      100,
+                      Colors.white,
+                      false,
+                      false,
+                      true,
+                      () {},
+                      context,
+                    textColor: AppColors.purple,
+                      bold: true,
+                    ),
                   ),
-                ),
                   verticalSpacer(20),
                   Text(
                     df.format(now),

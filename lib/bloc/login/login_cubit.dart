@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:kasanipedido/helpers/storage/user_storage.dart';
 import 'package:kasanipedido/models/host/host_model.dart';
 import 'package:kasanipedido/models/vendor/vendor_model.dart';
@@ -8,20 +9,25 @@ import 'package:meta/meta.dart';
 
 part 'login_state.dart';
 
+// En LoginCubit
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit({
-    required this.repository,
-  }) : super(LoginInitial());
-
   final AuthenticationRepository repository;
 
+  LoginCubit({required this.repository}) : super(LoginInitial());
   loginUser(String email, String password) async {
     emit(LoginLoading());
 
     try {
       final userMap = await repository.loginUser(email, password);
+      final token = userMap['token'] ?? '';
 
-      if (userMap['id_empleado'] != null && userMap['id_empleado'] is String && userMap['id_empleado'].toString().isNotEmpty) {
+      if (userMap['requiere_cambio_contraseña'] == 'SI') {
+        final userId = userMap['id_usuario'] ?? '';
+        emit(LoginPasswordChangeRequired(userId, token));
+        return;
+      }
+
+      if (userMap['id_empleado'] != null && userMap['id_empleado'] is String) {
         final vendor = VendorModel.fromJson(userMap);
         await UserStorage.setVendor(json.encode(vendor.toJson()));
         emit(LoginVendorSuccess(vendor));
@@ -29,12 +35,16 @@ class LoginCubit extends Cubit<LoginState> {
         final host = HostModel.fromJson(userMap);
         await UserStorage.setHost(json.encode(host.toJson()));
         emit(LoginHostSuccess(host));
-
       }
-    } on UnauthorizedException catch (e) {
-      emit(LoginFailure(e.message));
     } catch (e) {
-      emit(LoginFailure(e.toString()));
+      String errorMessage = 'Ocurrió un error en el inicio de sesión';
+      if (e is DioException && e.response?.data is Map) {
+        final responseData = e.response?.data;
+        errorMessage = responseData['mensaje'] ?? errorMessage;
+        print('Respuesta del servidor: $responseData');
+      }
+
+      emit(LoginFailure(errorMessage));
     }
   }
 

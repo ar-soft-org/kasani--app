@@ -6,7 +6,7 @@ class AppImages {
   static String logo = 'lib/assets/images/logo-kasani.png';
   static String logoSvg = 'lib/assets/images/logo.svg';
   static String loginbg = 'lib/assets/images/loginbg.png';
-  static String fish = 'lib/assets/images/fish.jpeg';
+  static String fish = 'assets/icons/cong_3.png';
   static String jellyfish = 'lib/assets/images/jellyfish.png';
   static String congelados = 'lib/assets/images/congelados.png';
   static String frescos = 'lib/assets/images/Frescos.png';
@@ -17,12 +17,12 @@ class AppImages {
   static String deleteIcon = 'assets/icons/delete_icon_x2.png';
   static String closeIcon = 'assets/icons/close_icon_x2.png';
   static String frecosIcon = 'assets/icons/frescos_icon.png';
-  static String congeladosIcon = 'assets/icons/congelados_icon.png';
+  static String congeladosIcon = 'assets/icons/cong_4.png';
   static String homeIcon = 'lib/assets/images/home_icon.svg';
   static String profileIcon = 'lib/assets/images/profile_icon.svg';
   static String cartIcon = 'lib/assets/images/cart_icon.svg';
   static String checkCircle = 'assets/icons/check_circle.svg';
 
   // subcategory
-  static String mariscosCat = 'assets/icons/mariscos.png';
+  static String mariscosCat = 'assets/icons/cong_2.png';
 }

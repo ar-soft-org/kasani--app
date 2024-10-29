@@ -105,48 +105,45 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(productsByCategory: () => productsByCategory));
   }
 
-  setCurrentCategory(String categoryId) {
-    final category = state.categories
-        .firstWhere((element) => element.idCategoria == categoryId);
+  setCurrentSelection({required String id, required bool isCategory}) {
+    if (isCategory) {
+      final category =
+          state.categories.firstWhere((element) => element.idCategoria == id);
 
-    // if current category is the same as the new one, deselect it
+      if (state.currentCategory?.idCategoria == category.idCategoria) {
+        emit(state.copyWith(
+          currentCategory: () => category,
+          currentSubCategory: () => null,
+          currentProducts: state.products
+              .where((product) => product.categoria == category.nombreCategoria)
+              .toList(),
+        ));
+        return;
+      }
 
-    if (state.currentCategory?.idCategoria == category.idCategoria) {
       emit(state.copyWith(
-        currentCategory: () => null,
-        currentSubCategory: () => null,
-        currentProducts: state.products,
-      ));
-      return;
-    }
-
-    final subCategory = state.currentSubCategory ?? category.subCategorias.first;
-
-    // filter products by category
-    final products = state.products
-        .where((element) =>
-            element.categoria == category.nombreCategoria &&
-            element.subCategoria == subCategory.nombreSubCategoria)
-        .toList();
-
-    emit(
-      state.copyWith(
         currentCategory: () => category,
+        currentSubCategory: () => null,
+        currentProducts: state.products
+            .where((product) => product.categoria == category.nombreCategoria)
+            .toList(),
+      ));
+    } else {
+      if (state.currentCategory == null) return;
+
+      final subCategory = state.currentCategory!.subCategorias
+          .firstWhere((element) => element.idSubCategoria == id);
+
+      final products = _getProductsBySubCategory(
+          state.currentCategory!.nombreCategoria,
+          subCategory.nombreSubCategoria);
+
+      emit(state.copyWith(
+        currentCategory: () => state.currentCategory,
         currentSubCategory: () => subCategory,
         currentProducts: products,
-      ),
-    );
-  }
-
-  setCurrentSubCategory(String subCategoryId) {
-    final subCategory = state.currentCategory!.subCategorias
-        .firstWhere((element) => element.idSubCategoria == subCategoryId);
-
-    final products = _getProductsBySubCategory(
-        state.currentCategory!.nombreCategoria, subCategory.nombreSubCategoria);
-
-    emit(state.copyWith(
-        currentSubCategory: () => subCategory, currentProducts: products));
+      ));
+    }
   }
 
   addProductData(Product product, {ProductData? data}) {
@@ -157,11 +154,8 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   updateProductData(ProductData data) {
-    // FIXME: Considerar emilinar producto de cart si la cantidad es 0
-    ProductData updatedData = data.copyWith();
-    if (data.quantity < 0) {
-      updatedData = data.copyWith(quantity: 0);
-    }
+    ProductData updatedData =
+        data.quantity < 0 ? data.copyWith(quantity: 0) : data;
 
     _shoppingCartRepository.updateProductData(updatedData);
   }
@@ -171,12 +165,12 @@ class HomeCubit extends Cubit<HomeState> {
     _shoppingCartRepository.deleteProduct(id);
   }
 
-  _getProductsBySubCategory(String category, String subCategory) {
-    final products = state.products
-        .where((element) =>
-            element.categoria == category &&
-            element.subCategoria == subCategory)
+  List<Product> _getProductsBySubCategory(
+      String categoryName, String subCategoryName) {
+    return state.products
+        .where((product) =>
+            product.categoria == categoryName &&
+            product.subCategoria == subCategoryName)
         .toList();
-    return [...products];
   }
 }

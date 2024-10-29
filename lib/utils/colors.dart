@@ -7,11 +7,14 @@ class AppColors {
   static const darkBlue = Color(0xFF2D0C57);
 
   static const blue = Color(0xFF1C2E50);
+  static const selectCat = Color(0xFF0FB9DD);
   static const black = Color(0xFF030200);
   static const grey = Color(0XFF615F5F);
   static const tfBg = Color(0xFFF6F6F6);
   static const tfBorder = Color(0xFFE8E8E8);
-  static const ice = Color(0xFFF4FFFF);
+  static const ice = Color(0xFFE9F2FB);
+  static const white = Color.fromARGB(255, 255, 255, 255);
+
   static const greyShade = Color(0XFFA8A8A8);
   static const greyText = Color(0xFFBDBDBD);
   static const lightBlueGrey = Color(0XFF9586A8);
@@ -28,4 +31,8 @@ class AppColors {
   static const strokeWhite = Color(0XFFE0E0E0);
 
   static const textInputColor = Color(0xff222222);
+
+  // AppBar
+  static const appBar = Color(0xFF0B2C71);
+  static const bodyColor = Color(0xFFE9F2FB);
 }

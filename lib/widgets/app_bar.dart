@@ -10,21 +10,31 @@ AppBar customAppBar(
       title: Text(
         title,
         style: TextStyle(
-            color: AppColors.darkBlue,
+            color: AppColors.white,
             fontFamily: GoogleFonts.inter().fontFamily,
             fontWeight: FontWeight.w600,
             fontSize: 17.sp),
       ),
       centerTitle: true,
       elevation: 2,
-      shadowColor: AppColors.ice,
       bottomOpacity: 0,
-      backgroundColor: Colors.white,
-      leading: isBack
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios_outlined,
-                  color: AppColors.darkBlue),
-              onPressed: onPressed ?? () => Navigator.of(context).pop(),
-            )
-          : null);
+      backgroundColor: AppColors.appBar,
+leading: isBack
+    ? IconButton(
+        icon: const Icon(
+          Icons.arrow_back_ios_outlined,
+          color: AppColors.white,
+          size: 17,
+        ),
+        onPressed: onPressed ?? () => Navigator.of(context).pop(),
+      )
+    : GestureDetector(
+        onTap: null, // No tendrá acción
+        child: const Icon(
+          Icons.arrow_back_ios_outlined,
+          color: AppColors.appBar,
+          size: 17,
+        ),
+      ),
+);
 }

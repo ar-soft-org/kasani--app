@@ -6,6 +6,7 @@ import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/domain/repository/order_booking/models/order_history.dart';
 import 'package:kasanipedido/domain/repository/order_booking/order_booking_repository.dart';
 import 'package:kasanipedido/order_history_detail/cubit/order_history_detail_cubit.dart';
+import 'package:kasanipedido/screens/home_screen.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/bottom_button.dart';
@@ -327,7 +328,7 @@ Widget historyItemCard(String title, String count, String mScale) {
                   Flexible(
                     flex: 2,
                     child: customText(
-                      mScale,
+                      getAbbreviatedUnit(mScale),
                       FontWeight.w400,
                       11,
                       GoogleFonts.beVietnamPro().fontFamily.toString(),
@@ -342,7 +343,7 @@ Widget historyItemCard(String title, String count, String mScale) {
       ),
       verticalSpacer(10),
       Container(
-        width: double.infinity, // Ajustar al ancho disponible
+        width: double.infinity, 
         height: 1.h,
         color: AppColors.lightGrey,
       ),

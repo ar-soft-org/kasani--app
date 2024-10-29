@@ -78,7 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
           listenWhen: (previous, current) {
             return current is LoginHostSuccess ||
                 current is LoginVendorSuccess ||
-                current is LoginFailure;
+                current is LoginFailure ||
+                current is LoginPasswordChangeRequired;
           },
           listener: (context, state) {
             if (state is LoginHostSuccess) {
@@ -93,6 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     content: Text(state.message),
                   ),
                 );
+            } else if (state is LoginPasswordChangeRequired) {
+                Navigator.of(context).pushReplacementNamed('change-password');
             }
           },
         ),

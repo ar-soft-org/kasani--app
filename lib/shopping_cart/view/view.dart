@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
+import 'package:kasanipedido/screens/home_screen.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
@@ -49,7 +50,7 @@ class CartScreen extends StatelessWidget {
         context.select((ShoppingCartBloc bloc) => bloc.state.productsData);
     return Scaffold(
       backgroundColor: AppColors.ice,
-      appBar: customAppBar(context, 'Carrito', true, onPressed: (){
+      appBar: customAppBar(context, 'Carrito', true, onPressed: () {
         context.read<HostHomeCubit>().setTab(HostHomeTab.home);
       }),
       body: Padding(
@@ -85,7 +86,7 @@ class CartScreen extends StatelessWidget {
                         comment: data.observation,
                         data: data,
                         count: data.getQuantity,
-                        mScale: item.unidadMedida,
+                        mScale: getAbbreviatedUnit(item.unidadMedida),
                         // isHeadingVisible: true,
                         showTopActions: true,
                         increment: () {
@@ -136,7 +137,7 @@ class CartScreen extends StatelessWidget {
                           alignment: Alignment.center,
                           child: customButton(
                             context,
-                            true,
+                            false,
                             'Agregar Producto',
                             12.sp,
                             () {

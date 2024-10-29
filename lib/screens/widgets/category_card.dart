@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kasanipedido/screens/exports.dart';
 import 'package:kasanipedido/shopping_cart/shopping_cart.dart';
 import 'package:kasanipedido/shopping_cart/widgets/product_count.dart';
 import 'package:kasanipedido/utils/colors.dart';
@@ -77,27 +78,30 @@ Widget circleCard(
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 8.w),
     child: SizedBox(
-      height: 70.h,
+      height: 80.h,
       child: Column(
         children: [
           GestureDetector(
             onTap: onTap,
             child: Container(
               height: 44.h,
-              width: 44.w,
+              width: 50.w,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: bgColor, width: 1.w),
                   image: DecorationImage(
-                      image: AssetImage(image), fit: BoxFit.cover)),
+                      image: AssetImage(image), fit: BoxFit.fill)),
             ),
+          ),
+          const SizedBox(
+            height: 1,
           ),
           Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: GoogleFonts.inter().fontFamily,
-              fontSize: 11.sp,
+              fontSize: 8.sp,
               fontWeight: fontWeight,
               color: clrText,
             ),
@@ -139,17 +143,6 @@ Widget addItemCard({
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // isHeadingVisible
-                //     ? Text(
-                //         headTitle ?? '--',
-                //         style: TextStyle(
-                //           fontWeight: FontWeight.w500,
-                //           fontFamily: GoogleFonts.inter().fontFamily,
-                //           fontSize: 16.sp,
-                //           color: AppColors.lightCyan,
-                //         ),
-                //       )
-                //     : const SizedBox.shrink(),
                 Text(
                   title,
                   maxLines: null,
@@ -272,7 +265,7 @@ Widget addItemCard({
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           customText(
-              mScale,
+              getAbbreviatedUnit(mScale),
               FontWeight.w400,
               11,
               GoogleFonts.beVietnamPro().fontFamily.toString(),

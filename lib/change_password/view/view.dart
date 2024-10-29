@@ -17,18 +17,33 @@ class ChangePasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final loginState = context.read<LoginCubit>().state;
+    String? userId;
+    String? token;
+
+    if (loginState is LoginPasswordChangeRequired) {
+      userId = loginState.userId;
+      token = loginState.token; 
+    }
+
     return BlocProvider(
-      create: (context) =>
-          ChangePasswordCubit(context.read<AuthenticationRepository>()),
-      child: const ChangePasswordView(),
+      create: (context) => ChangePasswordCubit(
+        repository: context.read<AuthenticationRepository>(),
+        token: token ?? '',
+      ),
+      child: ChangePasswordView(userId: userId),
     );
   }
 }
 
+
 enum ChangePasswordViews { changePassword, success }
 
 class ChangePasswordView extends StatefulWidget {
-  const ChangePasswordView({super.key});
+  final String? userId;
+
+  const ChangePasswordView({super.key, required this.userId});
 
   @override
   State<ChangePasswordView> createState() => _ChangePasswordViewState();
@@ -36,39 +51,43 @@ class ChangePasswordView extends StatefulWidget {
 
 class _ChangePasswordViewState extends State<ChangePasswordView> {
   ChangePasswordViews currentView = ChangePasswordViews.changePassword;
+  late final String userId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final loginState = context.read<LoginCubit>().state;
+    if (loginState is LoginPasswordChangeRequired) {
+      userId = loginState.userId;
+      print('User ID asignado correctamente: $userId');
+    } else {
+      throw Exception(
+          'No se pudo obtener el User ID para cambio de contraseña');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<ChangePasswordCubit, ChangePasswordState>(
       listener: (context, state) {
-        // show snackbar when state is ChangePasswordFailure
         if (state is ChangePasswordFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
+              SnackBar(content: Text(state.message)),
             );
 
-          if (state.message.contains('99 - ')) {
-            // remove token
+          final codeParts = state.message?.split(' - ');
+          final code = (codeParts != null && codeParts.isNotEmpty)
+              ? codeParts.first
+              : '';
+
+          if (code == '99') {
             context.read<LoginCubit>().logoutHost();
-            // navigate to login page
             Navigator.of(context).pushReplacementNamed('login');
           }
         } else if (state is ChangePasswordSuccess) {
-          // navigate to host page
-          // show snackbar success
-          // ScaffoldMessenger.of(context)
-          //   ..hideCurrentSnackBar()
-          //   ..showSnackBar(
-          //     const SnackBar(
-          //       content: Text('Contraseña actualizada correctamente'),
-          //     ),
-          //   );
-          // Navigator.of(context).pushReplacementNamed('host');
-
           setState(() {
             currentView = ChangePasswordViews.success;
           });
@@ -139,7 +158,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         ],
                       );
                     }
-                    return const _Inputs();
+                    return _Inputs(userId: userId);
                   },
                 ),
               ],
@@ -152,7 +171,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 }
 
 class _Inputs extends StatefulWidget {
-  const _Inputs({super.key});
+  final String? userId;
+
+  const _Inputs({super.key, required this.userId});
 
   @override
   State<_Inputs> createState() => _InputsState();
@@ -167,8 +188,6 @@ class _InputsState extends State<_Inputs> {
   bool obscureTextP1 = true;
   bool obscureTextP2 = true;
 
-  User? user;
-
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -178,45 +197,46 @@ class _InputsState extends State<_Inputs> {
     _confirmPasswordController = TextEditingController();
     _passwordFocusNode = FocusNode();
     _confirmPasswordFocusNode = FocusNode();
-
-    // validate userId
-    final authCubit = context.read<AuthCubit>();
-    if (authCubit.state is! AuthHostSuccess &&
-        authCubit.state is! AuthVendorSuccess) {
-      // navigate to login page
-      Navigator.of(context).pushReplacementNamed('login');
-    } else if (authCubit.state is AuthVendorSuccess) {
-      user = (authCubit.state as AuthVendorSuccess).vendor;
-    } else if (authCubit.state is AuthHostSuccess) {
-      user = (authCubit.state as AuthHostSuccess).host;
-    } else {
-      throw Exception('Invalid user type');
-    }
   }
 
   @override
   void dispose() {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 
-  process() {
-    // validate form
+  void process() {
     if (formKey.currentState?.validate() ?? false) {
-      // get userId
-      final userId = user?.idUsuario ?? '';
+      // Obtener el userId desde LoginCubit
+      final loginState = context.read<LoginCubit>().state;
+      String? userId;
+      if (loginState is LoginPasswordChangeRequired) {
+        userId = loginState.userId;
+      }
 
-      // change password
+      if (userId == null || userId.isEmpty) {
+        print('Error: userId no asignado correctamente.');
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Error al obtener el userId para cambiar la contraseña.'),
+            ),
+          );
+        return;
+      }
+
+      print(
+          'Enviando nueva contraseña para userId $userId: ${_passwordController.text}');
       context.read<ChangePasswordCubit>().changePassword(
             userId,
             _passwordController.text,
           );
     } else {
-      // show error (snackbar)
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
@@ -229,7 +249,6 @@ class _InputsState extends State<_Inputs> {
 
   back() {
     context.read<LoginCubit>().logoutHost();
-    // navigate to login page
     Navigator.of(context).pushReplacementNamed('login');
   }
 
@@ -290,11 +309,9 @@ class _InputsState extends State<_Inputs> {
                       },
                       child: suffixIcon(obscureTextP2)),
                   validator: (value) {
-                    // should not be empty
                     if (value == null || value.isEmpty) {
                       return 'Por favor, repita la contraseña';
                     }
-
                     if (value != _passwordController.text) {
                       return 'Las contraseñas no coinciden';
                     }

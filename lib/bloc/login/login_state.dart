@@ -26,3 +26,10 @@ final class LoginFailure extends LoginState {
 }
 
 final class LoginLogout extends LoginState {}
+
+class LoginPasswordChangeRequired extends LoginState {
+  final String userId;
+  final String token;
+
+  LoginPasswordChangeRequired(this.userId, this.token);
+}

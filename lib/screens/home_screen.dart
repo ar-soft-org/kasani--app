@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/bloc/auth/auth_cubit.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/domain/repository/client/models/client.dart';
@@ -11,8 +10,8 @@ import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 import 'package:kasanipedido/vendor/bloc/vendor_bloc.dart';
-import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/list_wrapper.dart';
-import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/regular_text.dart';
+
+import 'package:kasanipedido/widgets/app_bar.dart';
 import 'package:kasanipedido/widgets/textfields.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
 import 'package:shopping_cart_repository/shopping_cart_repository.dart';
@@ -106,22 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: AppColors.ice, // Dark background color
-          appBar: AppBar(
-            title: Text(
-              getTitle(vendorState?.currentClient),
-              style: TextStyle(
-                  color: AppColors.darkBlue,
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 17.sp),
-            ),
-            centerTitle: true,
-            elevation: 2,
-            shadowColor: AppColors.ice,
-            bottomOpacity: 0,
-            backgroundColor: Colors.white,
-          ),
+          backgroundColor: AppColors.ice,
+          appBar: customAppBar(
+              context, getTitle(vendorState?.currentClient), false),
           body: RefreshIndicator(
             onRefresh: () async {
               final state = BlocProvider.of<AuthCubit>(context).state;
@@ -138,63 +124,44 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Column(
-                          children: [
-                            verticalSpacer(15),
-                            GestureDetector(
-                              onTap: () {
-                                final homeCubit = context.read<HomeCubit>();
-                                Navigator.of(context)
-                                    .pushNamed('continue_home', arguments: {
-                                  'cubit': homeCubit,
-                                });
-                              },
-                              child: AbsorbPointer(
-                                child: Hero(
-                                  tag: 'search',
-                                  child: Container(
-                                    padding: EdgeInsets.zero,
-                                    child: textField(
-                                      controller,
-                                      46,
-                                      356,
-                                      'Buscar',
-                                      '',
-                                      100,
-                                      Colors.white,
-                                      true,
-                                      true,
-                                      true,
-                                      () {},
-                                      context,
-                                      bold: true,
-                                    ),
+                        Column(children: [
+                          verticalSpacer(10),
+                          GestureDetector(
+                            onTap: () {
+                              final homeCubit = context.read<HomeCubit>();
+                              Navigator.of(context)
+                                  .pushNamed('continue_home', arguments: {
+                                'cubit': homeCubit,
+                              });
+                            },
+                            child: AbsorbPointer(
+                              child: Hero(
+                                tag: 'search',
+                                child: Container(
+                                  padding: EdgeInsets.zero,
+                                  child: textField(
+                                    controller,
+                                    46,
+                                    356,
+                                    'Buscar',
+                                    '',
+                                    100,
+                                    Colors.white,
+                                    false,
+                                    true,
+                                    true,
+                                    () {},
+                                    textColor: AppColors.purple,
+                                    context,
+                                    bold: true,
                                   ),
                                 ),
                               ),
                             ),
-
-                            verticalSpacer(15),
-                            ListWrapper(
-                              count: state.hasCategories ? 1 : 0,
-                              emptyWidget:
-                                  const RegularText('No hay categorías'),
-                              child: SizedBox(
-                                height: 65.h,
-                                child: const CategoriesSection(),
-                              ),
-                            ),
-                            verticalSpacer(5),
-                            // subcategories
-                            if (state.hasCurrentCategory)
-                              SizedBox(
-                                height: 167.h,
-                                child: const SubCategorySection(),
-                              ),
-
-                            verticalSpacer(20),
-                          ],
-                        ),
+                          ),
+                          verticalSpacer(5),
+                          const CombinedCategoriesSection()
+                        ]),
                         // Products
                         const Expanded(
                           child:
@@ -206,6 +173,36 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class CombinedCategoriesSection extends StatelessWidget {
+  const CombinedCategoriesSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: 5.w), 
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+
+              SizedBox(
+                height: 65.h,
+                child: const SubCategorySection(),
+              ),
+                  SizedBox(
+                height: 65.h,
+                child: const CategoriesSection(),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -253,7 +250,7 @@ class ProductCard extends StatelessWidget {
     return addItemCard(
       title: item.nombreProducto,
       count: data.getQuantity,
-      mScale: item.unidadMedida,
+      mScale: getAbbreviatedUnit(item.unidadMedida),
       // isHeadingVisible: false,
       showTopActions: false,
       increment: () {
@@ -327,11 +324,12 @@ class SubCategorySection extends StatelessWidget {
             final item = subCategories[index];
             return SubCategoryCard(
               item: item,
+              index: index,
               isSelected:
                   currentSubCategory?.idSubCategoria == item.idSubCategoria,
               onTap: (String subCategoryId) {
                 BlocProvider.of<HomeCubit>(context)
-                    .setCurrentSubCategory(subCategoryId);
+                    .setCurrentSelection(id: subCategoryId, isCategory: false);
               },
             );
           },
@@ -347,11 +345,13 @@ class SubCategoryCard extends StatelessWidget {
     required this.item,
     required this.onTap,
     required this.isSelected,
+    required this.index,
   });
 
   final SubCategoria item;
   final Function(String) onTap;
   final bool isSelected;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -362,19 +362,36 @@ class SubCategoryCard extends StatelessWidget {
         case '2':
           return AppImages.mariscosCat;
         default:
-          return AppImages.jellyfish;
+          return AppImages.mariscosCat;
       }
     }
 
-    return categoryCard(
+    return circleCard(
+      context,
       getImage(item.idSubCategoria),
       item.nombreSubCategoria,
-      () {
-        onTap(item.idSubCategoria);
-      },
-      isSelected ? AppColors.lightCyan : Colors.white,
-      isSelected ? AppColors.whiteFill : AppColors.darkBlue,
-      fontWeight: FontWeight.w700,
+      Colors.cyan,
+      0,
+      index == 1 ? Colors.cyan : AppColors.greyText,
+      () => onTap(item.idSubCategoria),
+      isSelected ? AppColors.selectCat : AppColors.purple,
+      isSelected ? FontWeight.w700 : FontWeight.w400,
     );
+  }
+}
+
+String getAbbreviatedUnit(String unit) {
+  switch (unit.toLowerCase()) {
+    case 'documento':
+      return 'DOC';
+    case 'kilogramo':
+      return 'KG';
+    case 'gramo':
+      return 'G';
+    case 'unidad':
+      return 'UND';
+
+    default:
+      return unit; 
   }
 }

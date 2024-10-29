@@ -58,9 +58,13 @@ Widget textField(
                 ),
                 borderRadius: BorderRadius.circular(borderRadius.r)),
             hintText: hintText,
-            prefixIcon: isSearchIcon
-                ? Image(image: AssetImage(AppImages.search))
-                : null,
+prefixIcon: isSearchIcon
+    ? Padding(
+        padding: const EdgeInsets.only(left: 10), // Padding left de 5
+        child: Image(image: AssetImage(AppImages.search)),
+      )
+    : null,
+
             suffixIcon: indicator == 'password'
                 ? GestureDetector(
                     onTap: onShow,
@@ -80,9 +84,9 @@ Widget textField(
                   )
                 : const SizedBox(),
             hintStyle: TextStyle(
-                color: AppColors.greyText,
-                fontSize: 16.sp,
-                fontWeight: bold ? FontWeight.bold : FontWeight.w400,
+                color: AppColors.purple,
+                fontSize: 15.sp,
+                fontWeight:  FontWeight.w400,
                 fontFamily: GoogleFonts.inter().fontFamily,
                 fontStyle: FontStyle.normal),
             fillColor: fillColor,

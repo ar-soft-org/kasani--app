@@ -1,6 +1,6 @@
 part of 'host_home_cubit.dart';
 
-enum HostHomeTab { home, history, cart, favorites, profile }
+enum HostHomeTab { home, history, cart, favorites, profile, continueHome }
 
 final class HostHomeState extends Equatable {
   const HostHomeState({

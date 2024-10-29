@@ -5,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasanipedido/bloc/home/home_cubit.dart';
 import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
+import 'package:kasanipedido/screens/home_screen.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/debouncer.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/list_wrapper.dart';
 import 'package:kasanipedido/widgets/UIKit/Standard/Atoms/regular_text.dart';
+import 'package:kasanipedido/widgets/app_bar.dart';
 import 'package:kasanipedido/widgets/categories/category_section.dart';
 import 'package:kasanipedido/widgets/textfields.dart';
 import 'package:kasanipedido/widgets/vertical_spacer.dart';
@@ -18,18 +20,19 @@ import 'package:shopping_cart_repository/shopping_cart_repository.dart';
 class ContinueHomePage extends StatelessWidget {
   const ContinueHomePage({
     super.key,
-    required this.homeCubit,
+    this.homeCubit,
   });
 
-  final HomeCubit homeCubit;
+  final HomeCubit? homeCubit;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider.value(
-          value: homeCubit,
-        ),
+        if (homeCubit != null)
+          BlocProvider.value(
+            value: homeCubit!,
+          ),
         BlocProvider(
           create: (context) => EditProductBloc(
             shoppingCartRepository: context.read<ShoppingCartRepository>(),
@@ -138,31 +141,8 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
             context.select((EditProductBloc bloc) => bloc.state.productsData);
 
         return Scaffold(
-          backgroundColor: AppColors.ice, // Dark background color
-          appBar: AppBar(
-            title: Text(
-              'Nuevo Pedido',
-              style: TextStyle(
-                  color: AppColors.darkBlue,
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 17.sp),
-            ),
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.darkBlue,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            centerTitle: true,
-            elevation: 2,
-            shadowColor: AppColors.ice,
-            bottomOpacity: 0,
-            backgroundColor: Colors.white,
-          ),
+          backgroundColor: AppColors.ice,
+          appBar: customAppBar(context, 'Nuevo Pedido', true),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: Column(
@@ -180,12 +160,12 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                     '',
                     100,
                     Colors.white,
-                    true,
+                    false,
                     false,
                     true,
                     () {},
                     context,
-                    textColor: AppColors.textInputColor,
+                    textColor: AppColors.purple,
                     bold: true,
                   ),
                 ),
@@ -341,7 +321,7 @@ class CategoryAndProducts extends StatelessWidget {
               return addItemCard(
                   title: item.nombreProducto,
                   count: data.getQuantity,
-                  mScale: item.unidadMedida,
+                  mScale: getAbbreviatedUnit(item.unidadMedida),
                   // isHeadingVisible: true,
                   showTopActions: false,
                   data: data,

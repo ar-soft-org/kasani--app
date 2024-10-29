@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:kasanipedido/order_booking/bloc/order_booking_bloc.dart';
+import 'package:kasanipedido/screens/home_screen.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
 import 'package:kasanipedido/shopping_cart/bloc/shopping_cart_bloc.dart';
 import 'package:kasanipedido/utils/colors.dart';
@@ -83,7 +84,7 @@ class _OrderDetailedPageViewState extends State<OrderDetailedPageView> {
                       return addItemCard(
                         title: item.nombreProducto,
                         count: data.getQuantity,
-                        mScale: item.unidadMedida,
+                        mScale: getAbbreviatedUnit(item.unidadMedida),
                         comment: data.observation,
                         data: data,
                         // isHeadingVisible: true,
@@ -173,7 +174,7 @@ class _OrderDetailedPageViewState extends State<OrderDetailedPageView> {
                   customText(
                       'Datos de entrega',
                       FontWeight.w500,
-                      14,
+                      12,
                       GoogleFonts.beVietnamPro().fontFamily.toString(),
                       AppColors.black),
                 ],
