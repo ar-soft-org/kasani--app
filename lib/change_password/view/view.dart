@@ -17,14 +17,13 @@ class ChangePasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final loginState = context.read<LoginCubit>().state;
     String? userId;
     String? token;
 
     if (loginState is LoginPasswordChangeRequired) {
       userId = loginState.userId;
-      token = loginState.token; 
+      token = loginState.token;
     }
 
     return BlocProvider(
@@ -36,7 +35,6 @@ class ChangePasswordPage extends StatelessWidget {
     );
   }
 }
-
 
 enum ChangePasswordViews { changePassword, success }
 
@@ -83,7 +81,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               ? codeParts.first
               : '';
 
-          if (code == '99') {
+          if (code != '0') {
             context.read<LoginCubit>().logoutHost();
             Navigator.of(context).pushReplacementNamed('login');
           }

@@ -53,9 +53,18 @@ class AuthenticationRepository {
       throw UnauthorizedException(response.data['mensaje'] ?? 'Unauthorized');
     }
 
-    if (response.data['codigo'] == '00' && response.data['mensaje'] is String) {
-      print('Código 00 recibido: Se requiere cambio de contraseña');
+    // Si el código es "00", se comprueba si requiere cambio de contraseña
+    if (response.data['codigo'] == '00') {
+      final requiereCambioContrasena =
+          response.data['requiere_cambio_contraseña'];
+      if (requiereCambioContrasena == 'SI') {
+        print('Código 00 recibido: Se requiere cambio de contraseña');
+        throw PasswordChangeRequiredException('Cambio de contraseña requerido');
+      } else {
+        print('Código 00 recibido: No se requiere cambio de contraseña');
+      }
     }
+
     return response.data;
   }
 

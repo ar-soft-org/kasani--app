@@ -117,9 +117,6 @@ Widget addItemCard({
   required String title,
   required String count,
   required String mScale,
-  // required bool isHeadingVisible,
-
-  /// show comment and delete icon
   required bool showTopActions,
   required void Function() increment,
   required void Function() decrement,
@@ -134,149 +131,155 @@ Widget addItemCard({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       verticalSpacer(10),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Flexible(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  maxLines: null,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontFamily: GoogleFonts.inter().fontFamily,
-                    fontSize: 12.sp,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (showTopActions) ...[
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: TopActions(comment: comment, data: data),
-                ),
-                SizedBox(
-                  height: 8.h,
-                )
-              ],
-              Row(
+      Padding(
+        padding: const EdgeInsets.only(left: 17.0, right: 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: decrement,
-                    child: Container(
-                      width: 27.w,
-                      height: 27.h,
-                      decoration: BoxDecoration(
+                  Text(
+                    title,
+                    maxLines: null,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: GoogleFonts.inter().fontFamily,
+                      fontSize: 12.sp,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                if (showTopActions) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: TopActions(comment: comment, data: data),
+                  ),
+                  SizedBox(height: 8.h),
+                ],
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: decrement,
+                      child: Container(
+                        width: 27.w,
+                        height: 27.h,
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
                           border: Border.all(
-                              color: AppColors.lightCyan, width: 1.w)),
-                      child: const Center(
-                        child: Icon(
-                          Icons.remove,
-                          color: AppColors.lightCyan,
-                          size: 15,
+                            color: AppColors.lightCyan,
+                            width: 1.w,
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  horizontalSpacer(6),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: 35.w),
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () async {
-                          if (onEdit != null) {
-                            final result = await showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (_) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(17.r),
-                                  ),
-                                  child: ProductCount(
-                                    initialQuantity:
-                                        data?.quantity.toString() ?? '1',
-                                    onDelete: () {
-                                      onCountDelete?.call();
-                                    },
-                                  ),
-                                );
-                              },
-                            );
-
-                            final quantityResult = result?['quantity'];
-                            if (context.mounted && quantityResult != null) {
-                              onEdit(quantityResult);
-                            }
-                          }
-                        },
-                        child: Text(
-                          count,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: GoogleFonts.roboto().fontFamily,
-                            fontSize: 16.sp,
-                            color: AppColors.darkBlue,
-                            decoration: TextDecoration.underline,
+                        child: const Center(
+                          child: Icon(
+                            Icons.remove,
+                            color: AppColors.lightCyan,
+                            size: 15,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  horizontalSpacer(6),
-                  GestureDetector(
-                    onTap: increment,
-                    child: Container(
-                      width: 27.w,
-                      height: 27.h,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: AppColors.lightCyan, width: 1.w)),
-                      child: const Center(
-                        child: Icon(
-                          Icons.add,
-                          color: AppColors.lightCyan,
-                          size: 15,
+                    horizontalSpacer(6),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: 35.w),
+                      child: Center(
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (onEdit != null) {
+                              final result = await showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(17.r),
+                                    ),
+                                    child: ProductCount(
+                                      initialQuantity:
+                                          data?.quantity.toString() ?? '1',
+                                      onDelete: () {
+                                        onCountDelete?.call();
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+
+                              final quantityResult = result?['quantity'];
+                              if (context.mounted && quantityResult != null) {
+                                onEdit(quantityResult);
+                              }
+                            }
+                          },
+                          child: Text(
+                            count,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: GoogleFonts.roboto().fontFamily,
+                              fontSize: 16.sp,
+                              color: AppColors.darkBlue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  horizontalSpacer(5),
-                ],
-              )
-            ],
-          ),
-        ],
+                    horizontalSpacer(10),
+                    GestureDetector(
+                      onTap: increment,
+                      child: Container(
+                        width: 27.w,
+                        height: 27.h,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.lightCyan,
+                            width: 1.w,
+                          ),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.add,
+                            color: AppColors.lightCyan,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                    horizontalSpacer(5),
+                    customText(
+                      getAbbreviatedUnit(mScale),
+                      FontWeight.w400,
+                      9,
+                      GoogleFonts.beVietnamPro().fontFamily.toString(),
+                      AppColors.darkGrey,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          customText(
-              getAbbreviatedUnit(mScale),
-              FontWeight.w400,
-              11,
-              GoogleFonts.beVietnamPro().fontFamily.toString(),
-              AppColors.darkGrey),
-        ],
-      ),
-      verticalSpacer(10),
-      Container(
-        width: 330.w,
-        height: 1.h,
-        color: AppColors.lightGrey,
+      verticalSpacer(5),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 17.0),
+        child: Container(
+          width: 330.w,
+          height: 1.h,
+          color: AppColors.lightGrey,
+        ),
       ),
       verticalSpacer(5),
     ],

@@ -9,11 +9,11 @@ import 'package:meta/meta.dart';
 
 part 'login_state.dart';
 
-// En LoginCubit
 class LoginCubit extends Cubit<LoginState> {
   final AuthenticationRepository repository;
 
   LoginCubit({required this.repository}) : super(LoginInitial());
+
   loginUser(String email, String password) async {
     emit(LoginLoading());
 
@@ -27,14 +27,18 @@ class LoginCubit extends Cubit<LoginState> {
         return;
       }
 
-      if (userMap['id_empleado'] != null && userMap['id_empleado'] is String) {
+      if (userMap['id_empleado'] != null && userMap['id_empleado'] is String && userMap['id_empleado'].isNotEmpty) {
         final vendor = VendorModel.fromJson(userMap);
         await UserStorage.setVendor(json.encode(vendor.toJson()));
+        print('Usuario autenticado como Vendor: ${vendor.toJson()}');
         emit(LoginVendorSuccess(vendor));
-      } else {
+      } else if (userMap['nombre_cliente'] != null && userMap['nombre_cliente'].isNotEmpty) {
         final host = HostModel.fromJson(userMap);
         await UserStorage.setHost(json.encode(host.toJson()));
+        print('Usuario autenticado como Cliente (Host): ${host.toJson()}');
         emit(LoginHostSuccess(host));
+      } else {
+        emit(LoginFailure('No se pudo identificar el tipo de usuario.'));
       }
     } catch (e) {
       String errorMessage = 'Ocurrió un error en el inicio de sesión';

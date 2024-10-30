@@ -185,17 +185,15 @@ class CombinedCategoriesSection extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: 5.w), 
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-
               SizedBox(
                 height: 65.h,
                 child: const SubCategorySection(),
               ),
-                  SizedBox(
+              SizedBox(
                 height: 65.h,
                 child: const CategoriesSection(),
               ),
@@ -390,8 +388,9 @@ String getAbbreviatedUnit(String unit) {
       return 'G';
     case 'unidad':
       return 'UND';
-
+    case 'paquete':
+      return 'PAQ';
     default:
-      return unit; 
+      return unit;
   }
 }

@@ -18,6 +18,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   navigateToLogin() {
     Navigator.of(context).pushReplacementNamed('login');
+    print('Navigating to login page: No valid session found.');
   }
 
   @override
@@ -36,13 +37,14 @@ class _SplashScreenState extends State<SplashScreen> {
               current is SplashHostSuccess || current is SplashVendorSuccess,
           listener: (context, state) {
             if (state is SplashHostSuccess && state.logedIn) {
+              print('Host session found. Loading host data...');
               BlocProvider.of<AuthCubit>(context).loadUserLogged();
             } else if (state is SplashVendorSuccess && state.logedIn) {
+              print('Vendor session found. Loading vendor data...');
               BlocProvider.of<AuthCubit>(context).loadVendorLogged();
-            } else if (state is SplashHostSuccess && !state.logedIn) {
-              Navigator.of(context).pushReplacementNamed('login');
-            } else if (state is SplashVendorSuccess && !state.logedIn) {
-              Navigator.of(context).pushReplacementNamed('login');
+            } else {
+              print('No session found. Navigating to login.');
+              navigateToLogin();
             }
           },
         ),
@@ -54,8 +56,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 HttpHeaders.authorizationHeader: 'Bearer ${state.host.token}'
               });
               if (state.host.requiereCambioContrasena == 'NO') {
+                print('Host authenticated. Navigating to host page.');
                 Navigator.of(context).pushReplacementNamed('host');
               } else {
+                print(
+                    'Host requires password change. Navigating to change password page.');
                 Navigator.of(context)
                     .pushReplacementNamed(AppRouteNames.changePassword);
               }
@@ -65,20 +70,25 @@ class _SplashScreenState extends State<SplashScreen> {
                 HttpHeaders.authorizationHeader: 'Bearer ${state.vendor.token}'
               });
               if (state.vendor.requiereCambioContrasena == 'NO') {
+                print('Vendor authenticated. Navigating to vendor page.');
                 Navigator.of(context)
                     .pushReplacementNamed(AppRouteNames.vendorPage);
               } else {
+                print(
+                    'Vendor requires password change. Navigating to change password page.');
                 Navigator.of(context)
                     .pushReplacementNamed(AppRouteNames.changePassword);
               }
             } else if (state is AuthLogout || state is AuthError) {
-              Navigator.of(context).pushReplacementNamed('login');
+              print(
+                  'Authentication error or logout detected. Navigating to login.');
+              navigateToLogin();
             }
           },
         ),
       ],
       child: Scaffold(
-        backgroundColor: Colors.transparent, // Dark background color
+        backgroundColor: Colors.transparent, 
         appBar: null,
         body: Stack(
           fit: StackFit.expand,

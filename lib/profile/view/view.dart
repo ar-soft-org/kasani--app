@@ -49,28 +49,31 @@ class ProfileScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.ice,
           appBar: customAppBar(context, 'INFORMACIÓN', false),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 36.w, vertical: 10.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                verticalSpacer(40),
-                Container(
-                  width: 320.w,
-                  height: 90.h,
-                  decoration: BoxDecoration(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 36.w, vertical: 10.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  verticalSpacer(40),
+                  Container(
+                    width: 320.w,
+                    height: 90.h,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       image: DecorationImage(
-                          image: AssetImage(
-                            AppImages.profile,
-                          ),
-                          fit: BoxFit.fill)),
-                ),
-                verticalSpacer(20),
-                profileTitle('PERFIL', () {}),
-                if (authState is AuthVendorSuccess) ...[
-                  Padding(
+                        image: AssetImage(
+                          AppImages.profile,
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  verticalSpacer(20),
+                  profileTitle('PERFIL', () {}),
+                  if (authState is AuthVendorSuccess) ...[
+                    Padding(
                       padding: EdgeInsets.only(
                         left: 10.w,
                         right: 10.w,
@@ -79,17 +82,17 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              '${authState.vendor.nombres} ${authState.vendor.apellidos}'),
+                          Text('${authState.vendor.nombres} ${authState.vendor.apellidos}'),
                           Text(authState.vendor.correo),
                           SizedBox(height: 20.h),
                           Divider(height: 2.h, thickness: 2.h),
                           SizedBox(height: 20.h),
                         ],
-                      ))
-                ],
-                if (authState is AuthHostSuccess) ...[
-                  Padding(
+                      ),
+                    )
+                  ],
+                  if (authState is AuthHostSuccess) ...[
+                    Padding(
                       padding: EdgeInsets.only(
                         left: 10.w,
                         right: 10.w,
@@ -98,8 +101,7 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              '${authState.host.nombres} ${authState.host.apellidos}'),
+                          Text('${authState.host.nombres} ${authState.host.apellidos}'),
                           Text(authState.host.correo),
                           SizedBox(height: 20.h),
                           Divider(height: 2.h, thickness: 2.h),
@@ -115,21 +117,23 @@ class ProfileScreen extends StatelessWidget {
                             );
                           }).toList()
                         ],
-                      ))
+                      ),
+                    )
+                  ],
+                  verticalSpacer(20),
+                  profileCategoryTile(
+                    state is LoginLoading ? 'CERRANDO SESIÓN' : 'CERRAR SESIÓN',
+                    () {
+                      context.read<DioInterceptor>().removeInterceptors();
+                      if (authState is AuthVendorSuccess) {
+                        context.read<LoginCubit>().logoutVendor();
+                      } else if (authState is AuthHostSuccess) {
+                        context.read<LoginCubit>().logoutHost();
+                      }
+                    },
+                  ),
                 ],
-                verticalSpacer(20),
-                profileCategoryTile(
-                  state is LoginLoading ? 'CERRANDO SESIÓN' : 'CERRAR SESIÓN',
-                  () {
-                    context.read<DioInterceptor>().removeInterceptors();
-                    if (authState is AuthVendorSuccess) {
-                      context.read<LoginCubit>().logoutVendor();
-                    } else if (authState is AuthHostSuccess) {
-                      context.read<LoginCubit>().logoutHost();
-                    }
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         );

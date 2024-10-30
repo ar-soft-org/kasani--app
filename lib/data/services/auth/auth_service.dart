@@ -10,7 +10,7 @@ class AuthService {
   AuthService({required Dio dio}) : _dio = dio;
   final Dio _dio;
 
-  forgotPassword(String email) async {
+  Future<Map<String, dynamic>> forgotPassword(String email) async {
     try {
       final response = await _dio.post(
         KasaniEndpoints.forgotPassword,
@@ -19,8 +19,12 @@ class AuthService {
         },
       );
 
-      if (response.data['codigo'] != '00') {
-        throw AuthException(response.data['mensaje'] ?? 'An error occurred');
+      print('Respuesta del API para forgotPassword: ${response.data}');
+      final codigo = response.data['codigo'];
+      final mensaje = response.data['mensaje'] ?? 'Error desconocido';
+
+      if (codigo != '00') {
+        throw AuthException(mensaje); 
       }
 
       return response.data;

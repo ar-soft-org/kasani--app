@@ -40,4 +40,6 @@ class UserStorage {
   static Future<void> deleteVendor() async {
     await _storage.delete(key: _keyVendor);
   }
+
+  
 }
