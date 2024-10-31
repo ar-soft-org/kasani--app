@@ -8,6 +8,7 @@ import 'package:kasanipedido/edit_product/bloc/edit_product_bloc.dart';
 import 'package:kasanipedido/host_home/cubit/host_home_cubit.dart';
 import 'package:kasanipedido/profile/profile.dart';
 import 'package:kasanipedido/screens/favourite_screen.dart';
+import 'package:kasanipedido/screens/history_detail_screen.dart';
 import 'package:kasanipedido/screens/history_screen.dart';
 import 'package:kasanipedido/screens/home_screen.dart';
 import 'package:kasanipedido/screens/home_screen_continution.dart';
@@ -30,11 +31,8 @@ class HostHomePage extends StatelessWidget {
   final HostHomeTab initialTab;
 
   static Widget initWithVendorBloc(
-    VendorBloc bloc, 
-    Client client, 
-    HomeCubit? homeCubit, 
-    {HostHomeTab initialTab = HostHomeTab.home}
-  ) {
+      VendorBloc bloc, Client client, HomeCubit? homeCubit,
+      {HostHomeTab initialTab = HostHomeTab.home}) {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: bloc),
@@ -83,6 +81,7 @@ class HostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedTab = context.select((HostHomeCubit cubit) => cubit.state.tab);
+    final isBottomBarVisible = context.select((HostHomeCubit cubit) => cubit.state.isBottomBarVisible);
     final countProducts = context.select((EditProductBloc bloc) => bloc.state.countProducts);
     final VendorState? vendorState = context.select((VendorBloc? bloc) => bloc?.state);
 
@@ -90,12 +89,13 @@ class HostScreen extends StatelessWidget {
       body: IndexedStack(
         index: selectedTab.index,
         children: [
-          const EditProductPage(),
+          const HomeScreen(),
           const HistoryPage(),
           const ShoppingCartPage(),
           const FavoriteProductsPage(),
           const ProfilePage(),
-          ContinueHomePage(homeCubit: homeCubit), 
+          ContinueHomePage(homeCubit: homeCubit),
+          HistoryDetailPage(), // Añadir HistoryDetailPage aquí
         ],
       ),
       floatingActionButton: vendorState?.status == VendorStatus.loaded
@@ -107,55 +107,58 @@ class HostScreen extends StatelessWidget {
               child: const Icon(Icons.person_outline),
             )
           : const SizedBox.shrink(),
-      bottomNavigationBar: BottomAppBar(
-        color: AppColors.appBar,
-        child: SizedBox(
-          height: 70.h,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.sp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _HomeTabButton(
-                  icon: AppImages.homeIcon,
-                  label: 'Inicio',
-                  groupValue: selectedTab,
-                  value: HostHomeTab.home,
+      bottomNavigationBar: isBottomBarVisible
+          ? BottomAppBar(
+              color: AppColors.appBar,
+              child: SizedBox(
+                height: 70.h,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _HomeTabButton(
+                        icon: AppImages.homeIcon,
+                        label: 'Inicio',
+                        groupValue: selectedTab,
+                        value: HostHomeTab.home,
+                      ),
+                      _HomeTabButton(
+                        icon: AppImages.menu,
+                        label: 'Historial',
+                        groupValue: selectedTab,
+                        value: HostHomeTab.history,
+                      ),
+                      _HomeTabButton(
+                        icon: AppImages.cartIcon,
+                        label: 'Carrito',
+                        groupValue: selectedTab,
+                        value: HostHomeTab.cart,
+                        badgeValue: countProducts?.toString() ?? '',
+                      ),
+                      _HomeTabButton(
+                        icon: AppImages.fav,
+                        label: 'Favoritos',
+                        groupValue: selectedTab,
+                        value: HostHomeTab.favorites,
+                      ),
+                      _HomeTabButton(
+                        icon: AppImages.profileIcon,
+                        label: 'Perfil',
+                        groupValue: selectedTab,
+                        value: HostHomeTab.profile,
+                      ),
+                    ],
+                  ),
                 ),
-                _HomeTabButton(
-                  icon: AppImages.menu,
-                  label: 'Historial',
-                  groupValue: selectedTab,
-                  value: HostHomeTab.history,
-                ),
-                _HomeTabButton(
-                  icon: AppImages.cartIcon,
-                  label: 'Carrito',
-                  groupValue: selectedTab,
-                  value: HostHomeTab.cart,
-                  badgeValue: countProducts?.toString() ?? '',
-                ),
-                _HomeTabButton(
-                  icon: AppImages.fav,
-                  label: 'Favoritos',
-                  groupValue: selectedTab,
-                  value: HostHomeTab.favorites,
-                ),
-                _HomeTabButton(
-                  icon: AppImages.profileIcon,
-                  label: 'Perfil',
-                  groupValue: selectedTab,
-                  value: HostHomeTab.profile,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            )
+          : null,
     );
   }
 }
+
 
 class _HomeTabButton extends StatelessWidget {
   const _HomeTabButton({
@@ -175,8 +178,10 @@ class _HomeTabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final svgIcon = SvgPicture.asset(icon,
-        color: groupValue != value ? Colors.white : const Color(0xff0FB9DD));
+    final svgIcon = SvgPicture.asset(
+      icon,
+      color: groupValue != value ? Colors.white : const Color(0xff0FB9DD),
+    );
 
     return InkWell(
       onTap: () => context.read<HostHomeCubit>().setTab(value),
@@ -184,16 +189,20 @@ class _HomeTabButton extends StatelessWidget {
         padding: EdgeInsets.all(0.sp),
         child: Column(
           children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(minHeight: 37.h),
-              child: Center(
-                child: badgeValue.isNotEmpty
-                    ? Badge(
-                        backgroundColor: AppColors.lightCyan,
-                        label: Text(badgeValue),
-                        child: svgIcon,
-                      )
-                    : svgIcon,
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: 0.h, top: 5),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: 37.h),
+                child: Center(
+                  child: badgeValue.isNotEmpty
+                      ? Badge(
+                          backgroundColor: AppColors.lightCyan,
+                          label: Text(badgeValue),
+                          child: svgIcon,
+                        )
+                      : svgIcon,
+                ),
               ),
             ),
             ConstrainedBox(
@@ -201,8 +210,9 @@ class _HomeTabButton extends StatelessWidget {
               child: Center(
                 child: Text(
                   label,
-                  style: const TextStyle(
-                    color: Color(0xffb6bfd4),
+                  style: TextStyle(
+                    color: const Color(0xffb6bfd4),
+                    fontSize: 10.sp, 
                   ),
                 ),
               ),

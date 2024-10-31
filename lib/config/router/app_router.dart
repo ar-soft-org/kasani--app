@@ -5,7 +5,6 @@ import 'package:kasanipedido/domain/repository/client/models/client.dart';
 import 'package:kasanipedido/forgot_password/view/forgot_password_page.dart';
 import 'package:kasanipedido/host_home/host_home.dart';
 import 'package:kasanipedido/profile/view/view.dart';
-import 'package:kasanipedido/screens/history_detail_screen.dart';
 import 'package:kasanipedido/screens/history_screen.dart';
 import 'package:kasanipedido/screens/login_screen.dart';
 import 'package:kasanipedido/screens/order_check_out_screen.dart';
@@ -61,12 +60,14 @@ class AppRoutes {
 
       return HostHomePage(client: client, homeCubit: homeCubit);
     },
-    'history_detail': (context) => const HistoryDetailPage(),
+    'history_detail': (context) => HostHomePage(
+          initialTab: HostHomeTab.history,
+          homeCubit: ModalRoute.of(context)?.settings.arguments as HomeCubit?,
+        ),
     'order_completed': (context) => const OrderCompletedPageView(),
     AppRouteNames.vendorPage: (context) => const VendorPage(),
     AppRouteNames.profilePage: (context) => const ProfilePage(),
-        AppRouteNames.changePassword: (context) => const ChangePasswordPage(),
-
+    AppRouteNames.changePassword: (context) => const ChangePasswordPage(),
     AppRouteNames.forgotPassword: (context) => const ForgotPasswordPage(),
   };
 }

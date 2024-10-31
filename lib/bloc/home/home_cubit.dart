@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:kasanipedido/models/category/category_model.dart';
-import 'package:kasanipedido/models/subcategory/subcategory_model.dart';
+import 'package:kasanipedido/models/subcategory/subcategory_model.dart'; 
 import 'package:kasanipedido/models/user/user_model.dart';
 import 'package:kasanipedido/repositories/authentication_repository.dart';
 import 'package:kasanipedido/repositories/category_repository.dart';
@@ -34,12 +34,26 @@ class HomeCubit extends Cubit<HomeState> {
         idSucursal: host.idSucursal,
         idUsuario: host.idUsuario,
       );
+
+      CategoryModel? initialCategory = categories.isNotEmpty ? categories.first : null;
+      SubCategoria? initialSubCategory = initialCategory?.subCategorias.isNotEmpty == true 
+          ? initialCategory!.subCategorias.first 
+          : null;
+
+      final List<Product> initialProducts = initialSubCategory != null
+          ? _getProductsBySubCategory(
+              initialCategory!.nombreCategoria,
+              initialSubCategory.nombreSubCategoria,
+            )
+          : [];
+
       emit(state.copyWith(
-          status: HomeStatus.success,
-          categories: categories,
-          currentCategory: () => categories.isEmpty ? null : categories.first,
-          currentSubCategory: () => null,
-          currentProducts: []));
+        status: HomeStatus.success,
+        categories: categories,
+        currentCategory: () => initialCategory,
+        currentSubCategory: () => initialSubCategory,
+        currentProducts: initialProducts,
+      ));
     } on UnauthorizedException catch (e) {
       emit(state.copyWith(
         status: HomeStatus.error,
@@ -105,25 +119,19 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(productsByCategory: () => productsByCategory));
   }
 
-  setCurrentSelection({required String id, required bool isCategory}) {
+  setCurrentSelection({
+    required String id,
+    required bool isCategory,
+    int? index,
+  }) {
     if (isCategory) {
       final category =
           state.categories.firstWhere((element) => element.idCategoria == id);
 
-      if (state.currentCategory?.idCategoria == category.idCategoria) {
-        emit(state.copyWith(
-          currentCategory: () => category,
-          currentSubCategory: () => null,
-          currentProducts: state.products
-              .where((product) => product.categoria == category.nombreCategoria)
-              .toList(),
-        ));
-        return;
-      }
-
       emit(state.copyWith(
         currentCategory: () => category,
         currentSubCategory: () => null,
+        selectedSubCategoryIndex: -1,
         currentProducts: state.products
             .where((product) => product.categoria == category.nombreCategoria)
             .toList(),
@@ -141,10 +149,12 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(
         currentCategory: () => state.currentCategory,
         currentSubCategory: () => subCategory,
+        selectedSubCategoryIndex: index ?? state.selectedSubCategoryIndex, 
         currentProducts: products,
       ));
     }
   }
+
 
   addProductData(Product product, {ProductData? data}) {
     _shoppingCartRepository.addProductData(data ??

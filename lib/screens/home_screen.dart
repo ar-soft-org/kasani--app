@@ -50,12 +50,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
-
   @override
   void initState() {
     super.initState();
     final state = BlocProvider.of<AuthCubit>(context).state;
-    // get categories and subcategories
     if (state is AuthHostSuccess) {
       BlocProvider.of<HomeCubit>(context)
           .fetchCategoriesSubCategories(state.host);
@@ -311,7 +309,7 @@ class SubCategorySection extends StatelessWidget {
         }
 
         final subCategories = state.currentCategory!.subCategorias;
-        final currentSubCategory = state.currentSubCategory;
+        final selectedIndex = state.selectedSubCategoryIndex;
 
         return ListView.builder(
           physics: const BouncingScrollPhysics(),
@@ -323,11 +321,13 @@ class SubCategorySection extends StatelessWidget {
             return SubCategoryCard(
               item: item,
               index: index,
-              isSelected:
-                  currentSubCategory?.idSubCategoria == item.idSubCategoria,
-              onTap: (String subCategoryId) {
-                BlocProvider.of<HomeCubit>(context)
-                    .setCurrentSelection(id: subCategoryId, isCategory: false);
+              isSelected: selectedIndex == index, 
+              onTap: (String subCategoryId, int subCategoryIndex) {
+                BlocProvider.of<HomeCubit>(context).setCurrentSelection(
+                  id: subCategoryId,
+                  isCategory: false,
+                  index: subCategoryIndex, 
+                );
               },
             );
           },
@@ -347,7 +347,7 @@ class SubCategoryCard extends StatelessWidget {
   });
 
   final SubCategoria item;
-  final Function(String) onTap;
+  final Function(String, int) onTap; 
   final bool isSelected;
   final int index;
 
@@ -368,15 +368,16 @@ class SubCategoryCard extends StatelessWidget {
       context,
       getImage(item.idSubCategoria),
       item.nombreSubCategoria,
-      Colors.cyan,
+      AppColors.selectCat,
       0,
-      index == 1 ? Colors.cyan : AppColors.greyText,
-      () => onTap(item.idSubCategoria),
+      isSelected ? AppColors.selectCat : AppColors.purple,
+      () => onTap(item.idSubCategoria, index),
       isSelected ? AppColors.selectCat : AppColors.purple,
       isSelected ? FontWeight.w700 : FontWeight.w400,
     );
   }
 }
+
 
 String getAbbreviatedUnit(String unit) {
   switch (unit.toLowerCase()) {

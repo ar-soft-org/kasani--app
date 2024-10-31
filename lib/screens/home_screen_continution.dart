@@ -149,7 +149,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                verticalSpacer(20),
+                verticalSpacer(10),
                 Hero(
                   tag: 'search',
                   child: textField(
@@ -169,7 +169,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                     bold: true,
                   ),
                 ),
-                verticalSpacer(15),
+                verticalSpacer(5),
                 Expanded(
                   child: Builder(builder: (_) {
                     if (searching) {

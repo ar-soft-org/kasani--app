@@ -14,7 +14,9 @@ class HomeState extends Equatable {
   final List<Product> currentProducts;
   final Map<String, List<Product>>? productsByCategory;
 
-  HomeState({
+  final int selectedSubCategoryIndex; 
+
+  const HomeState({
     this.status = HomeStatus.initial,
     this.categories = const [],
     this.products = const [],
@@ -23,9 +25,10 @@ class HomeState extends Equatable {
     this.currentProducts = const [],
     this.errorMessage,
     this.productsByCategory = const {},
+    this.selectedSubCategoryIndex = -1,
   });
 
-  copyWith({
+  HomeState copyWith({
     HomeStatus? status,
     List<CategoryModel>? categories,
     CategoryModel? Function()? currentCategory,
@@ -34,6 +37,7 @@ class HomeState extends Equatable {
     List<Product>? products,
     List<Product>? currentProducts,
     Map<String, List<Product>>? Function()? productsByCategory,
+    int? selectedSubCategoryIndex, 
   }) {
     return HomeState(
       status: status ?? this.status,
@@ -49,6 +53,8 @@ class HomeState extends Equatable {
       productsByCategory: productsByCategory != null
           ? productsByCategory()
           : this.productsByCategory,
+      selectedSubCategoryIndex:
+          selectedSubCategoryIndex ?? this.selectedSubCategoryIndex,
     );
   }
 
@@ -62,6 +68,7 @@ class HomeState extends Equatable {
         currentProducts,
         errorMessage,
         productsByCategory,
+        selectedSubCategoryIndex,
       ];
 }
 

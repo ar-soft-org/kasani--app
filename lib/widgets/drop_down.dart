@@ -20,7 +20,6 @@ class CustomDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<CustomDropdownMenuItem<T>>(
-      menuMaxHeight: 150.h,
       enableFeedback: true,
       hint: customText(
         '--',
@@ -56,7 +55,7 @@ class CustomDropdown<T> extends StatelessWidget {
         return DropdownMenuItem<CustomDropdownMenuItem<T>>(
           value: item,
           child: Padding(
-            padding: const EdgeInsets.all(2.0),
+            padding: const EdgeInsets.all(0.0),
             child: Center(
               child: customText(
                 item.value,

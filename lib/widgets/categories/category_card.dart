@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kasanipedido/screens/widgets/category_card.dart';
-import 'package:kasanipedido/utils/app_constant.dart';
+// import 'package:kasanipedido/utils/app_constant.dart';
 import 'package:kasanipedido/utils/colors.dart';
 import 'package:kasanipedido/utils/images.dart';
 
@@ -28,9 +28,9 @@ class CategoryCard extends StatelessWidget {
               ? AppImages.congeladosIcon
               : AppImages.jellyfish,
       label,
-      Colors.cyan,
+      AppColors.selectCat,
       0,
-      index == 1 ? Colors.cyan : AppColors.greyText,
+      isSelected ? AppColors.selectCat : AppColors.purple,
       () => onTap(categoryId),
       isSelected ? AppColors.selectCat : AppColors.purple,
       isSelected ? FontWeight.w700 : FontWeight.w400,

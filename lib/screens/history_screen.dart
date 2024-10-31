@@ -278,11 +278,24 @@ Widget customListWidget(BuildContext context, OrderHistory item) {
             ),
           ),
           horizontalSpacer(40),
-          customButton(context, false, 'Ver detalles', 12.sp, () {
-            Navigator.of(context)
-                .pushNamed('history_detail', arguments: {'orderHistory': item});
-          }, 120.sp, 28, Colors.transparent, AppColors.lightCyan, 8,
-              showShadow: true),
+          customButton(
+            context,
+            false,
+            'Ver detalles',
+            12.sp,
+            () {
+              context.read<HostHomeCubit>().setTab(HostHomeTab.historyDetail);
+              context
+                  .read<HostHomeCubit>()
+                  .setArguments({'orderHistory': item});
+            },
+            120.sp,
+            28,
+            Colors.transparent,
+            AppColors.lightCyan,
+            8,
+            showShadow: true,
+          )
         ],
       ),
       verticalSpacer(10),

@@ -29,7 +29,7 @@ leading: isBack
         onPressed: onPressed ?? () => Navigator.of(context).pop(),
       )
     : GestureDetector(
-        onTap: null, // No tendrá acción
+        onTap: null, 
         child: const Icon(
           Icons.arrow_back_ios_outlined,
           color: AppColors.appBar,

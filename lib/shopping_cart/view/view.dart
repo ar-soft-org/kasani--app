@@ -60,13 +60,16 @@ class CartScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             verticalSpacer(40),
-            Text(
-              'Lista de productos seleccionados',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontFamily: GoogleFonts.inter().fontFamily,
-                fontSize: 16.sp,
-                color: AppColors.blue,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 17),
+              child: Text(
+                'Lista de productos seleccionados',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: GoogleFonts.inter().fontFamily,
+                  fontSize: 16.sp,
+                  color: AppColors.blue,
+                ),
               ),
             ),
             verticalSpacer(10),
@@ -163,17 +166,11 @@ class CartScreen extends StatelessWidget {
               height: 150,
               padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(50),
                   topRight: Radius.circular(50),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 4.0,
-                  ),
-                ],
               ),
               child: Center(
                 child: customButton(

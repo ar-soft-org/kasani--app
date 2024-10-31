@@ -19,32 +19,32 @@ class BottomButon extends StatelessWidget {
       height: 150,
       padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(50),
           topRight: Radius.circular(50),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4.0,
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black26,
+        //     blurRadius: 4.0,
+        //   ),
+        // ],
       ),
       child: Center(
         child: customButton(
           context,
           false,
           label ?? 'Continuar',
-          16,
+                            12.sp,
           () {
             onPressed?.call();
           },
-          308,
-          58,
+          170.sp,
+          31.sp,
           Colors.transparent,
-          AppColors.lightCyan,
-          100,
+          AppColors.blue,
+          8.sp,
           showShadow: true,
         ),
       ),

@@ -18,7 +18,9 @@ class OrderCompletedPageView extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        backgroundColor: AppColors.ice,
         body: SafeArea(
+          
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,

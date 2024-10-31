@@ -255,7 +255,7 @@ class _OrderBookingScreenState extends State<OrderBookingScreen> {
               height: 110.h,
               padding: EdgeInsets.symmetric(horizontal: 23.w, vertical: 10.h),
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.transparent,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(60.r),
                       topRight: Radius.circular(60.r))),
