@@ -66,58 +66,53 @@ class _OrderDetailedPageViewState extends State<OrderDetailedPageView> {
             verticalSpacer(20),
             Expanded(
               child: SizedBox(
-                // height: 160.h,
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: products.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    final item = products[index];
-                    final data = getProductData(item, productsData);
-                    return addItemCard(
-                      title: item.nombreProducto,
-                      count: data.getQuantity,
-                      mScale: getAbbreviatedUnit(item.unidadMedida),
-                      comment: data.observation,
-                      data: data,
-                      // isHeadingVisible: true,
-                      showTopActions: true,
-                      increment: () {
-                        final updated =
-                            data.copyWith(quantity: data.quantity + 1);
-                        if (updated.quantity == 1) {
-                          context
-                              .read<ShoppingCartBloc>()
-                              .add(ShoppingCartProductDataAdd(data: updated));
-                        } else {
-                          context.read<ShoppingCartBloc>().add(
-                              ShoppingCartProductDataUpdated(data: updated));
-                        }
-                      },
-                      decrement: () {
-                        final updated =
-                            data.copyWith(quantity: data.quantity - 1);
-                        if (updated.greaterThanZero) {
-                          context.read<ShoppingCartBloc>().add(
-                              ShoppingCartProductDataUpdated(data: updated));
-                        } else {
-                          context.read<ShoppingCartBloc>().add(
-                              ShoppingCartProductDataDeleted(
-                                  id: updated.productId));
-                        }
-                      },
-                      context: context,
-                    );
-                  },
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: products.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      final item = products[index];
+                      final data = getProductData(item, productsData);
+                      return addItemCard(
+                        title: item.nombreProducto,
+                        count: data.getQuantity,
+                        mScale: getAbbreviatedUnit(item.unidadMedida),
+                        comment: data.observation,
+                        data: data,
+                        showTopActions: true,
+                        increment: () {
+                          final updated =
+                              data.copyWith(quantity: data.quantity + 1);
+                          if (updated.quantity == 1) {
+                            context
+                                .read<ShoppingCartBloc>()
+                                .add(ShoppingCartProductDataAdd(data: updated));
+                          } else {
+                            context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataUpdated(data: updated));
+                          }
+                        },
+                        decrement: () {
+                          final updated =
+                              data.copyWith(quantity: data.quantity - 1);
+                          if (updated.greaterThanZero) {
+                            context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataUpdated(data: updated));
+                          } else {
+                            context.read<ShoppingCartBloc>().add(
+                                ShoppingCartProductDataDeleted(
+                                    id: updated.productId));
+                          }
+                        },
+                        context: context,
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: customButton(context, true, 'Continuar comprando', 12,
-            //       () {}, 175, 31, Colors.transparent, AppColors.blue, 8,
-            //       showShadow: true),
-            // ),
             verticalSpacer(10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 17),

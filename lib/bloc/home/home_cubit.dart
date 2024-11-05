@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:kasanipedido/models/category/category_model.dart';
 import 'package:kasanipedido/models/subcategory/subcategory_model.dart'; 
 import 'package:kasanipedido/models/user/user_model.dart';
@@ -16,12 +17,31 @@ class HomeCubit extends Cubit<HomeState> {
     required this.productRepository,
     required ShoppingCartRepository shoppingCartRepository,
   })  : _shoppingCartRepository = shoppingCartRepository,
-        super(HomeState());
+        searchController = TextEditingController(), 
+        super(const HomeState()) {
+    searchController.addListener(_onSearchTextChanged);
+  }
 
   final CategoryRepository categoryRepository;
   final ProductRepository productRepository;
   final ShoppingCartRepository _shoppingCartRepository;
+  final TextEditingController searchController;
 
+  void _onSearchTextChanged() {
+    final searchText = searchController.text;
+    emit(state.copyWith(searchText: searchText)); 
+  }
+
+
+  @override
+  Future<void> close() {
+    searchController.dispose();
+    return super.close();
+  }
+
+    void clearSearch() {
+    emit(state.copyWith(searchText: '')); 
+  }
   fetchCategoriesSubCategories(User host, {String? employeId}) async {
     emit(state.copyWith(status: HomeStatus.loading));
 

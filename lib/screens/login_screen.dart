@@ -75,18 +75,17 @@ class _LoginScreenState extends State<LoginScreen> {
     return MultiBlocListener(
       listeners: [
         BlocListener<LoginCubit, LoginState>(
-          listenWhen: (previous, current) {
-            return current is LoginHostSuccess ||
-                current is LoginVendorSuccess ||
-                current is LoginFailure ||
-                current is LoginPasswordChangeRequired;
-          },
           listener: (context, state) {
+            print('Estado actual del LoginCubit: $state');
+
             if (state is LoginHostSuccess) {
+              print('Navegando a pantalla de Host');
               BlocProvider.of<AuthCubit>(context).loadUserLogged();
             } else if (state is LoginVendorSuccess) {
+              print('Navegando a pantalla de Vendor');
               BlocProvider.of<AuthCubit>(context).loadVendorLogged();
             } else if (state is LoginFailure) {
+              print('Fallo en el inicio de sesión: ${state.message}');
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
@@ -95,7 +94,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 );
             } else if (state is LoginPasswordChangeRequired) {
-                Navigator.of(context).pushReplacementNamed('change-password');
+              print(
+                  'Cambio de contraseña requerido, navegando a change-password');
+              print('User ID: ${state.userId}, Token: ${state.token}');
+
+              Navigator.of(context).pushReplacementNamed(
+                'change-password',
+                arguments: {
+                  'userId': state.userId,
+                  'token': state.token,
+                },
+              );
             }
           },
         ),

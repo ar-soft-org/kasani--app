@@ -28,45 +28,49 @@ class AuthenticationRepository {
     throw UnimplementedError();
   }
 
-  Future<Map<String, dynamic>> loginUser(String email, String password) async {
-    const path = KasaniEndpoints.loginHost;
+Future<Map<String, dynamic>> loginUser(String email, String password) async {
+  const path = KasaniEndpoints.loginHost;
 
-    // Log de lo que se enviará al API
-    print('Enviando solicitud POST a $path con datos: '
-        '{usuario: $email, contraseña: $password, id_aplicacion: 3, id_establecimiento: 64}');
+  print('Enviando solicitud POST a $path con datos: '
+      '{usuario: $email, contraseña: $password, id_aplicacion: 3, id_establecimiento: 64}');
 
-    final response = await _dio.post(
-      path,
-      data: {
-        'usuario': email,
-        'contraseña': password,
-        'id_aplicacion': 3,
-        'id_establecimiento': 64
-      },
-    );
+  final response = await _dio.post(
+    path,
+    data: {
+      'usuario': email,
+      'contraseña': password,
+      'id_aplicacion': 3,
+      'id_establecimiento': 64
+    },
+  );
 
-    // Log de la respuesta del API
-    print('Respuesta del API para $path: ${response.data}');
-    print('Código de respuesta: ${response.data['codigo']}');
+  print('Respuesta del API para $path: ${response.data}');
+  print('Código de respuesta: ${response.data['codigo']}');
 
-    if (response.data['codigo'] == '99' && response.data['mensaje'] is String) {
-      throw UnauthorizedException(response.data['mensaje'] ?? 'Unauthorized');
-    }
-
-    // Si el código es "00", se comprueba si requiere cambio de contraseña
-    if (response.data['codigo'] == '00') {
-      final requiereCambioContrasena =
-          response.data['requiere_cambio_contraseña'];
-      if (requiereCambioContrasena == 'SI') {
-        print('Código 00 recibido: Se requiere cambio de contraseña');
-        throw PasswordChangeRequiredException('Cambio de contraseña requerido');
-      } else {
-        print('Código 00 recibido: No se requiere cambio de contraseña');
-      }
-    }
-
-    return response.data;
+  if (response.data['codigo'] == '99' && response.data['mensaje'] is String) {
+    throw UnauthorizedException(response.data['mensaje'] ?? 'Unauthorized');
   }
+
+  if (response.data['codigo'] == '00') {
+    final requiereCambioContrasena = response.data['requiere_cambio_contraseña'];
+    if (requiereCambioContrasena == 'SI') {
+      final userId = response.data['id_usuario'] ?? '';
+      final token = response.data['token'] ?? '';
+      print('Código 00 recibido: Se requiere cambio de contraseña para userId $userId con token $token');
+
+      return {
+        'requiereCambioContrasena': true,
+        'userId': userId,
+        'token': token,
+      };
+    } else {
+      print('Código 00 recibido: No se requiere cambio de contraseña');
+    }
+  }
+
+  return response.data;
+}
+
 
   Future<void> changePassword({
     required String userId,

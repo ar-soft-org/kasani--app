@@ -131,7 +131,7 @@ Widget addItemCard({
     children: [
       verticalSpacer(10),
       Padding(
-        padding: const EdgeInsets.only(left: 17.0, right: 17),
+        padding: const EdgeInsets.only(left: 17.0, right: 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -284,7 +284,7 @@ Widget addItemCard({
       ),
       verticalSpacer(5),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 17.0),
+        padding: const EdgeInsets.only(left: 17.0, right: 0),
         child: Container(
           width: 330.w,
           height: 1.h,

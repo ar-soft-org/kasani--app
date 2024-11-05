@@ -17,29 +17,28 @@ class ChangePasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginState = context.read<LoginCubit>().state;
-    String? userId;
-    String? token;
+    // Obtén los argumentos pasados desde el BlocListener
+    final arguments = ModalRoute.of(context)?.settings.arguments as Map?;
+    final userId = arguments?['userId'] ?? '';
+    final token = arguments?['token'] ?? '';
 
-    if (loginState is LoginPasswordChangeRequired) {
-      userId = loginState.userId;
-      token = loginState.token;
-    }
+    print('Datos recibidos en ChangePasswordPage: userId = $userId, token = $token');
 
     return BlocProvider(
       create: (context) => ChangePasswordCubit(
         repository: context.read<AuthenticationRepository>(),
-        token: token ?? '',
+        token: token,
       ),
       child: ChangePasswordView(userId: userId),
     );
   }
 }
 
+
 enum ChangePasswordViews { changePassword, success }
 
 class ChangePasswordView extends StatefulWidget {
-  final String? userId;
+  final String userId;
 
   const ChangePasswordView({super.key, required this.userId});
 
@@ -49,24 +48,16 @@ class ChangePasswordView extends StatefulWidget {
 
 class _ChangePasswordViewState extends State<ChangePasswordView> {
   ChangePasswordViews currentView = ChangePasswordViews.changePassword;
-  late final String userId;
 
   @override
   void initState() {
     super.initState();
-
-    final loginState = context.read<LoginCubit>().state;
-    if (loginState is LoginPasswordChangeRequired) {
-      userId = loginState.userId;
-      print('User ID asignado correctamente: $userId');
-    } else {
-      throw Exception(
-          'No se pudo obtener el User ID para cambio de contraseña');
-    }
+    print('User ID recibido en ChangePasswordView: ${widget.userId}');
   }
 
   @override
   Widget build(BuildContext context) {
+    // Resto del código...
     return BlocListener<ChangePasswordCubit, ChangePasswordState>(
       listener: (context, state) {
         if (state is ChangePasswordFailure) {
@@ -156,7 +147,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         ],
                       );
                     }
-                    return _Inputs(userId: userId);
+                    return _Inputs(userId: widget.userId);
                   },
                 ),
               ],

@@ -15,6 +15,7 @@ class HomeState extends Equatable {
   final Map<String, List<Product>>? productsByCategory;
 
   final int selectedSubCategoryIndex; 
+  final String? searchText; 
 
   const HomeState({
     this.status = HomeStatus.initial,
@@ -26,6 +27,7 @@ class HomeState extends Equatable {
     this.errorMessage,
     this.productsByCategory = const {},
     this.selectedSubCategoryIndex = -1,
+    this.searchText, 
   });
 
   HomeState copyWith({
@@ -38,6 +40,7 @@ class HomeState extends Equatable {
     List<Product>? currentProducts,
     Map<String, List<Product>>? Function()? productsByCategory,
     int? selectedSubCategoryIndex, 
+    String? searchText, 
   }) {
     return HomeState(
       status: status ?? this.status,
@@ -55,6 +58,7 @@ class HomeState extends Equatable {
           : this.productsByCategory,
       selectedSubCategoryIndex:
           selectedSubCategoryIndex ?? this.selectedSubCategoryIndex,
+      searchText: searchText ?? this.searchText, 
     );
   }
 
@@ -69,6 +73,7 @@ class HomeState extends Equatable {
         errorMessage,
         productsByCategory,
         selectedSubCategoryIndex,
+        searchText, 
       ];
 }
 

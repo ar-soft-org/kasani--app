@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,32 +51,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController controller = TextEditingController();
   @override
   void initState() {
     super.initState();
     final state = BlocProvider.of<AuthCubit>(context).state;
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
+
+
     if (state is AuthHostSuccess) {
-      BlocProvider.of<HomeCubit>(context)
-          .fetchCategoriesSubCategories(state.host);
-      BlocProvider.of<HomeCubit>(context).fetchProducts(state.host);
+      homeCubit.fetchCategoriesSubCategories(state.host);
+      homeCubit.fetchProducts(state.host);
     }
 
     if (state is AuthVendorSuccess) {
-      BlocProvider.of<HomeCubit>(context).fetchCategoriesSubCategories(
-          state.vendor,
-          employeId: state.vendor.idEmpleado);
-      BlocProvider.of<HomeCubit>(context)
-          .fetchProducts(state.vendor, employeId: state.vendor.idEmpleado);
+      homeCubit.fetchCategoriesSubCategories(
+          state.vendor, employeId: state.vendor.idEmpleado);
+      homeCubit.fetchProducts(state.vendor, employeId: state.vendor.idEmpleado);
     }
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
+ 
   getTitle(Client? client) {
     StringBuffer title = StringBuffer();
     title.write('Realiza tu Pedido');
@@ -82,14 +78,25 @@ class _HomeScreenState extends State<HomeScreen> {
       title.write(' - ');
       title.write(client.nombres);
     }
-
     return title.toString();
+  }
+
+  void _navigateToContinueHome() {
+    final homeCubit = context.read<HomeCubit>();
+    final searchText = homeCubit.searchController.text;
+
+    log("Texto de búsqueda antes de navegar: $searchText");
+
+    Navigator.of(context).pushNamed('continue_home', arguments: {
+      'cubit': homeCubit,
+      'searchText': searchText,
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final VendorState? vendorState =
-        context.select((VendorBloc? bloc) => bloc?.state);
+    final vendorState = context.select((VendorBloc? bloc) => bloc?.state);
+    final homeCubit = context.read<HomeCubit>();
 
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
@@ -108,10 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
               context, getTitle(vendorState?.currentClient), false),
           body: RefreshIndicator(
             onRefresh: () async {
-              final state = BlocProvider.of<AuthCubit>(context).state;
-              if (state is AuthHostSuccess) {
-                BlocProvider.of<HomeCubit>(context)
-                    .fetchCategoriesSubCategories(state.host);
+              final authState = BlocProvider.of<AuthCubit>(context).state;
+              if (authState is AuthHostSuccess) {
+                homeCubit.fetchCategoriesSubCategories(authState.host);
               }
             },
             child: state.isLoading
@@ -122,49 +128,40 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Column(children: [
-                          verticalSpacer(10),
-                          GestureDetector(
-                            onTap: () {
-                              final homeCubit = context.read<HomeCubit>();
-                              Navigator.of(context)
-                                  .pushNamed('continue_home', arguments: {
-                                'cubit': homeCubit,
-                              });
-                            },
-                            child: AbsorbPointer(
-                              child: Hero(
-                                tag: 'search',
-                                child: Container(
-                                  padding: EdgeInsets.zero,
-                                  child: textField(
-                                    controller,
-                                    46,
-                                    356,
-                                    'Buscar',
-                                    '',
-                                    100,
-                                    Colors.white,
-                                    false,
-                                    true,
-                                    true,
-                                    () {},
-                                    textColor: AppColors.purple,
-                                    context,
-                                    bold: true,
-                                  ),
-                                ),
-                              ),
+                        verticalSpacer(10),
+                        Hero(
+                          tag: 'search',
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            child: textField(
+                              homeCubit.searchController,
+                              46,
+                              356,
+                              'Buscar',
+                              '',
+                              100,
+                              Colors.white,
+                              false,
+                              false,
+                              true,
+                              () {},
+                              context,
+                              textColor: AppColors.purple,
+                              bold: true,
+                              onSubmitted: (value) {
+                                if (value.isNotEmpty) _navigateToContinueHome();
+                              },
+                              navigateOnSubmit: true,
                             ),
                           ),
-                          verticalSpacer(5),
-                          const CombinedCategoriesSection()
-                        ]),
-                        // Products
+                        ),
+                        verticalSpacer(5),
+                        const CombinedCategoriesSection(),
                         const Expanded(
-                          child:
-                              SingleChildScrollView(child: ProductsSection()),
-                        )
+                          child: SingleChildScrollView(
+                            child: ProductsSection(),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -321,12 +318,12 @@ class SubCategorySection extends StatelessWidget {
             return SubCategoryCard(
               item: item,
               index: index,
-              isSelected: selectedIndex == index, 
+              isSelected: selectedIndex == index,
               onTap: (String subCategoryId, int subCategoryIndex) {
                 BlocProvider.of<HomeCubit>(context).setCurrentSelection(
                   id: subCategoryId,
                   isCategory: false,
-                  index: subCategoryIndex, 
+                  index: subCategoryIndex,
                 );
               },
             );
@@ -347,7 +344,7 @@ class SubCategoryCard extends StatelessWidget {
   });
 
   final SubCategoria item;
-  final Function(String, int) onTap; 
+  final Function(String, int) onTap;
   final bool isSelected;
   final int index;
 
@@ -377,7 +374,6 @@ class SubCategoryCard extends StatelessWidget {
     );
   }
 }
-
 
 String getAbbreviatedUnit(String unit) {
   switch (unit.toLowerCase()) {

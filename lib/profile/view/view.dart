@@ -82,7 +82,8 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${authState.vendor.nombres} ${authState.vendor.apellidos}'),
+                          Text(
+                              '${authState.vendor.nombres} ${authState.vendor.apellidos}'),
                           Text(authState.vendor.correo),
                           SizedBox(height: 20.h),
                           Divider(height: 2.h, thickness: 2.h),
@@ -101,7 +102,8 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${authState.host.nombres} ${authState.host.apellidos}'),
+                          Text(
+                              '${authState.host.nombres} ${authState.host.apellidos}'),
                           Text(authState.host.correo),
                           SizedBox(height: 20.h),
                           Divider(height: 2.h, thickness: 2.h),
@@ -152,10 +154,10 @@ Widget profileCategoryTile(String title, void Function() onTap) {
         children: [
           customText(
             title,
-            FontWeight.w400,
+            FontWeight.w700,
             14,
             GoogleFonts.beVietnamPro().fontFamily.toString(),
-            AppColors.black,
+            AppColors.selectCat,
           ),
         ],
       ),

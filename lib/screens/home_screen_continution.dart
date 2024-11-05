@@ -27,6 +27,12 @@ class ContinueHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Obtén el texto de búsqueda actual desde el cubit
+    final searchText = homeCubit?.state.searchText ?? '';
+
+    // Log para verificar el valor de searchText
+    log("Valor de searchText en ContinueHomePage: $searchText");
+
     return MultiBlocProvider(
       providers: [
         if (homeCubit != null)
@@ -39,22 +45,29 @@ class ContinueHomePage extends StatelessWidget {
           )..add(const EditProductProductsDataRequested()),
         ),
       ],
-      child: const ContinueHomeView(),
+      child: ContinueHomeView(initialSearchText: searchText),
     );
   }
 }
 
 class ContinueHomeView extends StatelessWidget {
-  const ContinueHomeView({super.key});
+  final String initialSearchText;
+
+  const ContinueHomeView({super.key, required this.initialSearchText});
 
   @override
   Widget build(BuildContext context) {
-    return const ContinueHomeScreen();
+    // Log para verificar el valor de initialSearchText en ContinueHomeView
+    log("Valor de initialSearchText en ContinueHomeView: $initialSearchText");
+
+    return ContinueHomeScreen(initialSearchText: initialSearchText);
   }
 }
 
 class ContinueHomeScreen extends StatefulWidget {
-  const ContinueHomeScreen({super.key});
+  final String initialSearchText;
+
+  const ContinueHomeScreen({super.key, required this.initialSearchText});
 
   @override
   State<ContinueHomeScreen> createState() => _ContinueHomeScreenState();
@@ -62,34 +75,32 @@ class ContinueHomeScreen extends StatefulWidget {
 
 class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
   late TextEditingController controller;
-
   bool searching = false;
   final Map<String, List<Product>> productsByCategory = {};
-
   final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController();
+
+    log("Valor de initialSearchText en ContinueHomeScreen (initState): ${widget.initialSearchText}");
+
+    controller = TextEditingController(text: widget.initialSearchText);
+
+    if (widget.initialSearchText.isNotEmpty) {
+      searching = true;
+      searchProduct(widget.initialSearchText);
+    }
+
     controller.addListener(() {
       _debouncer.run(() {
         final text = controller.text;
-        searchProduct(text);
-        if (text.isEmpty) {
-          setState(() {
-            searching = false;
-          });
-          return;
-        }
-
         setState(() {
-          searching = true;
+          searching = text.isNotEmpty;
         });
+        searchProduct(text);
       });
     });
-
-    searchProduct(controller.text);
   }
 
   @override
@@ -98,6 +109,7 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
     super.dispose();
   }
 
+  // Método para realizar la búsqueda basada en el texto
   searchProduct(String text) {
     final products = context.read<HomeCubit>().state.products;
 
@@ -106,7 +118,6 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
             product.nombreProducto.toLowerCase().contains(text.toLowerCase()))
         .toList();
 
-    // filter products by categories
     final Map<String, List<Product>> productsByCategory = {};
     for (final product in filteredList) {
       if (!productsByCategory.containsKey(product.categoria)) {
@@ -119,6 +130,18 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
       this.productsByCategory.clear();
       this.productsByCategory.addAll(productsByCategory);
     });
+  }
+
+// Ejecuta la búsqueda en respuesta a un envío de texto
+  void _onSearchSubmit() {
+    final searchText = controller.text;
+
+    // Log para verificar el texto de búsqueda al enviar
+    log("Texto de búsqueda al enviar en _onSearchSubmit: $searchText");
+
+    if (searchText.isNotEmpty) {
+      searchProduct(searchText);
+    }
   }
 
   @override
@@ -142,7 +165,8 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
 
         return Scaffold(
           backgroundColor: AppColors.ice,
-          appBar: customAppBar(context, 'Nuevo Pedido', true),
+          appBar: customAppBar(context, 'Nuevo Pedido', true,
+              clearSearchOnBack: true),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: Column(
@@ -167,6 +191,8 @@ class _ContinueHomeScreenState extends State<ContinueHomeScreen> {
                     context,
                     textColor: AppColors.purple,
                     bold: true,
+                    onSubmitted: (_) => _onSearchSubmit(),
+                    navigateOnSubmit: false,
                   ),
                 ),
                 verticalSpacer(5),

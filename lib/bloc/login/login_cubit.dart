@@ -9,6 +9,7 @@ import 'package:meta/meta.dart';
 
 part 'login_state.dart';
 
+
 class LoginCubit extends Cubit<LoginState> {
   final AuthenticationRepository repository;
 
@@ -16,18 +17,27 @@ class LoginCubit extends Cubit<LoginState> {
 
   loginUser(String email, String password) async {
     emit(LoginLoading());
+    print('Intentando iniciar sesión con el usuario: $email');
 
     try {
       final userMap = await repository.loginUser(email, password);
+      print('Respuesta del servidor: $userMap');
+
+      final userId = userMap['userId'] ?? '';
       final token = userMap['token'] ?? '';
 
-      if (userMap['requiere_cambio_contraseña'] == 'SI') {
-        final userId = userMap['id_usuario'] ?? '';
-        emit(LoginPasswordChangeRequired(userId, token));
+      if (userMap['requiereCambioContrasena'] == true) {
+        if (userId.isNotEmpty && token.isNotEmpty) {
+          print('Cambio de contraseña requerido para el usuario $userId');
+          emit(LoginPasswordChangeRequired(userId, token));
+        } else {
+          print('Error: userId o token no asignados correctamente.');
+          emit(LoginFailure('Datos incompletos para cambio de contraseña.'));
+        }
         return;
       }
 
-      if (userMap['id_empleado'] != null && userMap['id_empleado'] is String && userMap['id_empleado'].isNotEmpty) {
+      if (userMap['id_empleado'] != null && userMap['id_empleado'].isNotEmpty) {
         final vendor = VendorModel.fromJson(userMap);
         await UserStorage.setVendor(json.encode(vendor.toJson()));
         print('Usuario autenticado como Vendor: ${vendor.toJson()}');
@@ -38,17 +48,12 @@ class LoginCubit extends Cubit<LoginState> {
         print('Usuario autenticado como Cliente (Host): ${host.toJson()}');
         emit(LoginHostSuccess(host));
       } else {
+        print('No se pudo identificar el tipo de usuario.');
         emit(LoginFailure('No se pudo identificar el tipo de usuario.'));
       }
     } catch (e) {
-      String errorMessage = 'Ocurrió un error en el inicio de sesión';
-      if (e is DioException && e.response?.data is Map) {
-        final responseData = e.response?.data;
-        errorMessage = responseData['mensaje'] ?? errorMessage;
-        print('Respuesta del servidor: $responseData');
-      }
-
-      emit(LoginFailure(errorMessage));
+      print('Error en el inicio de sesión: ${e.toString()}');
+      emit(LoginFailure('Ocurrió un error en el inicio de sesión'));
     }
   }
 
@@ -64,3 +69,6 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLogout());
   }
 }
+
+
+
